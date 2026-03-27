@@ -1,12 +1,13 @@
 ---
 name: tax-info-request
-version: 1.0.0
+version: 2.0.0
 description: |
   Review a prior year individual tax return (Form 1040) PDF and generate a
-  structured information request for the current tax year. Extracts every
-  income source, deduction, entity, and account from the return, then produces
-  a client-ready document request organized by category with prior year
-  reference amounts.
+  flat, one-line-per-item information request for the current tax year.
+  Extracts every income source, deduction, entity, and account from the
+  return, then produces a checklist-style document request with prior year
+  reference amounts — one request per line, ready to paste into a portal
+  or tracker.
 trigger: |
   "information request", "info request", "tax organizer", "review prior year return",
   "document request list", "what do we need from the client", "1040 info request"
@@ -21,18 +22,37 @@ tier: all-staff
 
 ## Purpose
 
-Generate a complete, client-ready information request for the upcoming tax year by extracting every relevant item from the prior year Form 1040. The output lists exactly what documents the client needs to provide, organized by category, with prior year reference amounts for context. This replaces the manual process of paging through a return and building a request from scratch.
+Generate a complete information request for the upcoming tax year by extracting every relevant item from the prior year Form 1040. The output is a **flat checklist** — one request per line, no section headers, no sub-bullets — ready to paste line-by-line into a portal, tracker, or email. Prior year amounts appear in parentheses for context.
 
 ## Required Inputs
 
 - Path to the prior year tax return PDF
-- Override notes from the user (optional) — e.g., "skip rental section", "add crypto question", "they sold the property", "new baby born in 2025"
+
+## Optional Inputs
+
+- **Meeting notes / intake context** — Notes from client calls, planning meetings, or advisory discussions. Examples: "client sold ~$1.9M in stock", "bought a home in 2025", "considering angel investments". The skill weaves these into the request as specific line items.
+- **Already-collected items** — List of documents or info already obtained. Examples: "already have spouse email", "W-2s received". These items are excluded from the output.
+- **Override notes** — e.g., "skip rental section", "add crypto question", "they sold the property", "new baby born in 2025"
+
+**Prompt for these if not provided.** Ask:
+> Do you have any meeting notes, intake call context, or known life events for this client? Also let me know if you've already collected any documents so I can exclude them.
+
+## Current Tax Year Thresholds (2025)
+
+Always use the **current filing year** amounts, not the prior year's. Key thresholds:
+- Gift tax annual exclusion: **$19,000** (2025)
+- Standard deduction (MFJ): **$30,000** (2025)
+- Standard deduction (Single): **$15,000** (2025)
+- FBAR threshold: $10,000 aggregate (static)
+- Form 8938 thresholds: $50,000/$75,000/$200,000/$400,000 (static, varies by filing status and residence)
+
+Update these amounts if the current date indicates a different filing year.
 
 ## Workflow
 
 1. **Read the full return** — Read the tax return PDF in batches of 20 pages. Read ALL pages — K-1 details, state returns, and supporting statements are often at the end. Do not stop early.
 
-2. **Extract the checklist** — Systematically extract data from every section of the return:
+2. **Extract data** — Systematically extract data from every section of the return:
 
    **A. Form 1040 — Basic Information**
    - Tax year, taxpayer name(s), filing status, home address
@@ -80,13 +100,40 @@ Generate a complete, client-ready information request for the upcoming tax year 
    **I. Supporting Statements**
    - Supplemental statements detailing interest, dividends, partnerships, rental expenses, or other breakdowns
 
-3. **Apply user overrides** — If the user provided override notes:
-   - "Skip [section]" — omit that section from the output
-   - "Add [topic]" — add a custom question or section
-   - "They sold [property]" — note the property is no longer applicable but ask about sale details (1099-S, closing statement)
-   - "New [life event]" — add relevant questions (new dependent, marriage, divorce, new home, etc.)
+   **J. Foreign Entity / Closely Held Company Detection**
+   - Form 8938 (FATCA): Any specified foreign financial assets, including ownership in foreign entities
+   - Form 5471 (controlled foreign corporation), Form 8865 (foreign partnership), or any foreign entity reporting
+   - FBAR signature authority over foreign accounts
+   - If detected: flag for expanded questioning (see Closely Held / Foreign Entity Rules below)
 
-4. **Generate the information request** — Produce the output using the template below. Only include sections where the prior year return shows relevant activity or where user overrides add something.
+3. **Apply meeting notes & context** — If the user provided meeting notes or intake context:
+   - Convert known facts into specific request lines (e.g., "client sold stock" → request sale docs, cost basis, broker statement)
+   - Add advisory-driven questions (e.g., estate plan discussion → flag estate plan status)
+   - Incorporate life events as targeted requests (e.g., "bought a home" → Form 1098, property tax statement)
+
+4. **Remove already-collected items** — If the user specified items already obtained, exclude them from the output entirely.
+
+5. **Apply user overrides** — If the user provided override notes:
+   - "Skip [section]" — omit those items from the output
+   - "Add [topic]" — add a custom request line
+   - "They sold [property]" — replace rental/property lines with sale-related requests (1099-S, closing statement, depreciation recapture)
+   - "New [life event]" — add relevant request lines
+
+6. **Generate the information request** — Produce the output using the format rules below.
+
+## Closely Held / Foreign Entity Rules
+
+When the return shows ownership in a closely held company — especially a foreign entity (Form 8938, Form 5471, FBAR signature authority) — and meeting notes or the return indicate a partial sale or ongoing ownership, generate these additional lines:
+
+```
+Sale documentation for [Entity] shares — date, number of shares, proceeds, cost basis, selling expenses
+[Entity] — remaining shares held as of 12/31/[current year] and year-end fair market value
+[Entity] — maximum value of shares held at any point during [current year] (needed for Form 8938)
+[Entity] — any additional acquisitions or dispositions of shares in [current year] beyond known sale
+[Entity] — any dividends or distributions received in [current year]
+```
+
+Adjust language if the entity is a partnership interest rather than shares.
 
 ## Control Points
 
@@ -99,171 +146,61 @@ Generate a complete, client-ready information request for the upcoming tax year 
 - Foreign accounts question answered Yes but no FBAR/FATCA details visible — flag for follow-up
 - Large estimated tax payments that may indicate underwithholding pattern — include in the request
 - Digital assets question answered Yes but no Schedule D/Form 8949 crypto activity — ask about current year activity
+- Foreign entity ownership detected but no Form 5471/8865 included — flag for review
 
 ## Output Format
 
-Plain-text, client-ready document organized with clear section headers:
+**Flat checklist. One request per line. No section headers, no grouping, no sub-bullets, no decorative formatting.**
+
+Rules:
+- Each line is a standalone request that can be copied independently into a portal or tracker
+- Lead with the document name or topic, not "Please provide..."
+- Include prior year amounts in parentheses for context — keep brief
+- Use short, direct phrasing — checklist style, not letter style
+- No "Dear Client", no greeting, no closing, no signature blocks
+- No dashes/equals separators between sections
+- Group related items together in the list order, but do not add headers
+
+### Example Output
 
 ```
-============================================================
-[CURRENT YEAR] TAX INFORMATION REQUEST
-============================================================
-Prepared for: [Taxpayer Name(s)]
-Based on review of [Prior Year] Federal Tax Return
-Filing Status: [MFJ/Single/etc.]
-------------------------------------------------------------
-
-PERSONAL INFORMATION
-- Please confirm your current home address:
-  [Address from prior year return]
-- Please confirm filing status for [current year]: [status]
-- Dependents reported on prior year return:
-  [List each: Name — Relationship]
-  Are all dependents still claimed? Any new dependents?
-
-------------------------------------------------------------
-
-FOREIGN BANK ACCOUNTS
-[Only if Schedule B Part III = Yes]
-
-[For each known foreign account:]
-- [Bank Name] — Acct [last 4 digits]
-  * Highest account balance during [current year]
-  * Interest income earned from this account
-
-- Any other foreign bank accounts during [current year]?
-
-Note: FBAR (FinCEN 114) filing may be required if aggregate
-balance of all foreign accounts exceeded $10,000 at any time.
-
-------------------------------------------------------------
-
-WAGES & EMPLOYMENT (W-2)
-[Only if wages present]
-
-[List each employer from W-2s:]
-- Please provide [current year] W-2 from [Employer Name]
-
-- Did you have any new employers or change jobs?
-
-------------------------------------------------------------
-
-BANK / INVESTMENT ACCOUNTS — Please share 1099s
-[List every payer from Schedule B + brokerage from 8949]
-
-[Group by institution:]
-- [Institution] — Acct [last 4]
-- [Institution] — Acct [last 4]
-
-Please let us know if you have any accounts not listed above.
-
-------------------------------------------------------------
-
-PARTNERSHIP / S-CORP INCOME (K-1s)
-[Only if Schedule E Part II has entries]
-
-We expect Schedule K-1 forms from the following entities.
-Please forward as you receive them:
-
-- [Entity Name] (EIN: [##-#######])
-
-Please let us know if you have K-1s from entities not
-listed above, or if you are no longer involved in any.
-
-------------------------------------------------------------
-
-RENTAL INCOME
-[Only if Schedule E Part I has entries]
-
-[For each rental property:]
-- [Property Address]
-  Prior year rental income: $[amount]
-  Please provide:
-  * Gross rental income for [current year]
-  * Expenses: maintenance/repairs, HOA, real estate taxes,
-    utilities, insurance, management fees, other
-
-------------------------------------------------------------
-
-CAPITAL GAINS / DIGITAL ASSETS
-[Only if Schedule D / Form 8949 has activity]
-
-[If digital assets = Yes:]
-- Did you buy, sell, or exchange any cryptocurrency or
-  digital assets in [current year]?
-
-[If brokerage activity:]
-- 1099-B forms should be included with your brokerage
-  1099 composite statements listed above.
-
-------------------------------------------------------------
-
-ITEMIZED DEDUCTIONS
-[Only if Schedule A was used]
-
-Please provide for [current year]:
-
-[If real estate taxes > 0:]
-- Property tax bills/statements (prior year: $[amount])
-
-[If mortgage interest / Form 1098:]
-- Form 1098 — Mortgage Interest Statement
-
-[If charitable > 0:]
-- Charitable contribution receipts, cash and non-cash
-  (prior year cash donations: $[amount])
-
-[If medical > 0:]
-- Summary of medical and dental expenses paid
-  (prior year: $[amount])
-
-[If investment interest > 0:]
-- Investment interest expense documentation
-
-------------------------------------------------------------
-
-ESTIMATED TAX PAYMENTS
-[Only if estimated payments were made or vouchers generated]
-
-Prior year estimated payments: $[total]
-[If overpayment applied:] Overpayment of $[amount] was
-applied to [current year] estimates.
-
-[If ES vouchers present:]
-Voucher amounts for [current year]:
-  Q1 (04/15): $[amount]
-  Q2 (06/15): $[amount]
-  Q3 (09/15): $[amount]
-  Q4 (01/15): $[amount]
-
-Please confirm all estimated payments made and amounts paid.
-
-------------------------------------------------------------
-
-OTHER ITEMS
-[Include if corresponding form was present:]
-
-[If Form 1116:] - Foreign tax credit documentation
-[If Form 4797:] - Any sales of business property?
-[If Schedule C:] - Business income and expense summary
-[If education credits:] - Form 1098-T for tuition paid
-[If child care credit:] - Child/dependent care expenses
-  and provider information
-[If state returns:] - State-specific items for [state(s)]
-
-------------------------------------------------------------
-
-CHANGES & NEW ACTIVITY
-
-Please let us know about any of the following in [current year]:
-- Change in marital status
-- Birth or adoption of a child
-- Purchase or sale of a home
-- New business started or closed
-- Significant gifts made or received (over $18,000)
-- Any other new income sources or life changes
-
-============================================================
+Confirm current home address: [address from prior year return]
+Confirm filing status for 2025: Married Filing Jointly
+Confirm dependents still claimed: [Name] (son), [Name] (daughter) — any new dependents?
+2025 W-2 — Dialog Enterprises Inc. (2024: $116,748)
+2025 W-2 — Salisbury House Management LLC (2024: $89,104)
+Any new employers or job changes in 2025?
+2025 Form 1099 composite — Charles Schwab acct ending 4821
+2025 Form 1099 composite — Robinhood Securities acct ending 7733
+Any brokerage/investment accounts not listed above?
+2025 Form 1099-INT — TD Bank acct ending 0092 (2024 interest: $1,204)
+Any new bank accounts earning interest?
+2025 Form 1099-R for any IRA/Roth/retirement distributions (2024: $7,810 Roth conversion via Robinhood)
+2025 Schedule K-1 — ABC Partners LP (EIN: 12-3456789)
+2025 Schedule K-1 — XYZ Holdings LLC (EIN: 98-7654321)
+Any new K-1 entities, or any entities you are no longer involved in?
+Sale documentation for Dialog Enterprises shares — date, shares sold, proceeds, cost basis, expenses
+Dialog Enterprises — remaining shares held as of 12/31/2025 and year-end fair market value
+Dialog Enterprises — maximum value of shares during 2025 (for Form 8938)
+Dialog Enterprises — any additional share transactions in 2025 beyond the known sale
+Dialog Enterprises — any dividends or distributions received in 2025
+2025 Form 1098 — mortgage interest statement (2024: $18,500)
+2025 property tax bills/statements (2024: $12,300)
+Charitable contribution receipts — cash and non-cash (2024 cash: $8,200)
+Summary of unreimbursed medical/dental expenses paid in 2025 (2024: $4,100)
+Foreign bank accounts — highest balance during 2025 for each account (FBAR required if aggregate > $10,000)
+Foreign bank accounts — interest earned in 2025 from each account
+Any new foreign bank or financial accounts opened in 2025?
+Confirm all estimated tax payments made in 2025 and amounts (2024 total: $24,000; $6,400 overpayment applied)
+2025 Form 1098-T for tuition paid
+Dependent care expenses and provider info for 2025
+Any cryptocurrency or digital asset transactions in 2025?
+Any purchase or sale of a home in 2025?
+Any change in marital status in 2025?
+Any births, adoptions, or new dependents in 2025?
+Any new business started or closed in 2025?
+Any gifts made over $19,000 to a single person in 2025?
+Any other new income sources or significant life changes in 2025?
 ```
 
 ## Safety Constraints
@@ -272,5 +209,6 @@ Please let us know about any of the following in [current year]:
 - **EINs for K-1 entities are included** — clients need these to match K-1s they receive.
 - **Account identifiers use last 4 digits only** — do not include full account numbers.
 - **Prior year amounts are reference only** — include in parentheses for context, not as expectations.
-- **Omit sections with no activity** — if no rental property, skip the rental section entirely.
-- **Always ask about unlisted items** — for every category, ask "do you have any accounts/entities/properties not listed above?"
+- **Omit lines with no activity** — if no rental property, skip rental lines entirely.
+- **For every category, include an "any not listed?" catch-all line.**
+- **Use current-year thresholds** — never use prior year amounts for exclusion limits, gift limits, etc.
