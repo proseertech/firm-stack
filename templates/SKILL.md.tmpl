@@ -1,0 +1,60 @@
+---
+name: skill-slug
+version: 1.0.0
+description: |
+  One-line summary of what this skill does.
+  Additional detail on scope, expected inputs, and output format.
+trigger: |
+  Phrases that should invoke this skill automatically.
+  Example: "reconcile", "bank rec", "tie out GL"
+allowed-tools:
+  - Read
+  - Write
+  - Grep
+  - AskUserQuestion
+  # Add others as needed: Bash, Agent, WebSearch, etc.
+tier: all-staff   # all-staff | power-user | developer
+---
+
+# Skill Title
+
+## Purpose
+
+What problem this solves and when to use it. One short paragraph.
+
+## Required Inputs
+
+What Claude needs before starting. Be specific — file names, account names, date ranges, etc.
+
+- Item one
+- Item two
+
+## Workflow
+
+1. **Phase name** — What happens in this phase. What Claude produces. What the validation gate is before moving on.
+2. **Phase name** — ...
+3. **Phase name** — ...
+
+## Control Points
+
+Hard stops where a human must confirm before Claude proceeds. These map to internal controls — treat them seriously.
+
+- **[Control name]** — What triggers it, what the human needs to verify.
+
+## Red Flags
+
+Conditions that should pause the skill and surface to the user immediately.
+
+- Unexplained rounding over materiality threshold
+- ...
+
+## Output Format
+
+What Claude delivers at the end of this skill: a document, a checklist, a summary table, a set of corrected entries, etc.
+
+## Safety Constraints
+
+What this skill must NOT do under any circumstances.
+
+- Do not post or submit entries without explicit human approval.
+- ...
