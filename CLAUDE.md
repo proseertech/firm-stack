@@ -10,6 +10,9 @@ A Claude Code skills pack for accounting firms. This file registers all availabl
 - **`/client-email`** — Polish a CPA-to-client email draft. Trigger: "improve this email", "polish my draft", "client email"
 - **`/tax-memo`** — Draft a client-facing tax memo from position notes. Trigger: "tax memo", "client memo", "write a memo"
 
+### Tax Workflow
+- **`/tax-info-request`** — Generate an information request from a prior year 1040. Trigger: "information request", "info request", "tax organizer", "document request list"
+
 ### Tax Return Reviews
 - **`/1040-review`** — Cross-reference a Form 1040 against source documents. Trigger: "review the 1040", "check the individual return", "1040 cross-reference"
 - **`/1120s-review`** — Cross-reference a Form 1120-S against source documents. Trigger: "review the 1120-S", "S-corp return review", "check the S-corp"

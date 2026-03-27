@@ -26,6 +26,11 @@ Then add a `firm-stack` configuration block to your project's `CLAUDE.md` (see [
 | `/client-email` | Polish CPA-to-client email drafts |
 | `/tax-memo` | Draft client-facing tax memos from position notes |
 
+### Tax Workflow
+| Skill | Purpose |
+|---|---|
+| `/tax-info-request` | Generate a document request list from a prior year 1040 |
+
 ### Tax Return Reviews
 | Skill | Purpose |
 |---|---|
