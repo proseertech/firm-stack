@@ -39,6 +39,11 @@ git clone https://github.com/larryb821/firm-stack ~/.claude/skills/firm-stack
 | `client-email` | Polish CPA-to-client email drafts |
 | `tax-memo` | Draft client-facing tax memos from position notes |
 
+### Tax Workflow
+| Skill | Purpose |
+|---|---|
+| `/tax-info-request` | Generate a document request list from a prior year 1040 |
+
 ### Tax Return Reviews
 | Skill | Purpose |
 |---|---|
