@@ -1,10 +1,12 @@
 ---
 name: fixed-assets
-version: 1.0.0
+version: 1.1.0
 description: |
   Review fixed asset additions, disposals, and the depreciation schedule.
   Applies the firm's capitalization threshold ($2,500 default) to determine
-  capitalize vs. expense, and verifies depreciation calculations.
+  capitalize vs. expense, evaluates Section 179 and bonus depreciation
+  opportunities, handles special asset categories (leasehold improvements,
+  software, IT assets), and verifies depreciation calculations.
 trigger: |
   "fixed assets", "depreciation", "capitalize or expense", "R&M review",
   "asset additions", "fixed asset schedule", "should I capitalize this"
@@ -19,7 +21,7 @@ tier: all-staff
 
 ## Purpose
 
-Ensure fixed asset additions are properly capitalized or expensed under the firm's capitalization policy, and that the depreciation schedule is accurate and complete.
+Ensure fixed asset additions are properly capitalized or expensed under the firm's capitalization policy, and that the depreciation schedule is accurate and complete. Evaluate accelerated depreciation opportunities (Section 179, bonus depreciation) and handle special asset categories.
 
 ## Required Inputs
 
@@ -35,15 +37,21 @@ Ensure fixed asset additions are properly capitalized or expensed under the firm
    - Cost vs. threshold: capitalize if ≥ threshold, expense if < threshold
    - Nature: is this a new asset, an improvement (extends useful life), or routine repair and maintenance?
    - Asset class and useful life: what depreciation method and recovery period applies?
-3. **Flag R&M vs. capitalize judgment calls** — Items near the threshold or involving improvements vs. repairs require professional judgment.
-4. **Review depreciation schedule** — Confirm new assets were added at the correct cost and date. Verify MACRS or GAAP depreciation calculations for the period.
-5. **Identify disposals** — Check for assets that may have been disposed of during the period without being removed from the schedule.
-6. **Summarize findings** — List of capitalize vs. expense recommendations with amounts, plus depreciation schedule issues.
+   - **Section 179 / bonus depreciation**: for each capitalized asset, evaluate Section 179 election eligibility (property type, business use percentage, annual limitation) and applicable bonus depreciation percentage. Note: "Confirm with the tax team whether Section 179 or bonus depreciation is preferred for this client's tax situation."
+3. **Special asset categories** — Apply category-specific rules:
+   - **Leasehold improvements**: determine if this is qualified improvement property (QIP) eligible for 15-year recovery and bonus depreciation. If the remaining lease term is shorter than the recovery period, flag for review.
+   - **Software**: apply internal-use software capitalization rules (ASC 350-40 for GAAP; Section 167 for tax). Distinguish development-stage costs (capitalize) from post-implementation costs (expense). Flag development-stage costs that may qualify for R&D credit instead of capitalization.
+   - **IT assets**: computers and peripherals are 5-year MACRS property. Confirm correct asset class assignment.
+4. **Flag R&M vs. capitalize judgment calls** — Items near the threshold or involving improvements vs. repairs require professional judgment.
+5. **Review depreciation schedule** — Confirm new assets were added at the correct cost and date. Verify MACRS or GAAP depreciation calculations for the period.
+6. **Identify disposals** — Check for assets that may have been disposed of during the period without being removed from the schedule.
+7. **Summarize findings** — List of capitalize vs. expense recommendations with amounts, depreciation schedule issues, and accelerated depreciation opportunities.
 
 ## Control Points
 
 - **Material capitalize/expense judgment calls** — Items near the threshold where the nature (improvement vs. repair) is unclear require manager review.
 - **Partial-year assets** — Assets placed in service or disposed of mid-year need the correct convention applied (half-year, mid-quarter).
+- **Section 179 limitation** — If Section 179 elections are approaching the annual limitation, flag for tax team confirmation before proceeding.
 
 ## Red Flags
 
@@ -51,12 +59,17 @@ Ensure fixed asset additions are properly capitalized or expensed under the firm
 - Asset on the schedule with zero net book value still generating depreciation
 - Addition with no supporting invoice or description
 - Disposal of a high-value asset without a gain/loss entry
+- Leasehold improvement on a lease with remaining term shorter than the recovery period
+- Software costs that may include research-stage activities eligible for R&D credit instead of capitalization
+- Section 179 election approaching annual limitation — confirm with tax team
 
 ## Output Format
 
-1. Capitalize vs. expense recommendation table with amounts
-2. Depreciation schedule issues (if reviewed)
-3. Journal entries needed (proposed, for manager approval)
+1. Capitalize vs. expense recommendation table with amounts and rationale
+2. Accelerated depreciation opportunities (Section 179 / bonus) with estimated tax impact
+3. Special asset category notes (if applicable)
+4. Depreciation schedule issues (if reviewed)
+5. Journal entries needed (proposed, for manager approval)
 
 ## Safety Constraints
 

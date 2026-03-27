@@ -1,10 +1,11 @@
 ---
 name: reconcile
-version: 1.0.0
+version: 1.1.0
 description: |
   Reconcile accounts by comparing GL balances to bank statements, subledgers,
   or third-party data. Handles bank reconciliations, GL-to-subledger recs,
-  and intercompany reconciliations. Identifies and categorizes reconciling items.
+  and intercompany reconciliations. Applies account-type-specific materiality,
+  categorizes reconciling items with aging analysis, and flags stale items.
 trigger: |
   "reconcile", "bank rec", "tie out", "reconciliation", "GL to subledger",
   "intercompany rec", "accounts don't match", "help me reconcile"
@@ -31,22 +32,32 @@ Systematically compare two sets of records to identify differences, document rec
 
 ## Workflow
 
-1. **Confirm scope** — Account, period, GL balance, and comparison source. Ask for what's missing.
+1. **Confirm scope** — Account, period, GL balance, and comparison source. Establish account-type-specific materiality:
+   - **Cash/bank accounts**: zero tolerance — must reconcile to the penny
+   - **AR/AP subledger recs**: firm's materiality threshold applies
+   - **Intercompany**: must net to zero across all entities
+   - **Prepaid/accrual accounts**: firm's materiality threshold applies; document the nature of any variance
 2. **Identify timing differences** — Outstanding checks, deposits in transit, timing entries between systems. These are normal reconciling items that will clear.
 3. **Identify unexplained differences** — Amounts in one source but not the other that aren't timing differences.
 4. **Categorize reconciling items** — For each item: amount, description, expected resolution date, owner.
-5. **Compute net difference** — GL balance +/- reconciling items = comparison source balance (or flag the remaining variance).
-6. **Document the reconciliation** — Produce a formatted rec that can be saved as a workpaper.
+5. **Aging analysis** — Categorize all outstanding items by age:
+   - **Current** (0-30 days): normal, monitor
+   - **Aging** (31-60 days): follow up
+   - **Stale** (61-90 days): investigate
+   - **Investigate** (90+ days): automatic escalation flag — items over 90 days require a documented resolution plan. For bank recs, outstanding checks over 90 days may need to be voided and re-issued (subject to state unclaimed property rules).
+6. **Compute net difference** — GL balance +/- reconciling items = comparison source balance (or flag the remaining variance).
+7. **Document the reconciliation** — Produce a formatted rec that can be saved as a workpaper.
 
 ## Control Points
 
-- **Unexplained variance above materiality** — Any variance above the firm's materiality threshold that cannot be explained as a timing difference requires manager review before the rec is marked complete.
+- **Unexplained variance above materiality** — Any variance above the account-type-specific materiality that cannot be explained as a timing difference requires manager review before the rec is marked complete.
 - **Prior-month items still outstanding** — Items that were outstanding on the prior-month rec and are still unresolved need to be flagged and investigated.
 
 ## Red Flags
 
 - Unexplained variance that cannot be traced to a specific transaction
-- Outstanding item from more than 60 days ago still unresolved
+- Outstanding item aged 90+ days without documented resolution plan
+- Account type is cash but unexplained variance is non-zero
 - Bank balance significantly lower than GL balance without clear explanation
 - Intercompany balances that don't net to zero across entities
 
@@ -62,9 +73,12 @@ Reconciling Items:
 Adjusted Balance:         $X,XXX
 Comparison Source:        $X,XXX
 Unexplained Variance:     $0
+
+OUTSTANDING ITEMS AGING
+| Item | Amount | Age (Days) | Category | Action Required |
 ```
 
 ## Safety Constraints
 
-- Do not mark a reconciliation complete with an unexplained variance above materiality.
+- Do not mark a reconciliation complete with an unexplained variance above the account-type-specific materiality.
 - Do not propose journal entries to clear variances without identifying the root cause.
