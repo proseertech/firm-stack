@@ -1,12 +1,12 @@
 ---
 name: 990-review
-version: 1.1.0
+version: 1.2.0
 description: |
   Cross-reference a completed Form 990-PF (private foundation return) against
   source documents — financial statements, investment schedules, grants paid, and
   officer compensation records — to verify accuracy and compliance with private
-  foundation excise tax rules. Quantifies materiality, grades findings by severity,
-  independently recalculates the distributable amount, and flags audit risk items.
+  foundation excise tax rules. Grades findings by severity, independently
+  recalculates the distributable amount, and flags audit risk items.
 trigger: |
   "review the 990", "private foundation return", "990-PF review",
   "check the private foundation return", "990 cross-reference"
@@ -23,6 +23,19 @@ tier: power-user
 
 Catch errors and compliance issues before a Form 990-PF is filed. Verify that financials tie to source documents and that the distribution requirement, investment income excise tax, and disqualified person transactions are correctly reported.
 
+## Accuracy Standard
+
+Tax returns must be substantially correct. Rounding differences in the $10-$100 range are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
+
+There is no percentage-based materiality threshold. Do not use a percentage of total assets or net investment income to determine whether a variance is acceptable. That approach belongs in financial statement audits, not tax review.
+
+Classify findings by severity (impact + risk) rather than by dollar-amount materiality:
+- **HIGH**: Incorrect excise tax computation, distribution shortfall, self-dealing transactions, missing forms
+- **MEDIUM**: Documentation gaps, grant recipients without expenditure responsibility, items that could trigger IRS correspondence
+- **LOW**: Minor rounding differences ($10-$100 range), presentation preferences, informational items
+
+Do not dismiss or deprioritize findings because the dollar amount is small relative to total assets. A $500 error is still an error that needs correction.
+
 ## Required Inputs
 
 - Completed Form 990-PF and all schedules
@@ -34,15 +47,14 @@ Catch errors and compliance issues before a Form 990-PF is filed. Verify that fi
 
 ## Workflow
 
-1. **Establish materiality and scope** — Quantify materiality for this return. Use the firm's configured materiality threshold; if not configured, use 2% of total assets as working materiality. Every finding in subsequent steps is classified as material or immaterial relative to this threshold.
-2. **Reconcile financial statements** — Tie Part I revenue and expenses to the financial statements. Tie Part II balance sheet to the ending balance sheet.
-3. **Verify investment income and excise tax** — Confirm net investment income in Part VI and the 1.39% excise tax computation.
-4. **Verify distributable amount and qualifying distributions (IRC 4942)** — Independently calculate the 5% distributable amount: 5% of the average fair market value of non-charitable-use assets. Show the math in the output. Confirm qualifying distributions meet or exceed the distributable amount. Flag any carryover of undistributed income.
-5. **Verify grants paid** — Tie Part XV grants and contributions paid to grant records. Confirm grant recipients and amounts.
-6. **Verify officer compensation** — Tie Part VIII compensation to W-2s and confirm reasonableness.
-7. **Check for self-dealing and restricted transactions** — Flag any transactions with disqualified persons reported in Part VII-A.
-8. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
-9. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]."
+1. **Reconcile financial statements** — Tie Part I revenue and expenses to the financial statements. Tie Part II balance sheet to the ending balance sheet.
+2. **Verify investment income and excise tax** — Confirm net investment income in Part VI and the 1.39% excise tax computation.
+3. **Verify distributable amount and qualifying distributions (IRC 4942)** — Independently calculate the 5% distributable amount: 5% of the average fair market value of non-charitable-use assets. Show the math in the output. Confirm qualifying distributions meet or exceed the distributable amount. Flag any carryover of undistributed income.
+4. **Verify grants paid** — Tie Part XV grants and contributions paid to grant records. Confirm grant recipients and amounts.
+5. **Verify officer compensation** — Tie Part VIII compensation to W-2s and confirm reasonableness.
+6. **Check for self-dealing and restricted transactions** — Flag any transactions with disqualified persons reported in Part VII-A.
+7. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
+8. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]."
 
 ## Control Points
 
@@ -67,14 +79,14 @@ A structured findings report with severity-graded issues:
 Issue #[X] — [HIGH / MEDIUM / LOW]
 Line/Schedule: [specific form reference]
 Finding: [what was found]
-Amount: $[X] (X% of total assets)
+Amount: $[X]
 Correction: [recommended action]
 Authority: [IRC §, Reg., or procedure if applicable]
 ```
 
 Organized into sections:
 - **Confirmed** — Line items that tie
-- **Issues** — Severity-graded findings (HIGH / MEDIUM / LOW)
+- **Issues** — Severity-graded findings (HIGH / MEDIUM / LOW), ranked by dollar impact for preparer attention
 - **Compliance Flags** — Foundation-specific compliance items
 - **Preparer Questions** — Items requiring judgment
 - **Audit Risk Items** — 1-3 items with factual risk assessment
@@ -84,3 +96,4 @@ Organized into sections:
 - Do not mark the return reviewed-complete if the distribution requirement is not met without preparer resolution.
 - Do not clear self-dealing transactions without preparer review.
 - Do not characterize audit risk as a probability or percentage. Professional judgment on acceptable risk levels belongs to the signing partner.
+- Do not dismiss findings because the dollar amount is small relative to total assets.
