@@ -8,14 +8,16 @@ Contributions from accounting professionals are welcome. If you have a workflow 
 
 ### 1. Pick a category
 
-| Category | Directory | For |
+| Category | Naming Convention | Examples |
 |---|---|---|
-| Client communications | `skills/` | Email, memos, client-facing output |
-| Tax return reviews | `skills/` | Cross-referencing returns against source docs |
-| CAS / close | `skills/` | Month-end workflows, JEs, reconciliations |
-| Excel | `skills/excel/` | Excel formula and formatting skills |
-| Tax planning analysis | `skills/planning/` | "Should we pursue this strategy?" screenings |
-| Platform integrations | `integrations/<platform>/skills/` | Skills that call a specific GL or practice management API |
+| Client communications | `<action>` | `client-email`, `tax-memo` |
+| Tax return reviews | `<form>-review` | `1040-review`, `1120s-review` |
+| CAS / close | `<workflow>` | `close`, `reconcile`, `journal-entry` |
+| Excel productivity | `excel-<action>` | `excel-formula-refresh`, `excel-report-format` |
+| Tax planning analysis | `<strategy>-analysis` | `costseg-analysis`, `rd-analysis` |
+| Platform integrations | `<platform>-<action>` | `intacct-import-je`, `qbo-pull-reports` |
+
+All skills live as flat folders under `skills/`. No nesting.
 
 ### 2. Copy the template
 
@@ -39,7 +41,11 @@ See [docs/skill-authoring.md](docs/skill-authoring.md) for detailed guidance and
 
 ### 4. Test it
 
-Install firm-stack locally and run your skill in a real Claude Code session before submitting.
+```bash
+claude --plugin-dir .
+```
+
+Then invoke your skill and verify it works with realistic (anonymized) data.
 
 ### 5. Open a pull request
 
@@ -54,7 +60,7 @@ Install firm-stack locally and run your skill in a real Claude Code session befo
 - **Evidence-based** — every finding should point to a specific line item, account, or document. No vague observations.
 - **Actionable** — the output should tell the user what to do next, not just what was found.
 - **Control-aware** — accounting skills must treat control points seriously. A skill that bypasses human review of a material item is a defect.
-- **Platform-agnostic** — core skills should work regardless of GL system. If a skill requires a specific platform, it belongs in `integrations/`.
+- **Platform-agnostic** — core skills should work regardless of GL system. Integration skills use `<platform>-<action>` naming and live alongside core skills in `skills/`.
 - **No telemetry** — skills must not transmit data externally.
 
 ---
