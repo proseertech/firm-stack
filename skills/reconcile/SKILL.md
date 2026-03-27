@@ -44,7 +44,7 @@ Systematically compare two sets of records to identify differences, document rec
    - **Current** (0-30 days): normal, monitor
    - **Aging** (31-60 days): follow up
    - **Stale** (61-90 days): investigate
-   - **Investigate** (90+ days): automatic escalation flag — items over 90 days require a documented resolution plan. For bank recs, outstanding checks over 90 days may need to be voided and re-issued.
+   - **Investigate** (90+ days): automatic escalation flag — items over 90 days require a documented resolution plan. For bank recs, outstanding checks over 90 days may need to be voided and re-issued (subject to state unclaimed property rules).
 6. **Compute net difference** — GL balance +/- reconciling items = comparison source balance (or flag the remaining variance).
 7. **Document the reconciliation** — Produce a formatted rec that can be saved as a workpaper.
 

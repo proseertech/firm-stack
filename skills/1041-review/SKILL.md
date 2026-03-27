@@ -38,6 +38,7 @@ Catch errors before a Form 1041 is filed. Verify that trust income, deductions, 
    - **Grantor trust**: Income taxed to grantor; return may be informational only.
    - **Simple trust**: Required to distribute all income; no charitable deduction.
    - **Complex trust**: May accumulate income; may have charitable deduction.
+   - **Note**: This skill covers trusts. For decedent estates during administration, additional considerations apply including IRC 642(c) charitable deductions and the IRC 645 election to treat a revocable trust as part of the estate.
 3. **Reconcile income to source documents** — Tie interest, dividends, capital gains, and pass-through income to 1099s and K-1s.
 4. **Verify deductions** — Confirm fiduciary fees, attorney fees, and other deductions are properly allocated between income and principal per the trust instrument.
 5. **Verify DNI and distribution deduction** — Show the DNI calculation explicitly: gross income minus deductions allocable to income, with specific exclusion of capital gains allocated to corpus (unless the trust instrument or local law allocates gains to income). Confirm the income distribution deduction ties to actual distributions. For complex trusts, verify the 65-day election (IRC 663(b)) if distributions in the first 65 days of the following year are being treated as current-year distributions.

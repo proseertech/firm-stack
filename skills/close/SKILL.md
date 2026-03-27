@@ -63,7 +63,6 @@ Drive the month-end close to completion by tracking task status, surfacing block
 - Client has been in preparer stage for more than 5 business days without progress
 - No bank activity coded for a client that normally has daily transactions
 - Balance sheet reconciliation hasn't been started by day 3 of close
-- Client has no bank activity coded but historically has daily transactions
 - Balance sheet reconciliation variance exceeds materiality without documented explanation
 
 ## Output Format

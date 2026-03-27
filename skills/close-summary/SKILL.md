@@ -50,9 +50,10 @@ Convert the close financials into a structured client-facing summary and a meeti
    - **Variance analysis**: for each material line item, compute $ change and % change vs. prior period. Flag any variance exceeding 10% or the materiality threshold. For each flagged variance, provide:
 
      | Account | Current | Prior | $ Change | % Change | Explanation | Client Talking Point |
-4. **Identify key vendors and transactions** — From the GL, identify which vendors are driving expenses and COGS. Flag one-time or unusual transactions: new vendors above materiality, accounts not used in prior periods, round-number amounts that may indicate estimates.
-5. **Draft executive summary** — 2-4 sentence narrative covering the month's financial performance.
-6. **Draft meeting agenda** — Standard 5-section structure. Each section should include 2-3 bullet talking points derived from the analysis above, not just section headers.
+4. **Compute key metrics** — Working capital (current assets minus current liabilities), current ratio, gross margin %, AR days outstanding (if aging data available), and net cash build/burn for the period.
+5. **Identify key vendors and transactions** — From the GL, identify which vendors are driving expenses and COGS. Flag one-time or unusual transactions: new vendors above materiality, accounts not used in prior periods, round-number amounts that may indicate estimates.
+6. **Draft executive summary** — 2-4 sentence narrative covering the month's financial performance.
+7. **Draft meeting agenda** — Standard 5-section structure. Each section should include 2-3 bullet talking points derived from the analysis above, not just section headers.
 
 ## Control Points
 

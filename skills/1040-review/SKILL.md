@@ -63,6 +63,7 @@ Catch errors before a Form 1040 is filed. Verify that every material line on the
 - Pass-through loss claimed without basis documentation or Form 6198
 - Passive loss allowed without Form 8582 or evidence of material participation
 - QBI deduction taken on SSTB income above threshold without phase-out calculation
+- Large ISO exercise, accelerated depreciation, or preference items present — verify Form 6251 is present and AMT computation is correct
 - Cross-return coordination needed: K-1 amounts from a related 1120-S, 1065, or 1041 should tie to the issuing entity's return
 
 ## Output Format

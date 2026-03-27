@@ -60,6 +60,7 @@ Catch errors before a Form 1065 is filed. Verify that income, deductions, and pa
 - Partner's share of loss exceeds outside basis — loss limitation applies under IRC 704(d)
 - Liability allocations under IRC 752 not documented — affects outside basis for all partners
 - Guaranteed payments: confirm deductibility and self-employment tax treatment
+- Partnership has not elected out of centralized partnership audit regime (BBA/CPAR) under IRC 6221(b) — entity-level audit adjustments possible; confirm election status
 - Cross-return coordination needed: K-1 amounts should tie to each partner's Form 1040 or entity return
 
 ## Output Format

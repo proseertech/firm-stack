@@ -37,7 +37,7 @@ Catch errors and compliance issues before a Form 990-PF is filed. Verify that fi
 1. **Establish materiality and scope** — Quantify materiality for this return. Use the firm's configured materiality threshold; if not configured, use 2% of total assets as working materiality. Every finding in subsequent steps is classified as material or immaterial relative to this threshold.
 2. **Reconcile financial statements** — Tie Part I revenue and expenses to the financial statements. Tie Part II balance sheet to the ending balance sheet.
 3. **Verify investment income and excise tax** — Confirm net investment income in Part VI and the 1.39% excise tax computation.
-4. **Verify distributable amount and qualifying distributions** — Independently calculate the 5% distributable amount: 5% of the average fair market value of non-charitable-use assets. Show the math in the output. Confirm qualifying distributions meet or exceed the distributable amount. Flag any carryover of undistributed income.
+4. **Verify distributable amount and qualifying distributions (IRC 4942)** — Independently calculate the 5% distributable amount: 5% of the average fair market value of non-charitable-use assets. Show the math in the output. Confirm qualifying distributions meet or exceed the distributable amount. Flag any carryover of undistributed income.
 5. **Verify grants paid** — Tie Part XV grants and contributions paid to grant records. Confirm grant recipients and amounts.
 6. **Verify officer compensation** — Tie Part VIII compensation to W-2s and confirm reasonableness.
 7. **Check for self-dealing and restricted transactions** — Flag any transactions with disqualified persons reported in Part VII-A.
