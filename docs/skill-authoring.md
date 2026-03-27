@@ -16,9 +16,9 @@ Every finding a skill surfaces must:
 
 ```yaml
 ---
-name: skill-slug          # lowercase, hyphenated
+name: skill-slug          # lowercase, hyphenated — must match folder name
 version: 1.0.0            # semantic versioning
-description: |            # shown in CLAUDE.md registry
+description: |            # shown in skill registry
   ...
 trigger: |                # phrases that auto-invoke the skill
   ...
@@ -40,6 +40,21 @@ tier: all-staff           # all-staff | power-user | developer
 | Red Flags | Yes | Conditions that pause and surface to user |
 | Output Format | Yes | What Claude delivers |
 | Safety Constraints | Yes | What the skill must NOT do |
+
+---
+
+## Skill Naming
+
+All skills live as flat folders under `skills/`. No nesting.
+
+| Category | Convention | Examples |
+|---|---|---|
+| Core skills | `<descriptive-name>` | `close`, `reconcile`, `tax-memo` |
+| Excel skills | `excel-<action>` | `excel-formula-refresh` |
+| Planning skills | `<strategy>-analysis` | `costseg-analysis`, `rd-analysis` |
+| Integration skills | `<platform>-<action>` | `intacct-import-je`, `qbo-pull-reports` |
+
+The `name:` field in frontmatter must match the folder name exactly.
 
 ---
 
@@ -82,17 +97,17 @@ Control points are not optional. A skill that bypasses a material control point 
 
 ## Platform-Agnostic vs. Integration Skills
 
-- **Core skills** (`skills/`) should work regardless of which GL, tax software, or practice management system the firm uses. Refer to data by concept ("the trial balance", "the bank statement") not by system ("the Intacct export").
-- **Integration skills** (`integrations/<platform>/skills/`) may call specific APIs and assume specific data formats.
+- **Core skills** should work regardless of which GL, tax software, or practice management system the firm uses. Refer to data by concept ("the trial balance", "the bank statement") not by system ("the Intacct export").
+- **Integration skills** use `<platform>-<action>` naming (e.g., `intacct-import-je`, `qbo-pull-reports`) and may call specific APIs and assume specific data formats. They live alongside core skills in `skills/`.
 
 ---
 
 ## Testing Your Skill
 
 Before submitting:
-1. Install firm-stack locally: `git clone . ~/.claude/skills/firm-stack`
-2. Open a Claude Code session in a test project
-3. Run your skill with realistic (anonymized) data
+1. From the firm-stack repo root: `claude --plugin-dir .`
+2. Invoke your skill with `/firm-stack:<your-skill-name>`
+3. Run it with realistic (anonymized) data
 4. Verify all control points trigger correctly
 5. Verify red flags surface when expected
 6. Confirm the output format matches what the skill describes

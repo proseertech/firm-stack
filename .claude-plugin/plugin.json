@@ -1,0 +1,47 @@
+{
+  "name": "firm-stack",
+  "version": "1.0.0",
+  "description": "Claude Code skills for accounting firms — tax return review, month-end close, reconciliation, client communications, and more.",
+  "author": {
+    "name": "Laurence Bernstein",
+    "url": "https://github.com/larryb821"
+  },
+  "homepage": "https://github.com/larryb821/firm-stack",
+  "repository": "https://github.com/larryb821/firm-stack",
+  "license": "MIT",
+  "keywords": [
+    "accounting",
+    "cpa",
+    "tax",
+    "bookkeeping",
+    "month-end-close",
+    "reconciliation",
+    "1040",
+    "sage-intacct",
+    "quickbooks",
+    "karbon"
+  ],
+  "skills": "./skills/",
+  "userConfig": {
+    "materiality_threshold": {
+      "description": "Dollar amount below which Claude auto-corrects; above which it asks (e.g. 2500)",
+      "sensitive": false
+    },
+    "gl_system": {
+      "description": "Primary GL platform (Sage Intacct, QBO, NetSuite, Xero, or Other)",
+      "sensitive": false
+    },
+    "tax_software": {
+      "description": "Tax prep software (Lacerte, ProSystem, Drake, UltraTax, or Other)",
+      "sensitive": false
+    },
+    "fiscal_year_end": {
+      "description": "Fiscal year-end (e.g. December 31)",
+      "sensitive": false
+    },
+    "capitalization_threshold": {
+      "description": "Dollar threshold for capitalizing vs. expensing (e.g. 2500)",
+      "sensitive": false
+    }
+  }
+}

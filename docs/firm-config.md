@@ -4,17 +4,25 @@ How to configure firm-stack for your specific practice.
 
 ---
 
-## Where Configuration Lives
+## Plugin Config (recommended)
 
-firm-stack reads configuration from the `firm-stack Configuration` block in your **project's** `CLAUDE.md` file. This keeps your firm-specific settings separate from the shared skill definitions.
+When you install firm-stack as a plugin, you'll be prompted for these settings:
 
-Do **not** edit `~/.claude/skills/firm-stack/CLAUDE.md` with your firm's settings — those changes would be overwritten on the next `git pull`.
+| Setting | Description | Example |
+|---|---|---|
+| `materiality_threshold` | Dollar amount below which Claude auto-corrects; above which it asks | `2500` |
+| `gl_system` | Primary general ledger platform | `Sage Intacct` |
+| `tax_software` | Tax preparation software | `Lacerte` |
+| `fiscal_year_end` | Fiscal year-end | `December 31` |
+| `capitalization_threshold` | Dollar threshold for capitalizing vs. expensing | `2500` |
+
+These values are stored in your plugin config and available to all skills automatically. To update them later, use `/plugin config firm-stack`.
 
 ---
 
-## Configuration Block
+## Manual Configuration (fallback)
 
-Add this to your project's `CLAUDE.md`:
+If you're not using the plugin install (e.g., using the git clone method or org-level skill upload), add this block to your **project's** `CLAUDE.md`:
 
 ```markdown
 ## firm-stack Configuration
@@ -27,9 +35,9 @@ Add this to your project's `CLAUDE.md`:
 - Return types: 1040, 1120S, 1065, 1041, 990PF
 ```
 
----
+Do **not** edit the firm-stack plugin's CLAUDE.md with your firm's settings — those changes would be overwritten on update.
 
-## Options
+### Options
 
 | Key | Description | Example |
 |---|---|---|
@@ -45,14 +53,14 @@ Add this to your project's `CLAUDE.md`:
 
 ## Integration Setup
 
-Each integration requires additional setup (API credentials, etc.). See the README in each integration directory:
+Integration skills require API credentials stored in `.env` files (never committed to git). See the setup instructions for each platform:
 
-- [integrations/sage-intacct/README.md](../integrations/sage-intacct/README.md)
-- [integrations/qbo/README.md](../integrations/qbo/README.md)
-- [integrations/karbon/README.md](../integrations/karbon/README.md)
+- [Sage Intacct](../integrations/sage-intacct/README.md)
+- [QuickBooks Online](../integrations/qbo/README.md)
+- [Karbon](../integrations/karbon/README.md)
 
 ---
 
 ## If No Configuration Is Present
 
-Skills will prompt the user for required context at runtime. Adding a configuration block reduces friction but is not required to use firm-stack.
+Skills will prompt the user for required context at runtime. Adding configuration reduces friction but is not required to use firm-stack.
