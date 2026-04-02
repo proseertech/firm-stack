@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "firm-stack",
-      "source": ".",
+      "source": "./",
       "description": "21 accounting skills: tax return review, month-end close, reconciliation, journal entries, client comms, Excel productivity, tax planning, and GL integrations.",
       "version": "1.0.0",
       "category": "productivity",
