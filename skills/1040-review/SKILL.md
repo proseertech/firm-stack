@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.0.0
+version: 2.1.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or
   extension projection against source documents — W-2s, 1099s, K-1s, brokerage
@@ -123,22 +123,48 @@ Review the tax software's "Tax Return Carryovers to [Next Year]" schedule:
 - Verify current-year carryovers are reasonable given the return's activity
 - Specifically reconcile: capital loss carryovers, passive loss carryovers (Form 8582), and foreign tax credit carryovers (Form 1116)
 
-### Step 11 — Summarize Findings
+### Presentation Rule
 
-Produce a severity-graded findings list (see Output Format).
+**Do not narrate each step.** Steps 1-10 are internal guidance for thoroughness — execute them silently. Do not write "Step 4 — checking wages… wages tie" or similar play-by-play. Present only the dashboard summary below.
 
-### Step 12 — Audit Risk Assessment
+### Step 11 — Dashboard Summary
 
-Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]." This is not a risk score — it is a factual assessment of areas most likely to draw IRS attention.
+Present a **compact summary** the reviewer can scan in under 60 seconds:
 
-### Step 13 — Interactive Resolution
+1. **Bottom line** (2-3 sentences): Is the return / extension payment reasonable? What is the single most important issue?
+2. **Findings table** — one row per issue, no detail paragraphs:
 
-After producing the initial findings report, offer to walk through open items one at a time. For each item, allow the reviewer to:
-- **Resolve** — provide an explanation or correction that clears the item
+| # | Severity | Line / Schedule | Description | Amount |
+|---|----------|-----------------|-------------|--------|
+| 1 | HIGH | Sch E, Line 28 | K-1 loss with no basis worksheet | ($42,000) |
+| 2 | MEDIUM | Sch B | Sub-account 789 not mapped to 1099 | $3,200 |
+
+3. **Audit risk** — 1-3 bullet points, factual (not a score or probability).
+4. **Open items count** *(extension mode only)* — e.g., "4 items pending for final return (3 SALY K-1s, 1 preliminary 1099)."
+
+**Do not list confirmed line items.** Lines that tie correctly are the expected case — listing them adds bulk without value. If the reviewer wants a full tie-out schedule, they can request it.
+
+End the summary with: *"Expand any issue by number, say 'walk through all' to resolve one at a time, or ask for the full tie-out schedule."*
+
+### Step 12 — Interactive Resolution
+
+After the dashboard, the reviewer drives the conversation. For each item they raise:
+- **Resolve** — reviewer provides an explanation or correction that clears the item
 - **Defer** — move to the open items list for later follow-up
 - **Escalate** — flag for partner review
 
-Track which items are resolved vs. still open. Update the findings report as items are resolved.
+When expanding an issue, show the full detail block:
+
+```
+Issue #[X] — [HIGH / MEDIUM / LOW]
+Line/Schedule: [specific form reference]
+Finding: [what was found]
+Amount: $[X]
+Correction: [recommended action]
+Authority: [IRC §, Reg., or procedure if applicable]
+```
+
+Track which items are resolved vs. still open. Update the findings table as items are resolved.
 
 ## Control Points
 
@@ -166,24 +192,27 @@ Track which items are resolved vs. still open. Update the findings report as ite
 
 ## Output Format
 
-A structured findings report with severity-graded issues:
+**Default output is the dashboard summary** (see Step 11) — a compact table plus bottom line. The full detail block for each issue is shown only when the reviewer expands it (see Step 12).
 
-```
-Issue #[X] — [HIGH / MEDIUM / LOW]
-Line/Schedule: [specific form reference]
-Finding: [what was found]
-Amount: $[X]
-Correction: [recommended action]
-Authority: [IRC §, Reg., or procedure if applicable]
-```
-
-Organized into sections:
-- **Confirmed** — Line items that tie to source documents
-- **Issues** — Severity-graded findings (HIGH / MEDIUM / LOW), ranked by dollar impact for preparer attention
-- **Missing Support** — Items where source docs are absent
+The dashboard groups findings into:
+- **Issues** — Severity-graded (HIGH / MEDIUM / LOW), ranked by dollar impact
+- **Missing Support** — Source docs absent
 - **Preparer Questions** — Items requiring judgment or additional facts
-- **Audit Risk Items** — 1-3 items with factual risk assessment
-- **Open Items for Final Return** *(extension projection mode only)* — Items that must be resolved before filing, including SALY K-1s pending actual amounts and preliminary documents
+- **Audit Risk** — 1-3 bullet points
+- **Open Items for Final Return** *(extension projection mode only)* — SALY K-1s, preliminary documents, items pending for final filing
+
+Confirmed line items are **not listed by default**. Request "full tie-out schedule" to see them.
+
+### Excel / Workpaper Output
+
+When producing an Excel workpaper (extension payment summary, tax computation, reconciliation, etc.), **all computed cells must use Excel formulas, not hard-coded values**:
+
+- **Totals**: `=SUM(range)` — never type a static total
+- **Balance due / overpayment**: `=tax_cell - payments_cell` (e.g., `=B12-B18`)
+- **Effective rates, differences, variances**: formulas referencing source cells
+- **Subtotals feeding into grand totals**: `=SUM()` of detail rows, not of subtotal rows (avoid double-counting)
+
+Hard-coded totals defeat the purpose of a workpaper. The reviewer needs to see that the math ties by formula, and needs the ability to adjust an input and see the result update automatically.
 
 ## Safety Constraints
 
