@@ -24,23 +24,33 @@
   "skills": "./skills/",
   "userConfig": {
     "materiality_threshold": {
+      "title": "Materiality Threshold",
       "description": "Dollar amount below which Claude auto-corrects; above which it asks (e.g. 2500)",
+      "type": "number",
       "sensitive": false
     },
     "gl_system": {
+      "title": "GL System",
       "description": "Primary GL platform (Sage Intacct, QBO, NetSuite, Xero, or Other)",
+      "type": "string",
       "sensitive": false
     },
     "tax_software": {
+      "title": "Tax Software",
       "description": "Tax prep software (Lacerte, ProSystem, Drake, UltraTax, or Other)",
+      "type": "string",
       "sensitive": false
     },
     "fiscal_year_end": {
+      "title": "Fiscal Year End",
       "description": "Fiscal year-end (e.g. December 31)",
+      "type": "string",
       "sensitive": false
     },
     "capitalization_threshold": {
+      "title": "Capitalization Threshold",
       "description": "Dollar threshold for capitalizing vs. expensing (e.g. 2500)",
+      "type": "number",
       "sensitive": false
     }
   }

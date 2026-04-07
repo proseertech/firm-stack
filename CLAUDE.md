@@ -12,6 +12,7 @@ A Claude Code plugin for accounting firms. This file registers all available ski
 
 ### Tax Workflow
 - **`/tax-info-request`** — Generate an information request from a prior year 1040. Trigger: "information request", "info request", "tax organizer", "document request list"
+- **`/firm-stack:tax-workpapers`** — Build Excel workpapers summarizing 1099s and K-1s for any return type (1040, 1065, 1120-S, 1041). Trigger: "tax workpapers", "1099 summary", "K-1 summary", "build the workpapers", "partnership workpapers"
 
 ### Tax Return Reviews
 - **`/firm-stack:1040-review`** — Cross-reference a Form 1040 against source documents. Trigger: "review the 1040", "check the individual return", "1040 cross-reference"
