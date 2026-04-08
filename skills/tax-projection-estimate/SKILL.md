@@ -560,3 +560,8 @@ Column widths: B=44, C-F=15-17, Notes=45.
 - Use `openpyxl` for Excel manipulation. On Ubuntu, install with `pip install --break-system-packages openpyxl pdfplumber`.
 - The `execute_code` sandbox may not see user-installed packages. Use `mcp_terminal` with `export HOME=/home/[user]` for openpyxl/pdfplumber work.
 - When building formulas in openpyxl, single quotes in sheet name references must be escaped: `'Trial Balance 2025'!$E:$E`
+
+### Consistency Across Workbooks
+- When building projections for multiple entities in the same client group, verify the output is visually identical: same 5-color palette, same section order, same column layout, same K-1 table structure. Side-by-side comparison catches drift.
+- If delegating workbook builds to subagents, specify exact hex color codes and explicitly state "data rows = NO fill." Subagents tend to over-apply fills (coloring every data row with light blue) and use bolder/darker color variants unless constrained.
+- The firm-stack repo at `proseertech/firm-stack` is the canonical source for the skill. Keep Hermes local copy and firm-stack repo in sync after updates.
