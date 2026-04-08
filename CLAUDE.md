@@ -33,7 +33,8 @@ A Claude Code plugin for accounting firms. This file registers all available ski
 - **`/firm-stack:excel-formula-refresh`** — Replace hard-coded totals in an accounting export with SUM formulas. Trigger: "formula refresh", "fix the totals", "add SUM formulas", "hard-coded export"
 - **`/firm-stack:excel-report-format`** — Standardize Excel report formatting to firm look and feel. Trigger: "format this report", "standardize this Excel", "apply firm formatting"
 
-### Tax Planning Analysis
+### Tax Planning & Projections
+- **`/firm-stack:tax-projection-estimate`** — Build a standardized tax projection for a 1065 or 1120S from any GL trial balance and prior-year return. Tags every TB account, uses SUMIF-linked formulas, produces K-1 allocation by line item per partner/shareholder. Trigger: "tax projection", "tax estimate", "K-1 estimate", "estimate taxable income"
 - **`/firm-stack:costseg-analysis`** — Screen a client for cost segregation study candidacy. Trigger: "cost seg", "cost segregation", "bonus depreciation candidate", "should we do a cost seg"
 - **`/firm-stack:rd-analysis`** — Screen a client for R&D tax credit study candidacy. Trigger: "R&D credit", "research credit", "should we do an R&D study", "179 research"
 

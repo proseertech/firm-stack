@@ -1,7 +1,7 @@
 {
   "name": "firm-stack",
   "version": "1.0.0",
-  "description": "Claude Code skills for accounting firms — tax return review, month-end close, reconciliation, client communications, and more.",
+  "description": "Claude Code skills for accounting firms — tax projections, return review, month-end close, reconciliation, client communications, and more.",
   "author": {
     "name": "Laurence Bernstein",
     "url": "https://github.com/larryb821"
@@ -17,6 +17,11 @@
     "month-end-close",
     "reconciliation",
     "1040",
+    "1065",
+    "1120S",
+    "K-1",
+    "tax-projection",
+    "pass-through",
     "sage-intacct",
     "quickbooks",
     "karbon"
