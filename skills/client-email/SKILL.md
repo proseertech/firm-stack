@@ -1,6 +1,6 @@
 ---
 name: client-email
-version: 1.1.0
+version: 1.2.0
 description: |
   Polish and improve a CPA-to-client email draft. Takes an email thread and a draft
   reply, returns a more professional, clear, and approachable response with improvement
@@ -43,8 +43,8 @@ Elevate the professionalism and clarity of email communications between accounti
 
 ## Control Points
 
-- **Sensitive positions** — If the draft commits the firm to a specific tax position or includes financial figures, flag for partner review before sending.
-- **Unsourced technical claims** — If Step 2 identifies tax positions, dollar figures, or deadlines not traceable to the email thread or provided documents, surface them to the user for verification before finalizing the improved draft.
+- **Sensitive positions** — If the draft commits the firm to a specific tax position or includes financial figures, flag for director review before sending.
+- **Unsourced technical claims** — If Step 2 identifies tax positions, dollar figures, or deadlines not traceable to the email thread or provided documents, do not return the polished draft. List each unsourced claim and ask the user to confirm or correct it first; then polish using the verified version.
 
 ## Red Flags
 

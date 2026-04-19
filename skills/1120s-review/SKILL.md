@@ -1,6 +1,6 @@
 ---
 name: 1120s-review
-version: 1.2.0
+version: 1.3.0
 description: |
   Cross-reference a completed Form 1120-S (S-corporation income tax return) against
   source documents — trial balance, Schedule K-1s, officer W-2s, and supporting
@@ -34,7 +34,7 @@ Classify findings by severity (impact + risk) rather than by dollar-amount mater
 - **MEDIUM**: Documentation gaps, questionable positions that are defensible but need support, items that could trigger correspondence
 - **LOW**: Minor rounding differences ($10-$100 range), presentation preferences, informational items
 
-Do not dismiss or deprioritize findings because the dollar amount is small relative to gross receipts. A $500 error is still an error that needs correction.
+Report every discrepancy outside the rounding tolerance in the findings table, including items you are uncertain about or consider low-severity. Severity is for prioritization, not filtering — all findings go in the table. A separate preparer review step decides what to act on; your job at this stage is coverage.
 
 ## Required Inputs
 
@@ -99,4 +99,3 @@ Organized into sections:
 - Do not mark the return reviewed-complete if K-1 totals don't foot to Schedule K.
 - Do not adjust AAA or basis without preparer review.
 - Do not characterize audit risk as a probability or percentage. Professional judgment on acceptable risk levels belongs to the signing partner.
-- Do not dismiss findings because the dollar amount is small relative to gross receipts.

@@ -52,7 +52,7 @@ All skills live as flat folders under `skills/`. No nesting.
 | Core skills | `<descriptive-name>` | `close`, `reconcile`, `tax-memo` |
 | Excel skills | `excel-<action>` | `excel-formula-refresh` |
 | Planning skills | `<strategy>-analysis` | `costseg-analysis`, `rd-analysis` |
-| Integration skills | `<platform>-<action>` | `intacct-import-je`, `qbo-pull-reports` |
+| Integration skills | `<platform>-<action>` | e.g. `<gl>-import-je`, `<gl>-pull-reports` |
 
 The `name:` field in frontmatter must match the folder name exactly.
 
@@ -98,7 +98,7 @@ Control points are not optional. A skill that bypasses a material control point 
 ## Platform-Agnostic vs. Integration Skills
 
 - **Core skills** should work regardless of which GL, tax software, or practice management system the firm uses. Refer to data by concept ("the trial balance", "the bank statement") not by system ("the Intacct export").
-- **Integration skills** use `<platform>-<action>` naming (e.g., `intacct-import-je`, `qbo-pull-reports`) and may call specific APIs and assume specific data formats. They live alongside core skills in `skills/`.
+- **Integration skills** use `<platform>-<action>` naming and may call specific APIs and assume specific data formats. They live alongside core skills in `skills/`.
 
 ---
 

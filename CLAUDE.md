@@ -25,7 +25,6 @@ A Claude Code plugin for accounting firms. This file registers all available ski
 ### CAS / Month-End Close
 - **`/firm-stack:close`** — Month-end close checklist and portfolio health check. Trigger: "month-end", "close checklist", "close status"
 - **`/firm-stack:close-summary`** — Executive summary and client meeting agenda from financials. Trigger: "executive summary", "client meeting prep", "close summary", "monthly summary"
-- **`/firm-stack:journal-entry`** — Review, validate, and document journal entries. Trigger: "journal entry", "review this JE", "post this entry"
 - **`/firm-stack:reconcile`** — Reconcile bank, GL-to-subledger, or intercompany. Trigger: "reconcile", "bank rec", "tie out", "reconciliation"
 - **`/firm-stack:fixed-assets`** — Fixed asset review and depreciation schedule. Trigger: "fixed assets", "depreciation", "capitalize or expense", "R&M review"
 
@@ -37,12 +36,6 @@ A Claude Code plugin for accounting firms. This file registers all available ski
 - **`/firm-stack:tax-projection-estimate`** — Build a standardized tax projection for a 1065 or 1120S from any GL trial balance and prior-year return. Tags every TB account, uses SUMIF-linked formulas, produces K-1 allocation by line item per partner/shareholder. Trigger: "tax projection", "tax estimate", "K-1 estimate", "estimate taxable income"
 - **`/firm-stack:costseg-analysis`** — Screen a client for cost segregation study candidacy. Trigger: "cost seg", "cost segregation", "bonus depreciation candidate", "should we do a cost seg"
 - **`/firm-stack:rd-analysis`** — Screen a client for R&D tax credit study candidacy. Trigger: "R&D credit", "research credit", "should we do an R&D study", "179 research"
-
-### Integrations
-- **`/firm-stack:intacct-import-je`** — Import journal entries via Sage Intacct REST API. Trigger: "import JE to Intacct", "post to Intacct"
-- **`/firm-stack:intacct-pull-tb`** — Pull trial balance from Sage Intacct. Trigger: "pull TB from Intacct", "Intacct trial balance"
-- **`/firm-stack:qbo-pull-reports`** — Pull P&L and balance sheet from QuickBooks Online. Trigger: "pull QBO reports", "QBO P&L", "QBO balance sheet"
-- **`/firm-stack:karbon-work-status`** — Query and update Karbon work item status. Trigger: "Karbon status", "work item status", "update Karbon"
 
 ---
 
@@ -69,7 +62,6 @@ If not using the plugin install, add this block to your **project's** `CLAUDE.md
 - Fiscal year-end: [Month DD]
 - GL system: [Sage Intacct | QBO | NetSuite | Xero | Other]
 - Capitalization threshold: $X,XXX
-- Active integrations: [sage-intacct, qbo, karbon]
 - Tax software: [Lacerte | ProSystem | Drake | UltraTax | Other]
 - Return types: [1040, 1120S, 1120, 1065, 990PF, 1041]
 ```

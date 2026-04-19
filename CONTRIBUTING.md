@@ -12,10 +12,9 @@ Contributions from accounting professionals are welcome. If you have a workflow 
 |---|---|---|
 | Client communications | `<action>` | `client-email`, `tax-memo` |
 | Tax return reviews | `<form>-review` | `1040-review`, `1120s-review` |
-| CAS / close | `<workflow>` | `close`, `reconcile`, `journal-entry` |
+| CAS / close | `<workflow>` | `close`, `reconcile`, `fixed-assets` |
 | Excel productivity | `excel-<action>` | `excel-formula-refresh`, `excel-report-format` |
 | Tax planning analysis | `<strategy>-analysis` | `costseg-analysis`, `rd-analysis` |
-| Platform integrations | `<platform>-<action>` | `intacct-import-je`, `qbo-pull-reports` |
 
 All skills live as flat folders under `skills/`. No nesting.
 

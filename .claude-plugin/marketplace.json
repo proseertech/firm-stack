@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Claude Code skills for accounting firms",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "firm-stack",
       "source": "./",
-      "description": "21 accounting skills: tax return review, month-end close, reconciliation, journal entries, client comms, Excel productivity, tax planning, and GL integrations.",
-      "version": "1.0.0",
+      "description": "19 accounting skills: tax return review, month-end close, reconciliation, fixed assets, client comms, Excel productivity, tax planning, and tax projections.",
+      "version": "1.1.0",
       "category": "productivity",
       "tags": ["accounting", "cpa", "tax", "finance"]
     }
