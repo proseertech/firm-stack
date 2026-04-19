@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.1.0
+version: 2.2.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or
   extension projection against source documents — W-2s, 1099s, K-1s, brokerage
@@ -27,16 +27,16 @@ Catch errors before a Form 1040 is filed or an extension payment is calculated. 
 
 ## Accuracy Standard
 
-Tax returns must be substantially correct. Rounding differences in the $10-$100 range are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
+Tax returns must be substantially correct. Rounding differences in the $1- $2 range are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
 
 There is no percentage-based materiality threshold. Do not use a percentage of gross income, total assets, or net income to determine whether a variance is acceptable. That approach belongs in financial statement audits, not tax review.
 
 Classify findings by severity (impact + risk) rather than by dollar-amount materiality:
 - **HIGH**: Incorrect tax computation, wrong character of income, missing forms, positions without substantial authority
 - **MEDIUM**: Documentation gaps, questionable positions that are defensible but need support, items that could trigger correspondence
-- **LOW**: Minor rounding differences ($10-$100 range), presentation preferences, informational items
+- **LOW**: Minor rounding differences ($1 - $2 range), presentation preferences, informational items
 
-Do not dismiss or deprioritize findings because the dollar amount is small relative to gross income. A $500 error is still an error that needs correction.
+Report every discrepancy outside the rounding tolerance in the findings table, including items you are uncertain about or consider low-severity. Severity is for prioritization, not filtering — all findings go in the table. A separate preparer review step decides what to act on; your job at this stage is coverage.
 
 ## Required Inputs
 
@@ -219,5 +219,4 @@ Hard-coded totals defeat the purpose of a workpaper. The reviewer needs to see t
 - Do not mark the return as reviewed-complete if any discrepancies beyond rounding or missing documents remain.
 - Do not draft a response to an IRS notice based on this review without preparer confirmation.
 - Do not characterize audit risk as a probability or percentage. Professional judgment on acceptable risk levels belongs to the signing partner.
-- Do not dismiss findings because the dollar amount is small relative to gross income.
 - Do not hardcode SALT caps, bonus depreciation rates, or other amounts that change by tax year — always reference the applicable year's statutory amount.

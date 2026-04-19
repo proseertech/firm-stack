@@ -1,6 +1,6 @@
 ---
 name: fixed-assets
-version: 1.1.0
+version: 1.2.0
 description: |
   Review fixed asset additions, disposals, and the depreciation schedule.
   Applies the firm's capitalization threshold ($2,500 default) to determine
@@ -37,7 +37,7 @@ Ensure fixed asset additions are properly capitalized or expensed under the firm
    - Cost vs. threshold: capitalize if ≥ threshold, expense if < threshold
    - Nature: is this a new asset, an improvement (extends useful life), or routine repair and maintenance?
    - Asset class and useful life: what depreciation method and recovery period applies?
-   - **Section 179 / bonus depreciation**: for each capitalized asset, evaluate Section 179 election eligibility (property type, business use percentage, annual limitation) and applicable bonus depreciation percentage. Note: "Confirm with the tax team whether Section 179 or bonus depreciation is preferred for this client's tax situation."
+   - **Section 179 / bonus depreciation**: For each capitalized asset, evaluate §179 eligibility (property type, business use percentage) and the applicable bonus depreciation percentage. Default to the client's standing election policy (typically bonus depreciation at the current applicable rate). Flag for tax team review only when one of these triggers applies: aggregate §179 elections for the year are approaching the annual limitation; the client has material state tax exposure in a state that does not conform to federal bonus depreciation; the asset is listed property or has < 50% business use; or projected taxable income may not absorb a full §179 deduction.
 3. **Special asset categories** — Apply category-specific rules:
    - **Leasehold improvements**: determine if this is qualified improvement property (QIP) eligible for 15-year recovery and bonus depreciation. If the remaining lease term is shorter than the recovery period, flag for review.
    - **Software**: apply internal-use software capitalization rules (ASC 350-40 for GAAP; Section 167 for tax). Distinguish development-stage costs (capitalize) from post-implementation costs (expense). Flag development-stage costs that may qualify for R&D credit instead of capitalization.

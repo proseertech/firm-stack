@@ -30,7 +30,6 @@ If you're not using the plugin install (e.g., using the git clone method or org-
 - Fiscal year-end: December 31
 - GL system: Sage Intacct
 - Capitalization threshold: $2,500
-- Active integrations: sage-intacct, qbo, karbon
 - Tax software: Lacerte
 - Return types: 1040, 1120S, 1065, 1041, 990PF
 ```
@@ -45,19 +44,8 @@ Do **not** edit the firm-stack plugin's CLAUDE.md with your firm's settings — 
 | `Fiscal year-end` | Used by close and reporting skills | `December 31` |
 | `GL system` | Primary general ledger platform | `Sage Intacct` |
 | `Capitalization threshold` | For fixed asset skills — R&M vs. capitalize | `$2,500` |
-| `Active integrations` | Which integration modules to enable | `sage-intacct, qbo, karbon` |
 | `Tax software` | Used by return review skills for format-specific guidance | `Lacerte` |
 | `Return types` | Which tax return review skills are relevant to your practice | `1040, 1120S, 1065` |
-
----
-
-## Integration Setup
-
-Integration skills require API credentials stored in `.env` files (never committed to git). See the setup instructions for each platform:
-
-- [Sage Intacct](../integrations/sage-intacct/README.md)
-- [QuickBooks Online](../integrations/qbo/README.md)
-- [Karbon](../integrations/karbon/README.md)
 
 ---
 

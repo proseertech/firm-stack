@@ -59,7 +59,6 @@ git clone https://github.com/larryb821/firm-stack ~/.claude/skills/firm-stack
 |---|---|
 | `close` | Month-end close checklist and portfolio health check |
 | `close-summary` | Executive summary and client meeting agenda from financials |
-| `journal-entry` | Review, validate, and document journal entries |
 | `reconcile` | Bank rec, GL-to-subledger, intercompany reconciliation |
 | `fixed-assets` | Fixed asset review and depreciation schedule |
 
@@ -74,16 +73,6 @@ git clone https://github.com/larryb821/firm-stack ~/.claude/skills/firm-stack
 |---|---|
 | `costseg-analysis` | Screen clients for cost segregation study candidacy |
 | `rd-analysis` | Screen clients for R&D tax credit study candidacy |
-
-### Integrations
-| Skill | Platform | Purpose |
-|---|---|---|
-| `intacct-import-je` | Sage Intacct | Import journal entries via REST API |
-| `intacct-pull-tb` | Sage Intacct | Pull trial balance via REST API |
-| `qbo-pull-reports` | QuickBooks Online | Pull P&L and balance sheet |
-| `karbon-work-status` | Karbon | Query and update work item status |
-
-Integration setup instructions: [Sage Intacct](integrations/sage-intacct/README.md) | [QBO](integrations/qbo/README.md) | [Karbon](integrations/karbon/README.md)
 
 ---
 

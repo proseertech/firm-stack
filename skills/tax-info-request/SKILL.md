@@ -1,6 +1,6 @@
 ---
 name: tax-info-request
-version: 2.0.0
+version: 2.1.0
 description: |
   Review a prior year individual tax return (Form 1040) PDF and generate a
   flat, one-line-per-item information request for the current tax year.
@@ -50,7 +50,7 @@ Update these amounts if the current date indicates a different filing year.
 
 ## Workflow
 
-1. **Read the full return** — Read the tax return PDF in batches of 20 pages. Read ALL pages — K-1 details, state returns, and supporting statements are often at the end. Do not stop early.
+1. **Read the full return** — Read the tax return PDF in batches of 20 pages, continuing to the last page. K-1 details, state returns, and supporting statements typically appear at the end of the PDF, and the request list will be incomplete if those pages are skipped. If the PDF ends in clearly blank or boilerplate pages (e.g., empty worksheets, instruction pages), you can stop once the substantive content is exhausted.
 
 2. **Extract data** — Systematically extract data from every section of the return:
 

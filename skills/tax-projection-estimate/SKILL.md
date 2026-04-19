@@ -1,6 +1,6 @@
 ---
 name: tax-projection-estimate
-version: 1.1.0
+version: 1.3.0
 description: |
   Build a standardized tax projection estimate for a pass-through entity (Form 1065
   partnership or Form 1120S S-corporation). Ingests a trial balance from any GL system
@@ -102,7 +102,7 @@ Add Excel data validation (dropdown) to the tag column so tags are consistent.
 
 Before tagging is final, scan the TB for accounts that need GL-level investigation. Drill into the general ledger for any account that meets these criteria:
 
-- **Catch-all accounts**: "Ask my Accountant", "Uncategorized", "Other", "Suspense" — always investigate, regardless of balance size
+- **Catch-all accounts**: "Ask my Accountant", "Uncategorized", "Other", "Suspense" — since this is an estimate (directionally correct, not perfect), investigate only when the balance is large enough that misclassification could meaningfully shift the projection. For small balances in catch-all accounts, note their existence in the projection Notes so the preparer can resolve them during the actual return — do not drill into the GL for the estimate.
 - **Large year-over-year variance**: Any account where the balance changed > 50% vs prior year OR the absolute change exceeds $10,000
 - **Wrong-sign balances**: Revenue accounts with debit balances, expense accounts with credit balances, assets with credit balances
 - **Round-number balances**: Large round amounts (e.g., $50,000 exactly) may indicate estimates, reclassifications, or intercompany entries that need context
@@ -152,9 +152,9 @@ not $861,378 contributed this year.
 
 ### Phase 2c: Identify Book-Tax Differences (M-1 Adjustments)
 
-Scan the TB and GL for common book-tax differences that will require adjustment on the projection. These flow through Schedule M-1 (or M-3) on the return and affect the gap between book income and taxable income.
+Identify book-tax differences that actually apply to this client based on evidence in the TB, GL, and prior-year return. The list below is a reference for the common M-1 items — use it to prompt yourself to check whether each category appears in the current-year TB, not as a checklist of adjustments to manufacture. Only document an adjustment when the underlying account or transaction exists; skip categories that don't apply to this client.
 
-**Common M-1 items to look for:**
+**Common M-1 items to check against the TB:**
 
 Income timing differences:
 - Advance payments / deferred revenue recognized on books but not yet taxable (or vice versa)

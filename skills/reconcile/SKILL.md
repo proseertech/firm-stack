@@ -1,11 +1,12 @@
 ---
 name: reconcile
-version: 1.1.0
+version: 1.4.0
 description: |
   Reconcile accounts by comparing GL balances to bank statements, subledgers,
   or third-party data. Handles bank reconciliations, GL-to-subledger recs,
-  and intercompany reconciliations. Applies account-type-specific materiality,
-  categorizes reconciling items with aging analysis, and flags stale items.
+  and intercompany reconciliations. An account either reconciles or it
+  doesn't — every difference is identified, classified as a timing item or
+  unexplained variance, and tracked through to resolution.
 trigger: |
   "reconcile", "bank rec", "tie out", "reconciliation", "GL to subledger",
   "intercompany rec", "accounts don't match", "help me reconcile"
@@ -32,11 +33,7 @@ Systematically compare two sets of records to identify differences, document rec
 
 ## Workflow
 
-1. **Confirm scope** — Account, period, GL balance, and comparison source. Establish account-type-specific materiality:
-   - **Cash/bank accounts**: zero tolerance — must reconcile to the penny
-   - **AR/AP subledger recs**: firm's materiality threshold applies
-   - **Intercompany**: must net to zero across all entities
-   - **Prepaid/accrual accounts**: firm's materiality threshold applies; document the nature of any variance
+1. **Confirm scope** — Account, period, GL balance, and comparison source. An account either reconciles or it doesn't — there is no materiality threshold for reconciliation. Every difference must be identified and classified as either a timing item (will clear in a future period) or an unexplained variance (requires investigation). This applies equally to cash, AR/AP subledgers, intercompany, prepaid, and accrual accounts.
 2. **Identify timing differences** — Outstanding checks, deposits in transit, timing entries between systems. These are normal reconciling items that will clear.
 3. **Identify unexplained differences** — Amounts in one source but not the other that aren't timing differences.
 4. **Categorize reconciling items** — For each item: amount, description, expected resolution date, owner.
@@ -44,14 +41,14 @@ Systematically compare two sets of records to identify differences, document rec
    - **Current** (0-30 days): normal, monitor
    - **Aging** (31-60 days): follow up
    - **Stale** (61-90 days): investigate
-   - **Investigate** (90+ days): automatic escalation flag — items over 90 days require a documented resolution plan. For bank recs, outstanding checks over 90 days may need to be voided and re-issued (subject to state unclaimed property rules).
+   - **Investigate** (90+ days): every item over 90 days requires a documented resolution plan regardless of amount. For bank recs, outstanding checks over 90 days may need to be voided and re-issued (subject to state unclaimed property rules).
 6. **Compute net difference** — GL balance +/- reconciling items = comparison source balance (or flag the remaining variance).
 7. **Document the reconciliation** — Produce a formatted rec that can be saved as a workpaper.
 
 ## Control Points
 
-- **Unexplained variance above materiality** — Any variance above the account-type-specific materiality that cannot be explained as a timing difference requires manager review before the rec is marked complete.
-- **Prior-month items still outstanding** — Items that were outstanding on the prior-month rec and are still unresolved need to be flagged and investigated.
+- **Unexplained variance** — Any variance that cannot be explained as a timing difference requires manager review before the rec is marked complete. There is no materiality cushion; the account either ties or it doesn't.
+- **Prior-month items still outstanding** — Items that were outstanding on the prior-month rec and are still unresolved must be flagged and investigated.
 
 ## Red Flags
 
@@ -80,5 +77,5 @@ OUTSTANDING ITEMS AGING
 
 ## Safety Constraints
 
-- Do not mark a reconciliation complete with an unexplained variance above the account-type-specific materiality.
+- Do not mark a reconciliation complete with any unexplained variance. Accounts either reconcile or they don't.
 - Do not propose journal entries to clear variances without identifying the root cause.
