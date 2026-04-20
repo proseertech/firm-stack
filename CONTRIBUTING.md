@@ -76,4 +76,4 @@ Then invoke your skill and verify it works with realistic (anonymized) data.
 
 ## Questions
 
-Open a [GitHub Discussion](https://github.com/larryb821/firm-stack/discussions) for questions, skill proposals, or feedback.
+Open a [GitHub Discussion](https://github.com/proseertech/firm-stack/discussions) for questions, skill proposals, or feedback.
