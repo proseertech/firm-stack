@@ -12,7 +12,7 @@
     {
       "name": "firm-stack",
       "source": "./",
-      "description": "19 accounting skills: tax return review, month-end close, reconciliation, fixed assets, client comms, Excel productivity, tax planning, and tax projections.",
+      "description": "20 accounting skills: tax return review, month-end close, reconciliation, fixed assets, client comms, Excel productivity, tax planning, tax projections, and FBAR workpapers.",
       "version": "1.1.0",
       "category": "productivity",
       "tags": ["accounting", "cpa", "tax", "finance"]
