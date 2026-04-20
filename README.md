@@ -17,7 +17,7 @@ Inspired by [gstack](https://github.com/garrytan/gstack) and [superpowers](https
 /plugin install firm-stack@firm-stack
 ```
 
-Skills are namespaced as `/firm-stack:<skill-name>` and available in Claude Code, Claude Desktop, and IDE extensions.
+Skills are namespaced as `/firm-stack:<skill-name>` and available wherever Claude Code runs — Terminal, VS Code, and JetBrains IDE extensions.
 
 ### As Org-Level Skills (Claude Desktop)
 
@@ -42,7 +42,10 @@ git clone https://github.com/proseertech/firm-stack ~/.claude/skills/firm-stack
 ### Tax Workflow
 | Skill | Purpose |
 |---|---|
-| `/tax-info-request` | Generate a document request list from a prior year 1040 |
+| `tax-info-request` | Generate a document request list from a prior year 1040 |
+| `tax-workpapers` | Build Excel workpapers summarizing 1099s and K-1s for any return type (1040, 1065, 1120-S, 1041) |
+| `tax-projection-estimate` | Build a pass-through tax projection (1065 or 1120-S) from any GL trial balance |
+| `fbar-workpaper` | Build Excel FBAR workpapers (FinCEN 114) from foreign bank statements, including Schedule B and Form 1116 tie-out |
 
 ### Tax Return Reviews
 | Skill | Purpose |
