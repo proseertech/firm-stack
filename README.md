@@ -13,7 +13,7 @@ Inspired by [gstack](https://github.com/garrytan/gstack) and [superpowers](https
 ### As a Plugin (recommended)
 
 ```
-/plugin marketplace add larryb821/firm-stack
+/plugin marketplace add proseertech/firm-stack
 /plugin install firm-stack@firm-stack
 ```
 
@@ -26,7 +26,7 @@ Admins can upload individual SKILL.md files via **Organization Settings > Skills
 ### As a Skills Pack (legacy)
 
 ```bash
-git clone https://github.com/larryb821/firm-stack ~/.claude/skills/firm-stack
+git clone https://github.com/proseertech/firm-stack ~/.claude/skills/firm-stack
 ```
 
 ---

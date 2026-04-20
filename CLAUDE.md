@@ -75,14 +75,14 @@ If no config is present, skills will prompt the user for required context before
 ### As a Plugin (recommended)
 
 ```
-/plugin marketplace add larryb821/firm-stack
+/plugin marketplace add proseertech/firm-stack
 /plugin install firm-stack@firm-stack
 ```
 
 ### As a Skills Pack (legacy)
 
 ```bash
-git clone https://github.com/larryb821/firm-stack ~/.claude/skills/firm-stack
+git clone https://github.com/proseertech/firm-stack ~/.claude/skills/firm-stack
 ```
 
 ### Org-Level (Claude Desktop admin)
