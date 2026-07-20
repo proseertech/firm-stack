@@ -1,17 +1,26 @@
 ---
 name: excel-report-format
-version: 1.2.0
+version: 1.3.0
 description: |
-  Standardize an Excel report to the firm's look and feel. Applies consistent
-  formatting: fonts, header styles, number formats, column widths, freeze panes,
-  and any firm-specific design standards to produce a polished, client-ready report.
+  Standardize an Excel workbook to the firm's look and feel — fonts, header and
+  total-row styles, number formats, column widths, freeze panes, and print setup —
+  to turn a raw system export or one-off spreadsheet into a polished, client-ready
+  report. Use this whenever someone wants a spreadsheet cleaned up, made to look
+  professional or consistent, put "on brand," or dressed up before it goes to a
+  client — even when they don't say "formatting." This is presentation only: it
+  restyles cells and never touches values or formulas. If the ask is to fix static
+  totals into live SUM formulas, that's `excel-formula-refresh`, not this skill.
 trigger: |
   "format this report", "standardize this Excel", "apply firm formatting",
-  "make this look professional", "clean up this spreadsheet", "Excel formatting"
+  "make this look professional", "make it look nice", "make it presentable",
+  "clean up this spreadsheet", "tidy up this workbook", "make it client-ready",
+  "on-brand formatting", "polish this spreadsheet", "fix the formatting",
+  "Excel formatting", "style this report", "consistent formatting"
 allowed-tools:
   - Read
   - Write
   - AskUserQuestion
+  - Bash
 tier: all-staff
 ---
 
@@ -19,13 +28,17 @@ tier: all-staff
 
 ## Purpose
 
-Apply consistent, professional formatting to an Excel report so that all client-facing output looks uniform and polished. Eliminates ad-hoc formatting from system exports and one-off spreadsheets.
+Apply the firm's standard formatting to an Excel report so client-facing output looks uniform and polished instead of carrying the ad-hoc look of a system export or one-off spreadsheet. This is a presentation pass — it restyles cells (fonts, fills, borders, number formats, layout, print setup) and leaves every value and formula untouched.
+
+## Scope & Handoffs
+
+This skill changes how the workbook *looks*, never what it *computes*. If the request is to convert hard-coded total rows into live `SUM`/`SUBTOTAL`/`SUMIF` formulas, that's a different job — hand off to **`excel-formula-refresh`**. The two pair naturally: refresh the totals first so the numbers are live, then run this skill to make it presentable.
 
 ## Required Inputs
 
 - Description of the Excel file (or the file itself)
-- Intended audience (internal review vs. client-facing)
-- Any firm-specific formatting standards (if known)
+- Intended audience (internal review vs. client-facing) — sets how far to push polish and print setup
+- Any firm-specific formatting overrides (if the firm departs from the reference below)
 
 ## Workflow
 
@@ -74,7 +87,7 @@ This is the firm's standard look for client-facing and internal Excel deliverabl
 
 ## Control Points
 
-- **Client-facing reports** — Confirm the report is ready for client delivery before applying final formatting (content errors are harder to spot in a nicely formatted report).
+- **Client-facing reports** — Confirm the content is final and correct before applying formatting. Polish makes a report look authoritative, which makes content errors harder to catch — nobody scrutinizes numbers that are already dressed up for the client. Formatting comes last, after the numbers are right.
 
 ## Red Flags
 
@@ -87,8 +100,9 @@ Depending on what's most useful:
 1. **Step-by-step instructions** — Numbered list of formatting steps to apply manually
 2. **VBA macro** — A ready-to-run macro that applies the formatting automatically
 3. **Format specification** — A reference table of formatting rules to apply
+4. **Bundled helper script** — When you have the `.xlsx` file itself and openpyxl is available, run `scripts/format_report.py` to apply the Firm Formatting Reference programmatically: `python format_report.py input.xlsx [output.xlsx]`. It writes a new formatted workbook (defaults to `<input>-formatted.xlsx`, never overwriting the original), detects header/total/subtotal/note rows heuristically (tunable constants at the top of the file — not hard-coded to one layout), and enforces the safety constraint by asserting every cell value and formula is unchanged before saving. Use it for a fast, consistent pass; fall back to instructions or VBA when the file isn't in hand or the layout needs manual judgment.
 
 ## Safety Constraints
 
-- Do not modify formulas or data values — formatting only.
-- Note any merged cells or structural issues that need to be resolved before formatting is applied.
+- Formatting only — never change a cell's value or formula. A restyle that silently alters a number turns a cosmetic task into a data error that ships to the client. If a value looks wrong, flag it; don't fix it here.
+- Note any merged cells or structural issues that need to be resolved before formatting can be applied cleanly, rather than working around them silently.

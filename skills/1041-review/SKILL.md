@@ -1,15 +1,22 @@
 ---
 name: 1041-review
-version: 1.3.0
+version: 1.4.0
 description: |
-  Cross-reference a completed Form 1041 (fiduciary income tax return) against
-  source documents for grantor trusts, simple trusts, and complex trusts.
-  Verifies income, deductions, distributable net income (DNI), and beneficiary
-  allocations on Schedule K-1. Grades findings by severity, shows DNI
-  calculation explicitly, and flags audit risk items.
+  Cross-reference a completed Form 1041 (fiduciary income tax return) against its
+  source documents — the trust instrument, fiduciary accounting, 1099s, and pass-through
+  K-1s — to catch errors before filing. Works for grantor, simple, and complex trusts.
+  Verifies income, deductions, distributable net income (DNI), the income distribution
+  deduction, and beneficiary allocations on Schedule K-1; shows the DNI calculation
+  explicitly; grades findings by severity; and flags audit-risk items. Use this whenever
+  someone wants a trust or fiduciary return checked, tied out, or reviewed before it goes
+  out the door — "review the 1041", "check the trust return", "does the DNI tie", "tie the
+  K-1s to the distribution deduction", "look over the trust return before we file" — even
+  if they don't name the form or say the word "review".
 trigger: |
-  "review the 1041", "trust return review", "grantor trust", "fiduciary return",
-  "1041 cross-reference", "tie out the trust return", "trust K-1 review"
+  "review the 1041", "trust return review", "fiduciary return", "grantor trust",
+  "1041 cross-reference", "tie out the trust return", "trust K-1 review",
+  "check the trust return", "verify the 1041", "does the DNI tie", "check the DNI",
+  "distribution deduction", "estate return review", "look over the trust return before we file"
 allowed-tools:
   - Read
   - Write
@@ -25,7 +32,7 @@ Catch errors before a Form 1041 is filed. Verify that trust income, deductions, 
 
 ## Accuracy Standard
 
-Tax returns must be substantially correct. Rounding differences in the $10-$100 range are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
+Tax returns must be substantially correct. Rounding differences of $10 or less are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
 
 There is no percentage-based materiality threshold. Do not use a percentage of gross income or trust assets to determine whether a variance is acceptable. That approach belongs in financial statement audits, not tax review.
 
@@ -91,6 +98,7 @@ Organized into sections:
 - **Trust Type Confirmed** — Grantor / Simple / Complex with supporting rationale
 - **Confirmed** — Line items that tie
 - **Issues** — Severity-graded findings (HIGH / MEDIUM / LOW), ranked by dollar impact for preparer attention
+- **Missing Support** — Items where source docs are absent
 - **Preparer Questions** — Items requiring judgment
 - **Audit Risk Items** — 1-3 items with factual risk assessment
 

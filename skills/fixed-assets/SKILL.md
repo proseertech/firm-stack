@@ -1,15 +1,26 @@
 ---
 name: fixed-assets
-version: 1.2.0
+version: 1.3.0
 description: |
-  Review fixed asset additions, disposals, and the depreciation schedule.
-  Applies the firm's capitalization threshold ($2,500 default) to determine
-  capitalize vs. expense, evaluates Section 179 and bonus depreciation
-  opportunities, handles special asset categories (leasehold improvements,
-  software, IT assets), and verifies depreciation calculations.
+  Reviews fixed asset additions, disposals, and the depreciation schedule, and
+  decides capitalize vs. expense against the firm's capitalization threshold
+  ($2,500 default). Use whenever someone is looking at asset purchases, a repairs
+  & maintenance account, or a depreciation schedule — "should we capitalize this
+  or expense it," "is this a repair or an improvement," "review the fixed asset
+  additions," "why did R&M spike," "check the depreciation," "can we take 179 or
+  bonus on this," "what's the useful life," "did we book the disposal." Covers
+  Section 179 and bonus depreciation eligibility, special categories (leasehold
+  improvements / QIP, internal-use software, IT assets), MACRS lives and
+  conventions, and disposals. Fire it even when the form or the word
+  "depreciation" isn't said, as long as the question is about whether a cost gets
+  capitalized or how an asset is being depreciated.
 trigger: |
-  "fixed assets", "depreciation", "capitalize or expense", "R&M review",
-  "asset additions", "fixed asset schedule", "should I capitalize this"
+  "fixed assets", "depreciation", "capitalize or expense", "capitalize vs expense",
+  "R&M review", "repairs and maintenance", "repair or improvement",
+  "asset additions", "fixed asset schedule", "depreciation schedule",
+  "should I capitalize this", "should we expense this", "useful life",
+  "Section 179", "bonus depreciation", "179 or bonus", "leasehold improvement",
+  "QIP", "MACRS", "did we book the disposal", "asset disposal"
 allowed-tools:
   - Read
   - Write
@@ -21,9 +32,11 @@ tier: all-staff
 
 ## Purpose
 
-Ensure fixed asset additions are properly capitalized or expensed under the firm's capitalization policy, and that the depreciation schedule is accurate and complete. Evaluate accelerated depreciation opportunities (Section 179, bonus depreciation) and handle special asset categories.
+Ensure fixed asset additions are properly capitalized or expensed under the firm's capitalization policy, and that the depreciation schedule is accurate and complete. Evaluate accelerated depreciation opportunities (Section 179, bonus depreciation) and handle special asset categories. The value is a defensible capitalize/expense call and a clean schedule — each recommendation tied to a specific item, its cost, and the rule that governs it.
 
 ## Required Inputs
+
+Confirm these before starting. A capitalize/expense review run without the actual costs and descriptions produces guesses, and a wrong call surfaces only in a later depreciation true-up or an exam.
 
 - List of potential fixed asset additions for the period (from the GL or a listing)
 - Firm's capitalization threshold (default: $2,500)
@@ -49,19 +62,23 @@ Ensure fixed asset additions are properly capitalized or expensed under the firm
 
 ## Control Points
 
-- **Material capitalize/expense judgment calls** — Items near the threshold where the nature (improvement vs. repair) is unclear require manager review.
-- **Partial-year assets** — Assets placed in service or disposed of mid-year need the correct convention applied (half-year, mid-quarter).
-- **Section 179 limitation** — If Section 179 elections are approaching the annual limitation, flag for tax team confirmation before proceeding.
+Stop and get a human decision before proceeding when:
+
+- **Material capitalize/expense judgment calls** — Items near the threshold where the nature (improvement vs. repair) is unclear require manager review. The improvement-vs-repair line is a judgment call with real tax timing consequences, not a formula.
+- **Partial-year assets** — Assets placed in service or disposed of mid-year need the correct convention applied (half-year, mid-quarter). The mid-quarter convention triggers off aggregate Q4 additions, so the right convention can't be settled item by item — confirm the period's full addition pattern.
+- **Section 179 limitation** — If Section 179 elections are approaching the annual limitation, flag for tax team confirmation before proceeding. An election booked over the limit gets disallowed and has to be unwound after the fact.
 
 ## Red Flags
 
-- Large R&M expense spike — may indicate capitalization items were expensed
-- Asset on the schedule with zero net book value still generating depreciation
-- Addition with no supporting invoice or description
-- Disposal of a high-value asset without a gain/loss entry
-- Leasehold improvement on a lease with remaining term shorter than the recovery period
-- Software costs that may include research-stage activities eligible for R&D credit instead of capitalization
-- Section 179 election approaching annual limitation — confirm with tax team
+Pause and surface to the user when you see:
+
+- **Large R&M expense spike** — may indicate capitalization items were buried in repairs & maintenance; scan the account for individual items at or above the threshold and re-test them as improvements.
+- **Zero net book value asset still generating depreciation** — a fully depreciated asset can't take further deprecation; the schedule likely has a cost/basis or accumulated-depreciation error.
+- **Addition with no supporting invoice or description** — you can't classify or assign a life to a cost you can't see; request the source document before deciding.
+- **Disposal of a high-value asset without a gain/loss entry** — the asset left the balance sheet but the gain or loss on disposal was never booked.
+- **Leasehold improvement on a lease with remaining term shorter than the recovery period** — recovery period and lease term are mismatched; flag for review.
+- **Software costs that may include research-stage activities** — these may be eligible for R&D credit instead of capitalization; route to the tax team before capitalizing.
+- **Section 179 election approaching the annual limitation** — confirm with the tax team before electing further.
 
 ## Output Format
 
@@ -73,5 +90,6 @@ Ensure fixed asset additions are properly capitalized or expensed under the firm
 
 ## Safety Constraints
 
-- Do not automatically capitalize or expense items above the materiality threshold without manager confirmation.
-- Do not remove assets from the depreciation schedule without confirming disposal documentation exists.
+- Recommend, don't decide, on items above the materiality threshold — surface the capitalize/expense call for manager confirmation rather than booking it, since the treatment drives the client's tax timing.
+- Do not remove an asset from the depreciation schedule without confirming disposal documentation exists — dropping an asset that was never actually disposed of overstates the loss and leaves the books wrong.
+- Journal entries are proposed for approval, never posted directly.

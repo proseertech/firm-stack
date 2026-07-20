@@ -1,16 +1,23 @@
 ---
 name: tax-projection-estimate
-version: 1.3.0
+version: 1.4.0
 description: |
-  Build a standardized tax projection estimate for a pass-through entity (Form 1065
-  partnership or Form 1120S S-corporation). Ingests a trial balance from any GL system
-  (QBO, Sage Intacct, Xero, NetSuite, or manual export), tags every account, and produces
-  a formatted Excel workpaper with SUMIF-linked projections, prior-year comparison, and
-  K-1 allocation by line item per partner/shareholder.
+  Build a standardized, auditable tax projection for a pass-through entity (Form 1065
+  partnership or Form 1120S S-corporation) from a GL trial balance plus the prior-year
+  return. Tags every TB account, links every line with SUMIF formulas, compares to prior
+  year, and produces a K-1 allocation broken out by line item per partner/shareholder — the
+  primary deliverable. Use this whenever someone wants to know where a partnership or S-corp
+  will land for the year or what the owners' K-1s will look like: "run a tax projection",
+  "estimate taxable income for [entity]", "what will the K-1s be", "project the partnership
+  return", "give the partners a Q3 estimate", "build a K-1 estimate from the trial balance".
+  Ingests a TB from any GL (QBO, Sage Intacct, Xero, NetSuite, or a manual export). For
+  pass-throughs only — not 1040, 1120 (C-corp), 1041, or 990.
 trigger: |
   "tax projection", "tax estimate", "K-1 estimate", "project the return",
-  "estimate taxable income", "pass-through projection", "partnership projection",
-  "S-corp projection"
+  "project the K-1s", "what will the K-1s look like", "estimate taxable income",
+  "estimate the partners' income", "pass-through projection", "partnership projection",
+  "S-corp projection", "projection from the trial balance", "quarterly estimate for the partnership",
+  "give the owners an estimate"
 allowed-tools:
   - Read
   - Write
@@ -25,6 +32,8 @@ tier: power-user
 
 Produce a standardized, auditable tax projection for a 1065 or 1120S entity. The deliverable is an Excel workpaper inserted into the client's financials workbook where every calculated cell is a formula and every income/expense line traces back to a tagged trial balance via SUMIF. The primary output is a K-1 allocation table broken out by line item per partner or shareholder.
 
+This is an estimate for planning, not a filed return — its value is that it is directionally right and fully traceable, so the preparer can see exactly where every number came from during tax season.
+
 ## Required Inputs
 
 - **Entity type**: Form 1065 (partnership) or Form 1120S (S-corporation)
@@ -33,6 +42,8 @@ Produce a standardized, auditable tax projection for a 1065 or 1120S entity. The
 - **Prior-year tax return** (PDF) — filed 1065 or 1120S with all schedules, K-1s, and depreciation reports
 - **Owner/partner names and allocation percentages** — from the partnership agreement, S-corp shares, or prior-year K-1s
 - **Special items** (if any): 1031 exchange HUDs, cost segregation study, guaranteed payment schedules, officer compensation analysis
+
+If a required input is missing, ask before building — a projection built on a missing return or the wrong ownership split reads as authoritative but is wrong, and the error surfaces only when the real K-1s don't match.
 
 ## Workflow
 
@@ -46,55 +57,13 @@ Read the trial balance regardless of source system. Normalize to a standard stru
 
 If the source is Sage Intacct, Xero, or NetSuite, the column layout may differ. Map to the standard structure. If the TB is missing debit/credit split (only has net), that's fine — use the net column as DR (CR).
 
-**Validation gate**: TB must balance (total debits = total credits, or net = 0). If it doesn't, stop and flag.
+**Validation gate**: TB must balance (total debits = total credits, or net = 0). If it doesn't, stop and flag — an unbalanced TB means the projection is built on incomplete data.
 
 ### Phase 2: Tag Every Account
 
-Add a "Tax Group" column to the trial balance sheet. Assign a tag to every single account. No account should be left untagged.
+Add a "Tax Group" column to the trial balance sheet and assign a tag to every single account. No account should be left untagged — an untagged account is silently dropped from the projection, understating income or deductions.
 
-**Income tags** (credits on TB — negate with -SUMIF on projection):
-`Gross Receipts`, `Sales Returns`, `Rental Income`, `Brokerage Income`,
-`Interest Income`, `Other Income`, `Gain/Loss on Sale`, etc.
-
-**COGS tags** (debits on TB):
-`COGS` — all cost-of-goods-sold sub-accounts
-
-**Expense tags** (debits on TB — SUMIF directly):
-`Salaries & Wages`, `Officer Compensation`, `Commissions`,
-`Repairs & Maintenance`, `Rents`, `Taxes & Licenses`, `Interest Expense`,
-`Advertising`, `Insurance`, `HOA Expenses`, `Property Taxes`, `Utilities`,
-`Professional Fees`, `Office Expenses`, `Dues & Subscriptions`,
-`Employee Benefits`, `Pension/Retirement`, `Bad Debts`, `Depreciation`,
-`Travel`, `Meals`, `Vehicle Expenses`, `Contract Labor`,
-`Other Deductions`, etc.
-
-**K-1 separately stated tags**:
-`K1-Interest`, `K1-Dividends`, `K1-LTCG`, `K1-STCG`, `K1-1231`,
-`K1-179`, `K1-Charitable`, `K1-TaxExempt`
-
-**Nondeductible tags**:
-`NONDEDUCTIBLE-Meals50` — 50% of meals (nondeductible portion)
-`NONDEDUCTIBLE-Entertainment` — entertainment
-`NONDEDUCTIBLE-Penalties` — government penalties and fines
-
-**Reclassification tags**:
-`CAPITAL-[description]` — capitalize to balance sheet (e.g., `CAPITAL-1108 Washington`)
-`RECLASSIFY-[target]` — move to a different line
-
-**Balance sheet tags** (tagged for completeness — ensures every account is accounted for):
-`BS-Cash`, `BS-AR`, `BS-Inventory`, `BS-FixedAsset`, `BS-AccumDepr`,
-`BS-OtherAsset`, `BS-AP`, `BS-Loans`, `BS-OtherLiab`, `BS-Equity`
-
-Add Excel data validation (dropdown) to the tag column so tags are consistent.
-
-**Tag column formatting** (optional but recommended): Apply conditional formatting or light color fills to the tag column by category for visual scanning:
-- Income tags: light green fill
-- Expense tags: light orange fill
-- COGS tags: light blue fill
-- BS tags: light gray fill
-- K1 separately stated: light purple fill
-- Nondeductible: light red fill
-- Capital/reclassify: yellow fill
+The full tag category map (income, COGS, expense, K-1 separately stated, nondeductible, reclassification, and balance-sheet tags) is in **`references/account-tagging.md`** — read it while tagging. Add Excel data validation (dropdown) to the tag column so tags are consistent, and optionally color the tag column by category for visual scanning (colors in the same reference).
 
 **Validation gate**: Run a check — `=SUMIF(E:E,"",D:D)` should equal zero. If any accounts are untagged, stop and resolve before proceeding.
 
@@ -152,35 +121,9 @@ not $861,378 contributed this year.
 
 ### Phase 2c: Identify Book-Tax Differences (M-1 Adjustments)
 
-Identify book-tax differences that actually apply to this client based on evidence in the TB, GL, and prior-year return. The list below is a reference for the common M-1 items — use it to prompt yourself to check whether each category appears in the current-year TB, not as a checklist of adjustments to manufacture. Only document an adjustment when the underlying account or transaction exists; skip categories that don't apply to this client.
+Identify book-tax differences that actually apply to this client based on evidence in the TB, GL, and prior-year return. The common M-1 items are catalogued in **`references/account-tagging.md`** — use that list to prompt yourself to check whether each category appears in the current-year TB, not as a checklist of adjustments to manufacture. Only document an adjustment when the underlying account or transaction exists; skip categories that don't apply to this client.
 
-**Common M-1 items to check against the TB:**
-
-Income timing differences:
-- Advance payments / deferred revenue recognized on books but not yet taxable (or vice versa)
-- Installment sale income — book may recognize full gain; tax may defer under §453
-- Like-kind exchange gain deferred for tax but recognized on books
-- Cancellation of debt income — may be excluded for tax under §108
-
-Expense timing differences:
-- Depreciation — book depreciation almost never matches tax (MACRS vs straight-line, bonus dep, §179). Always a difference.
-- Amortization — book amort of intangibles vs §197 15-year amort for tax
-- Bad debt expense — book may use allowance method; tax requires direct write-off (specific charge-off)
-- Prepaid expenses — book may expense when paid; tax may require capitalization under 12-month rule
-- Accrued expenses — related-party accruals not deductible until paid (§267)
-- Inventory — §263A UNICAP adjustment (if applicable)
-- Compensation accruals — bonuses accrued on books but not paid within 2.5 months of year-end
-
-Permanent differences:
-- 50% meals limitation (§274) — book deducts 100%, tax only 50%
-- Entertainment — 100% nondeductible for tax (§274(a))
-- Government fines and penalties — nondeductible for tax (§162(f))
-- Life insurance premiums where entity is beneficiary — nondeductible
-- Political contributions — nondeductible
-- Tax-exempt interest income — on books but excluded from taxable income
-- Officer life insurance proceeds — tax-exempt but on books
-
-**Process**: For each M-1 item identified, determine whether it's already reflected in the TB (e.g., meals are already on the TB at 100% — need to add back 50% as nondeductible) or needs a separate adjustment line on the projection.
+For each M-1 item identified, determine whether it's already reflected in the TB (e.g., meals are already on the TB at 100% — need to add back 50% as nondeductible) or needs a separate adjustment line on the projection.
 
 ### Phase 2d: Analyze Fixed Asset and Intangible Asset Changes
 
@@ -274,19 +217,15 @@ Extract from the prior-year return PDF:
 - Schedule L (balance sheet), M-1 (book-to-tax reconciliation), M-2 (capital account)
 - Any Section 179 elections, 1031 exchanges, or other tax elections
 
-These become the "Prior Year Actual" column on the projection.
+These become the "Prior Year Actual" column on the projection. (For PDF extraction gotchas — merged columns, scanned HUDs, the 199A worksheet — see `references/pitfalls.md`.)
 
 ### Phase 4: Build Projection with SUMIF Formulas
 
-Create the "[Year] Tax Projection" sheet as the FIRST sheet in the workbook. Every income and expense line on the projection uses a SUMIF formula pulling from the tagged TB — never a hardcoded number.
+Create the "[Year] Tax Projection" sheet as the FIRST sheet in the workbook. Every income and expense line on the projection uses a SUMIF formula pulling from the tagged TB — never a hardcoded number, so a change to any TB balance cascades through the whole projection.
 
-**Column layout** (always this order):
-| B: Description | C: [Prior Year] Actual | D: [Current Year] Estimated | E: Variance | F+: Notes |
+Exact formula patterns, the column layout, styling palette, and column widths are in **`references/workbook-build.md`** — follow it while building.
 
-- Column C: Hardcoded from the filed return (reference data)
-- Column D: SUMIF formula referencing B{r} (the label cell in the same row) as the criteria — NEVER hardcode the tag name inside the formula. The column B label IS the tag. Form line references (e.g., "Line 1a") go in the Notes column, not in column B.
-- Column E: Formula `=D{r}-C{r}`
-- Notes column: Explanations, flags, assumptions
+**Helper (recommended)**: `scripts/build_projection.py` (openpyxl) builds the SUMIF-wired, styled skeleton for you — it holds the exact palette/font/format/width constants, writes the tagged-TB sheet with the tag column colored by category, wires income/expense lines as real `=SUMIF(...)` formulas referencing the TB tag column (never hard-coded sums or tags), and builds the per-owner K-1 grid. It also enforces the documented failure mode — **data rows get NO fill** (only header/total/subtotal/section/flagged rows are filled), verified by `audit_no_data_fill()`. Import it as a module, or run `python scripts/build_projection.py --demo` to see a 2-shareholder 1120S example (writes to a temp path). Use it to avoid re-deriving the styling by hand.
 
 **Section order:**
 
@@ -314,62 +253,7 @@ Create the "[Year] Tax Projection" sheet as the FIRST sheet in the workbook. Eve
 
    Total column = entity-level amount (Schedule K). Owner columns = formulas referencing Total (e.g., `=D{r}*0.5`). No prior year in this table — that comparison is in the sections above.
 
-   **Use the correct form's line numbers:**
-
-   FORM 1065 — SCHEDULE K-1 (Partner's Share):
-   | Line | Description                           | Notes |
-   |------|---------------------------------------|-------|
-   | 1    | Ordinary business income (loss)       | Form 1065 line 22 |
-   | 2    | Net rental real estate income (loss)  | Form 8825 net |
-   | 3    | Other net rental income (loss)        | |
-   | 4a   | Guaranteed payments — services        | Partner-specific; may not be pro-rata |
-   | 4b   | Guaranteed payments — capital         | Partner-specific; may not be pro-rata |
-   | 5    | Interest income                       | |
-   | 6a   | Ordinary dividends                    | |
-   | 7    | Royalties                             | |
-   | 8    | Net short-term capital gain (loss)    | |
-   | 9a   | Net long-term capital gain (loss)     | |
-   | 10   | Net section 1231 gain (loss)          | |
-   | 11   | Other income (loss)                   | |
-   | 12   | Section 179 deduction                 | Separately stated — NOT in Line 1 or 2 |
-   | 13   | Other deductions                      | |
-   | 14a  | Net self-employment earnings          | General partners only |
-   | 18a  | Tax-exempt interest income            | Informational — increases basis |
-   | 18b  | Other tax-exempt income               | Informational — increases basis |
-   | 18c  | Nondeductible expenses                | Informational — increases basis |
-   | 19   | Distributions                         | Not taxable — reduces basis |
-   | 20   | Other information (199A / QBI)        | Code Z |
-
-   FORM 1120S — SCHEDULE K-1 (Shareholder's Share):
-   | Box  | Description                           | Notes |
-   |------|---------------------------------------|-------|
-   | 1    | Ordinary business income (loss)       | Form 1120S line 21 |
-   | 2    | Net rental real estate income (loss)  | Form 8825 net |
-   | 3    | Other net rental income (loss)        | |
-   | 4    | Interest income                       | Box 4, NOT Line 5 like 1065 |
-   | 5a   | Ordinary dividends                    | Box 5a, NOT Line 6a like 1065 |
-   | 6    | Royalties                             | Box 6, NOT Line 7 like 1065 |
-   | 7    | Net short-term capital gain (loss)    | |
-   | 8a   | Net long-term capital gain (loss)     | Box 8a, NOT Line 9a like 1065 |
-   | 9    | Net section 1231 gain (loss)          | Box 9, NOT Line 10 like 1065 |
-   | 10   | Other income (loss)                   | |
-   | 11   | Section 179 deduction                 | Separately stated — NOT in Box 1 |
-   | 12   | Other deductions                      | Incl charitable contributions (12a) |
-   | 13   | Credits                               | |
-   | 16a  | Tax-exempt interest income            | Informational — increases basis |
-   | 16b  | Other tax-exempt income               | Informational — increases basis |
-   | 16c  | Nondeductible expenses                | Informational — increases basis |
-   | 16d  | Distributions                         | Box 16d, NOT Line 19 like 1065 |
-   | 17   | Other information (199A / QBI)        | Code V |
-
-   **KEY LINE NUMBER DIFFERENCES (1065 vs 1120S):**
-   - Interest: 1065 Line 5 vs 1120S Box 4
-   - Dividends: 1065 Line 6a vs 1120S Box 5a
-   - LTCG: 1065 Line 9a vs 1120S Box 8a
-   - Sec 1231: 1065 Line 10 vs 1120S Box 9
-   - Distributions: 1065 Line 19 vs 1120S Box 16d
-   - 1065 has guaranteed payments (4a/4b) and SE earnings (14a) — no 1120S equivalent
-   - 1120S has credits (Box 13) — different treatment on 1065
+   **Use the correct form's line numbers.** The full 1065 and 1120S K-1 line maps and the key line-number differences between them are in **`references/k1-line-map.md`** — the two forms number the same items differently (e.g., interest is 1065 Line 5 vs 1120S Box 4), and using the wrong set is a silent error.
 
    Required bottom rows:
    - **Est. Taxable K-1 Income**: SUM of taxable lines (excl distributions, nondeductible, tax-exempt). Formula in each owner column.
@@ -386,14 +270,14 @@ Create the "[Year] Tax Projection" sheet as the FIRST sheet in the workbook. Eve
    EQUITY / CAPITAL ROLLFORWARD
                                  Dan Berger    Kobi Ben      Total         Notes
    Prior-year ending capital     [formula]     [formula]     [formula]     From prior TB or M-2
-   
+
    Current-year changes:
      Contributions               [formula]     [formula]     =sum
      Distributions               [formula]     [formula]     =sum
      Capital account changes     [formula]     [formula]     =sum
      Retained earnings changes   n/a           n/a           [formula]     Entity-level only
    Total changes                 =SUM          =SUM          =SUM
-   
+
    Expected ending capital       =prior+chg    =prior+chg    =sum
    Actual ending per TB          [formula]     [formula]     =sum
    DIFFERENCE                    =exp-act      =exp-act      =sum          ⚠ if ≠ $0
@@ -471,58 +355,6 @@ Pause and surface to the user immediately if:
 
 **Tagged TB**: The original trial balance sheet with the Tax Group column added (non-destructive — original data preserved).
 
-## Excel Formula Rules
-
-Every calculated cell must use a formula. Never hardcode a derived value.
-
-| Cell Type | Formula Pattern |
-|-----------|----------------|
-| Income line (curr year) | `=-SUMIF('TB Sheet'!$E:$E,B{r},'TB Sheet'!$D:$D)` — B{r} is the label cell |
-| Expense line (curr year) | `=SUMIF('TB Sheet'!$E:$E,B{r},'TB Sheet'!$D:$D)` — B{r} is the label cell |
-| Variance | `=D{r}-C{r}` |
-| Section total | `=SUM(D{start}:D{end})` |
-| Net income | `=D{income}-D{expenses}-D{depreciation}` |
-| K-1 per-owner | `=D{r}*0.5` (or actual %) |
-| K-1 taxable total | `=SUM(D{line_refs})` |
-| 199A deduction | `=MIN(D{qbi}*0.2, D{w2}*0.5)` |
-| Reconciliation | `=SUM(all_tag_totals) - TB_grand_total` |
-
-**What stays hardcoded** (inputs only): prior-year return amounts, owner percentages, tax rates, depreciation from future dep reports, property names, notes text.
-
-Track row numbers in a `rows = {}` dict while building so formulas reference correct cells.
-
-## Styling Rules
-
-**Only 5 fill colors. Data rows have NO fill — leave them white.**
-Fills are reserved for structural rows only. This keeps the workpaper light and readable.
-
-| Element | Fill | Font | Border |
-|---------|------|------|--------|
-| Section headers | #1F4E79 (dark blue) | White, bold, 11pt | — |
-| Column headers | #D6E4F0 (soft blue) | Bold, 10pt | — |
-| Total rows | #E2EFDA (soft green) | Bold | top=medium, bottom=double |
-| Subtotal rows | #F2F2F2 (light gray) | Bold | bottom=thin |
-| Flagged items | #FFF2CC (soft yellow) | Bold | — |
-| **Data rows** | **No fill (white)** | Normal, 10pt | — |
-| Losses / negatives | No fill | Red font (#C00000) | — |
-| Notes column | No fill | Gray italic (#666666), 9pt | — |
-| Non-taxable K-1 items | No fill | Gray font (#666666) | — |
-
-Numbers: Right-aligned, `#,##0` or `#,##0;(#,##0)` for items that can be negative.
-Column widths: B=44, C-F=15-17, Notes=45.
-
-**Trial Balance tag column fills** (optional — for visual scanning):
-
-| Tag Category | Fill Color |
-|-------------|-----------|
-| Income tags | #E2EFDA (light green) |
-| Expense tags | #FDE9D9 (light orange) |
-| COGS tags | #D6E4F0 (light blue) |
-| BS tags | #F2F2F2 (light gray) |
-| K1 separately stated | #E8D5F5 (light purple) |
-| Nondeductible | #FFC7CE (light red) |
-| Capital/reclassify | #FFF2CC (light yellow) |
-
 ## Safety Constraints
 
 - This is an ESTIMATE, not a filed return. Always include the disclaimer.
@@ -532,36 +364,10 @@ Column widths: B=44, C-F=15-17, Notes=45.
 - Do not assume owner allocation percentages — verify from K-1s or partnership agreement.
 - Flag but do not resolve ambiguous tax positions (1031 qualification, 179 eligibility, passive activity status) — those require CPA judgment.
 
-## Pitfalls & Implementation Notes
+## References
 
-### PDF Extraction
-- Use `pymupdf` (preferred) or `pdfplumber` for tax return PDFs. Both handle multi-page text-based returns well. Some HUD/closing statement PDFs are scanned images and will extract as empty — fall back to GL entries or ask the user.
-- **PDF column misalignment**: Tax return PDFs often merge columns when extracted to text. The "Section 179 deduction" amount can appear to be "Other income" or vice versa. Always verify by checking if the total reconciles (e.g., rental income + LTCG - 179 = net income per analysis).
-- The Section 199A Information Worksheet is especially tricky — columns for QBI, W-2 wages, and UBIA of qualified property often merge. Cross-reference totals (entity-level should be 2x per-shareholder amounts for 50/50 splits).
-
-### Entity-Specific Traps
-- **S-Corp charitable contributions go to K-1, NOT page 1**: Unlike C-corps, S-Corp charitable contributions are NOT deducted on page 1 of Form 1120S. They flow through K-1 Box 12A and are deducted on the shareholder's personal return. Don't double-count.
-- **S-Corp COGS for dealer businesses**: For inventory businesses (boats, cars, etc.), COGS uses Form 1125-A (beginning inventory + purchases + labor - ending inventory). QBO may show COGS as sub-accounts (Finished Goods, Freight, Parts, Labor, Commissions) that sum to approximately the same number but may differ due to inventory timing. For a projection, use the TB sub-account totals directly.
-- **Reasonable compensation**: For S-Corps, verify officer W-2 amounts. Check prior-year Form 1125-E for the officer compensation breakdown. QBO often lumps officer comp into general "Salaries & wages."
-- **SSTB status**: Check the prior-year 199A Information Worksheet for the Specified Service Trade or Business flag. This affects the 199A deduction phase-out.
-- **Settlement dates determine tax year**: A January closing is NEXT year's taxable event even if the property was under contract in December. Check HUD settlement dates carefully.
-
-### Asset-Specific Traps
-- **Water/boat slips are non-depreciable**: Marina slips, dock spaces, and water rights are treated like land — no depreciation. Only closing costs (amortizable) and structural improvements generate deductions.
-- **Accumulated amortization can decrease**: When an amortizable asset is sold, its accumulated amortization is removed from the books. If accum amort goes DOWN year-over-year, check for asset dispositions — don't assume it's an error.
-- **Escrow accounts**: Large escrow balances often relate to 1031 exchanges or pending closings. Investigate rather than ignore.
-- **HUD "Borrower" vs "Buyer"**: When an entity buys through a 1031 QI, it appears as "Borrower" on the ALTA settlement statement even if there's no loan — "Borrower" just means buyer in ALTA format.
-
-### Balance Sheet & Intercompany
-- **Intercompany receivables/payables**: Changes in "Due from/to" accounts are balance sheet movements, not income. Don't include in the income calculation.
-- **Two-year comparison worksheet**: Many tax return PDFs include this (usually near the end). It's a quick way to verify prior-year amounts and spot year-over-year changes without reading every schedule.
-
-### Technical / Environment
-- Use `openpyxl` for Excel manipulation. On Ubuntu, install with `pip install --break-system-packages openpyxl pdfplumber`.
-- The `execute_code` sandbox may not see user-installed packages. Use `mcp_terminal` with `export HOME=/home/[user]` for openpyxl/pdfplumber work.
-- When building formulas in openpyxl, single quotes in sheet name references must be escaped: `'Trial Balance 2025'!$E:$E`
-
-### Consistency Across Workbooks
-- When building projections for multiple entities in the same client group, verify the output is visually identical: same 5-color palette, same section order, same column layout, same K-1 table structure. Side-by-side comparison catches drift.
-- If delegating workbook builds to subagents, specify exact hex color codes and explicitly state "data rows = NO fill." Subagents tend to over-apply fills (coloring every data row with light blue) and use bolder/darker color variants unless constrained.
-- The firm-stack repo at `proseertech/firm-stack` is the canonical source for the skill. Keep Hermes local copy and firm-stack repo in sync after updates.
+- **`references/account-tagging.md`** — tag category map + book-tax (M-1) difference list (Phases 2 and 2c)
+- **`references/k1-line-map.md`** — Form 1065 vs 1120S K-1 line numbers and key differences (Phase 4, section 6)
+- **`references/workbook-build.md`** — Excel formula patterns, column layout, styling palette, column widths (Phase 4)
+- **`references/pitfalls.md`** — PDF extraction, entity/asset-specific traps, environment setup, and multi-entity consistency notes
+- **`scripts/build_projection.py`** — openpyxl helper that builds the SUMIF-wired, styled skeleton (tagged-TB + projection + per-owner K-1 grid) and enforces the no-fill-on-data-rows rule (Phase 4; `--demo` for a runnable 1120S example)

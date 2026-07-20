@@ -1,14 +1,21 @@
 ---
 name: 1065-review
-version: 1.3.0
+version: 1.4.0
 description: |
-  Cross-reference a completed Form 1065 (partnership income tax return) against
-  source documents — trial balance, Schedule K-1s, and supporting schedules —
-  to verify income, deductions, credits, and partner allocations. Grades findings
-  by severity, verifies partner outside basis, and flags audit risk items.
+  Cross-reference a completed Form 1065 (partnership income tax return) against its
+  source documents — trial balance, Schedule K-1s, partnership agreement, and supporting
+  schedules — to catch errors before filing. Verifies income, deductions, credits, and
+  partner allocations tie out; confirms K-1 totals foot to Schedule K; checks partner
+  outside basis against allocated losses; and flags audit-risk items. Use this whenever
+  someone wants a partnership return checked, tied out, or reviewed before it goes out the
+  door — "review the 1065", "check the K-1s", "does this partnership return tie", "look over
+  the LLC return before we file", "the K-1s don't foot" — even if they don't name the form
+  or say the word "review".
 trigger: |
   "review the 1065", "partnership return review", "check the K-1s", "1065 cross-reference",
-  "tie out the partnership return", "verify the 1065"
+  "tie out the partnership return", "verify the 1065", "check the partnership return",
+  "review the LLC return", "do the K-1s foot", "K-1s don't tie", "partner allocations",
+  "check partner basis", "look over the 1065 before we file"
 allowed-tools:
   - Read
   - Write
@@ -20,20 +27,22 @@ tier: power-user
 
 ## Purpose
 
-Catch errors before a Form 1065 is filed. Verify that income, deductions, and partner allocations tie to the trial balance and source documents, and that K-1 totals are mathematically consistent with Schedule K.
+Catch errors before a Form 1065 is filed. Verify that income, deductions, and partner allocations tie to the trial balance and source documents, and that K-1 totals are mathematically consistent with Schedule K. The deliverable is a severity-graded findings report a preparer can act on line by line.
+
+This is a technical review for a professional preparer; it does not replace the signing partner's sign-off.
 
 ## Accuracy Standard
 
-Tax returns must be substantially correct. Rounding differences in the $10-$100 range are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
+Tax returns must be substantially correct, so the tolerance here is tight. Rounding differences of $10 or less are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
 
-There is no percentage-based materiality threshold. Do not use a percentage of gross receipts, total assets, or net income to determine whether a variance is acceptable. That approach belongs in financial statement audits, not tax review.
+Do **not** apply a percentage-based materiality threshold — no percentage of gross receipts, total assets, or net income. That approach belongs in a financial statement audit; a variance that is immaterial to the financials can still be a filing error on a tax return.
 
-Classify findings by severity (impact + risk) rather than by dollar-amount materiality:
+Classify findings by severity (impact + risk), not by dollar-amount materiality:
 - **HIGH**: Incorrect tax computation, wrong character of income, missing forms, positions without substantial authority
 - **MEDIUM**: Documentation gaps, questionable positions that are defensible but need support, items that could trigger correspondence
 - **LOW**: Minor rounding differences ($10-$100 range), presentation preferences, informational items
 
-Report every discrepancy outside the rounding tolerance in the findings table, including items you are uncertain about or consider low-severity. Severity is for prioritization, not filtering — all findings go in the table. A separate preparer review step decides what to act on; your job at this stage is coverage.
+Report every discrepancy outside the rounding tolerance in the findings table — including items you are uncertain about or consider low-severity. Severity ranks the list; it does not filter it. Deciding what to act on is the preparer's job at a later step; your job here is complete coverage, and a variance you drop because it "looked minor" is the one that surfaces after filing.
 
 ## Required Inputs
 
@@ -46,6 +55,8 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 
 ## Workflow
 
+Before starting, confirm the required inputs are present. A review run against a missing K-1 or an absent partnership agreement produces false "confirmed" items and misses real allocation errors — surface what's missing rather than reviewing around the gap.
+
 1. **Reconcile income and deductions to trial balance** — Tie Schedule K ordinary income/loss through M-1. Flag unexplained book-to-tax adjustments.
 2. **Verify Schedule K items** — Check each separately stated item against source (interest, dividends, Section 1231, QBI, credits, etc.).
 3. **Verify K-1 allocations** — Confirm K-1 totals for all partners sum to Schedule K. Verify percentages tie to the partnership agreement or are consistent with prior year.
@@ -57,9 +68,9 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 
 ## Control Points
 
-- **K-1 total mismatch** — K-1 allocations must equal Schedule K totals. Any discrepancy is a hard stop.
-- **Capital account method** — Confirm whether capital accounts are reported on tax basis, GAAP, Section 704(b), or other. Flag if the method changed from prior year.
-- **Partner loss without basis** — A loss allocated to a partner without documented outside basis is a hard stop requiring documentation.
+- **K-1 total mismatch** — K-1 allocations must equal Schedule K totals. Any discrepancy is a hard stop: at least one partner's K-1 is wrong, and the error flows straight to that partner's return.
+- **Capital account method** — Confirm whether capital accounts are reported on tax basis, GAAP, Section 704(b), or other. Flag if the method changed from prior year; a silent method change breaks the beginning-to-ending capital roll and can misstate every partner's balance.
+- **Partner loss without basis** — A loss allocated to a partner without documented outside basis is a hard stop. Under IRC 704(d) the loss is suspended, so filing it as currently deductible overstates the partner's deduction.
 
 ## Red Flags
 

@@ -1,14 +1,21 @@
 ---
 name: tax-memo
-version: 1.1.0
+version: 1.2.0
 description: |
-  Draft a client-facing tax memo from position notes, facts, and IRC citations.
-  Translates technical tax analysis into a clear, professional memo the client
-  can understand and act on. Distinguishes clear rules from gray areas and
-  includes a quality check before finalizing.
+  Write a polished, client-facing tax memo from an already-worked position — the
+  facts, the conclusion, and the IRC/reg citations behind it. This is the drafting
+  step: you have (or the user hands you) the analysis, and you turn it into a memo
+  the client can read and act on. Use it whenever someone wants a position written
+  up for a client — "draft a memo on this", "put this in a client memo", "write this
+  up for the client", "turn my notes into a memo", "summarize this position for the
+  client" — even if they don't say the word "memo." Keeps clear rules confident and
+  gray areas honestly hedged, and quality-checks every citation before finalizing.
+  For the underlying research, or a technical read of whether the position actually
+  holds up, that's tax-advisor — this skill formats the deliverable.
 trigger: |
   "tax memo", "client memo", "write a memo", "draft a memo", "memo to client",
-  "summarize this tax position", "client summary"
+  "put this in a memo", "write this up for the client", "turn these notes into a memo",
+  "write up this position for the client", "client-facing summary of this position"
 allowed-tools:
   - Read
   - Write
@@ -21,6 +28,10 @@ tier: all-staff
 ## Purpose
 
 Convert a tax position or analysis into a professional memo suitable for client delivery. The memo should be technically accurate with appropriate citations while remaining accessible to a non-tax audience.
+
+## Scope & Handoffs
+
+This skill is the **writing step**, not the research step. It assumes the position has already been worked — the facts, conclusion, and authority exist and are supplied. If the substantive question is still open ("how *should* we treat this", "is this defensible", "check whether this holds up"), that analysis belongs to **`tax-advisor`**; run that first, then bring the conclusion here to draft the client memo. Don't re-litigate the position while formatting it — but if a citation looks wrong or a gap appears while drafting, stop and flag it rather than papering over it.
 
 ## Required Inputs
 
@@ -46,9 +57,8 @@ Convert a tax position or analysis into a professional memo suitable for client 
 
 ## Control Points
 
-- **Gray areas** — If the position involves significant uncertainty, flag it explicitly and confirm the appropriate caveat language before drafting.
-- **Gray-area positions** — Before finalizing any memo on a gray-area position, present: the strongest authority supporting the position, the strongest authority against it, and the firm's recommended approach.
-- **Client-ready review** — Always note that the draft should be reviewed by the responsible CPA before sending.
+- **Gray-area positions** — Before finalizing any memo on a position involving significant uncertainty, stop and present: the strongest authority supporting the position, the strongest authority against it, and the firm's recommended approach — and confirm the caveat language with the user before drafting. Overstated certainty on a judgment call is what turns a memo into a malpractice exposure.
+- **Client-ready review** — Note that the draft must be reviewed and owned by the responsible CPA before it goes to the client; the memo is a draft until that happens.
 
 ## Red Flags
 
@@ -65,6 +75,6 @@ Convert a tax position or analysis into a professional memo suitable for client 
 
 ## Safety Constraints
 
-- Do not fabricate IRC citations or invent guidance that does not exist.
+- Never fabricate IRC citations or invent guidance that does not exist. A memo goes to the client under the firm's name; an invented citation is a client-facing misstatement that can survive into a filing. If you cannot stand behind a cite, leave it out and flag the gap.
 - Include appropriate disclaimer language: "This memo is for informational purposes and reflects our analysis based on the facts provided. Please consult with us before taking any action."
 - Do not finalize a memo on a gray-area position without noting the uncertainty.

@@ -1,16 +1,24 @@
 ---
 name: fbar-workpaper
-version: 1.0.0
+version: 1.1.0
 description: |
   Build Excel FBAR workpapers (FinCEN Form 114) from foreign bank account source
-  documents. Handles scanned bank statements, tax withholding certificates, and
-  multi-currency accounts. Produces a 4-sheet workpaper: summary, account detail,
-  interest income (Schedule B / Form 1116), and open items checklist.
+  documents — scanned statements, tax withholding certificates, multi-currency accounts.
+  Produces a 4-sheet workpaper: summary, account detail, interest income (Schedule B /
+  Form 1116), and open-items checklist. Use whenever a client discloses money held
+  outside the U.S. or hands over foreign bank paperwork — "client has an account
+  overseas", "do we need an FBAR", "foreign account reporting", "they had a bank account
+  in [country]", "build the FBAR workpaper", "foreign interest to report" — even if they
+  never say "FBAR" or "FinCEN 114." Also covers the related U.S. reporting the same
+  documents feed: Schedule B foreign accounts, Form 1116 foreign tax credit, and Form
+  8938 (FATCA) threshold screening.
 trigger: |
   "FBAR", "FinCEN 114", "foreign bank account", "foreign accounts", "BSA filing",
   "Report of Foreign Bank", "foreign financial account", "FBAR workpaper",
   "foreign account disclosure", "foreign interest income", "Schedule B foreign",
-  "Form 1116", "FATCA", "Form 8938", "foreign bank statement"
+  "Form 1116", "FATCA", "Form 8938", "foreign bank statement", "money overseas",
+  "offshore account", "account in [country]", "do we need to report a foreign account",
+  "did they file an FBAR"
 allowed-tools:
   - Read
   - Write
@@ -28,10 +36,13 @@ Form 114 (FBAR) filing and related U.S. income reporting (Schedule B, Form 1116,
 Form 8938). Use whenever a client discloses non-U.S. financial accounts, provides
 foreign bank statements, or receives foreign tax withholding certificates.
 
-FBAR is a high-penalty compliance item. Penalty for non-willful failure: up to
-$10,000 per account per year. Penalty for willful failure: greater of $100,000
-or 50% of the highest account value anytime during the year. Every number in these workpapers must trace
-directly to a source document.
+FBAR is a high-penalty compliance item, which is why every number in these workpapers
+must trace directly to a source document — a figure that can't be tied out is a figure
+that can't be defended. Penalty for non-willful failure: a $10,000 statutory base, inflation-adjusted (roughly
+$16,536 per violation for 2025 assessments) and applied per FBAR form — not per account
+(Bittner v. United States, 2023). Penalty for willful failure: the greater of the
+inflation-adjusted $100,000 base (roughly $165,353) or 50% of the highest account value
+anytime during the year. Confirm the current-year adjusted figures before relying on them.
 
 ## Required Inputs
 
@@ -41,6 +52,10 @@ directly to a source document.
 - **Foreign tax withholding certificate(s)** — if foreign tax was withheld on interest
 - **Filing status** — determines Form 8938 thresholds (single vs. MFJ)
 - **Prior-year FBAR** (optional) — for account continuity and completeness checking
+
+If a required input is missing, ask before proceeding. A workpaper built on an
+incomplete account list understates the client's exposure, and the gap surfaces only
+after filing.
 
 ## Workflow
 
@@ -59,25 +74,10 @@ directly to a source document.
 
 ### Phase 2 — Extract Source Documents
 
-Foreign bank statements are almost always scanned PDFs. Convert to images for
-vision-based extraction:
-
-```python
-import fitz, os
-doc = fitz.open(os.path.expanduser("~/path/to/statement.pdf"))
-for i, page in enumerate(doc):
-    pix = page.get_pixmap(dpi=150)
-    pix.save(os.path.expanduser(f"~/path/to/statement_p{i+1}.png"))
-```
-
-Extract per account using targeted vision queries:
-
-- Cover / account opening page: account holder name, address, account number,
-  bank name, branch, SWIFT/BIC, country
-- Balance pages: year-end balance, maximum balance during the year (if shown),
-  monthly average balances, sub-account detail
-- Tax certificate: gross income by category, foreign tax withheld, field codes,
-  tax year, currency
+Foreign bank statements are almost always scanned PDFs, so convert them to images for
+vision-based extraction and pull each account's balances, sub-account detail, and any
+tax-certificate income. The conversion snippet and the field-by-field extraction targets
+are in **`references/workpaper-layout.md`**.
 
 **Gate:** All source documents accounted for. If a document is missing (e.g., no
 annual statement showing maximum balance), flag it as an open item before continuing.
@@ -86,7 +86,8 @@ annual statement showing maximum balance), flag it as an open item before contin
 
 ### Phase 3 — Establish Exchange Rates
 
-Use two different rates — do not mix them:
+Use two different rates — do not mix them. They measure different things, and using a
+balance rate on income (or vice versa) produces figures that won't reconcile to either form.
 
 | Purpose | Rate | Source |
 |---|---|---|
@@ -104,92 +105,21 @@ Use two different rates — do not mix them:
 
 ### Phase 4 — Build the Workpaper (4 Sheets)
 
-Apply `firm-stack:excel-report-format` standards throughout. FBAR-specific additions:
-open items rows use a peach fill (#FDE8D8) to distinguish them from standard flagged
-items. Section headers use navy (#2B4770).
+Build a single `.xlsx` workbook with four sheets:
 
-#### Sheet 1 — FBAR Summary
+1. **FBAR Summary** — taxpayer block, one row per account, aggregate USD total, threshold
+   note (aggregate >$10,000 USD at any point during the year triggers filing), filing
+   instructions.
+2. **Account Detail** — one section per account: institution master, year-end balances,
+   sub-account/deposit detail, annual averages.
+3. **Interest Income (Schedule B / Form 1116)** — income by category at the IRS annual
+   average rate, foreign tax withheld, U.S. reporting treatment notes.
+4. **Open Items Checklist** — the standard nine-item list, each marked resolved or pending.
 
-- Taxpayer info block: name, TIN, filing type, tax year, report date
-- Accounts table — one row per account:
-
-| Column | Content |
-|---|---|
-| A | Account # (as it appears at the institution) |
-| B | Bank / Financial Institution |
-| C | Country |
-| D | Currency |
-| E | Maximum Value (foreign currency) |
-| F | Treasury FMS Year-End Rate |
-| G | Maximum Value (USD) — formula: `=E*F` |
-| H | Account Type (Bank Deposit / Securities / Other) |
-| I | Ownership / Signatory |
-| J | Status / Notes |
-
-- Total aggregate USD value row — `=SUM()` of column G
-- Threshold note: aggregate >$10,000 USD at any point during the year triggers filing
-- Filing instructions block: BSA E-Filing URL, due date, extension mechanics
-
-#### Sheet 2 — Account Detail
-
-One section per account. Each section contains:
-
-- **Section A — Institution Master:** Bank name, address, SWIFT/BIC, branch, account number
-- **Section B — Year-End Balances:** Balance in native currency, exchange rate, USD equivalent
-- **Section C — Sub-Account / Deposit Detail** (if applicable):
-
-| Column | Content |
-|---|---|
-| A | Deposit / Sub-Account # |
-| B | Currency |
-| C | Opening Balance |
-| D | Deposit Date |
-| E | Maturity Date |
-| F | Nominal Rate |
-| G | Effective Rate |
-| H | Rate Type (Fixed / Variable) |
-| I | Balance at Year-End |
-
-- **Section D — Annual Averages:** Monthly average balance from bank statement
-  (used to assess whether maximum balance may have been higher than year-end)
-
-#### Sheet 3 — Interest Income (Schedule B / Form 1116)
-
-- Source document reference (certificate number, issue date)
-
-| Column | Content |
-|---|---|
-| A | Income Category |
-| B | Amount (Foreign Currency) |
-| C | IRS Annual Average Rate |
-| D | Amount (USD) — formula: `=B*C` |
-| E | Notes |
-
-Rows to include (as applicable):
-- Taxable interest income
-- Tax-exempt interest (note treaty basis if applicable)
-- Foreign tax withheld
-- Net income after withholding — formula
-
-- U.S. reporting treatment note: exempt from foreign tax ≠ exempt from U.S.
-  Schedule B reporting
-- Form 1116 note: passive basket, foreign tax credit available for withheld amounts
-
-#### Sheet 4 — Open Items Checklist
-
-Standard open items (always include, mark resolved or pending):
-
-| # | Item | Status | Notes |
-|---|---|---|---|
-| 1 | Maximum balance confirmation — obtain if only year-end balance available | | |
-| 2 | IRS annual average exchange rate — confirm official rate for income conversion | | |
-| 3 | Treasury FMS year-end rate — confirm official rate for balance conversion | | |
-| 4 | Sub-account FBAR treatment — do sub-deposit numbers = separate FBAR accounts? | | |
-| 5 | Form 8938 (FATCA) assessment — threshold analysis vs. filing status | | |
-| 6 | Foreign residency / treaty status confirmation | | |
-| 7 | FBAR filing via BSA E-Filing System — client signature required | | |
-| 8 | Schedule B Part III — confirm "Yes" to foreign account question | | |
-| 9 | Form 1116 — foreign tax credit, passive basket | | |
+USD equivalents are formulas (`=E*F`, `=B*C`), never hard-coded values, so the workpaper
+recomputes when a rate is corrected. The full column-by-column layout for every sheet,
+plus the standard open-items list, is in **`references/workpaper-layout.md`** — read it
+when laying out the sheets.
 
 **Gate:** Open items reviewed with preparer before delivering workpaper.
 
@@ -248,7 +178,7 @@ These are hard stops. Do not proceed past them without explicit confirmation.
 
 5. **Corrected or amended source document** — If a corrected bank statement or tax
    certificate is received after the workpaper is built, stop and rebuild from the
-   corrected document. Note the correction in the Document Tracker.
+   corrected document. Note the correction in the Open Items Checklist.
 
 ---
 
@@ -273,17 +203,17 @@ Pause and surface to the preparer:
 
 ## Output Format
 
-Single `.xlsx` workbook with 4 sheets:
+Single `.xlsx` workbook with 4 sheets, in order:
 
 1. FBAR Summary
 2. Account Detail
 3. Interest Income (Schedule B / Form 1116)
 4. Open Items Checklist
 
-Naming convention: `{ClientName}_{TaxYear}_FBAR.xlsx`
-
-Formatting per `firm-stack:excel-report-format`. FBAR-specific: open items rows use
-peach fill (#FDE8D8).
+Naming convention: `{ClientName}_{TaxYear}_FBAR.xlsx`. Formatting per
+`firm-stack:excel-report-format`; FBAR-specific override: open-items rows use peach
+fill (#FDE8D8), section headers navy (#2B4770). Full layout in
+`references/workpaper-layout.md`.
 
 ---
 
