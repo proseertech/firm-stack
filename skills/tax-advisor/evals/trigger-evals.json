@@ -1,0 +1,22 @@
+[
+  {"query": "client is a dentist thinking about buying the building his practice rents through a separate LLC — walk me through whether renting it back to the practice creates self-rental problems and how that income gets characterized", "should_trigger": true},
+  {"query": "is a settlement for emotional distress from an employment lawsuit taxable? client got $180k, some of it allocated to physical symptoms. how much is excludable under 104(a)(2)?", "should_trigger": true},
+  {"query": "my associate drafted an analysis concluding the client can deduct a home office AND the mileage from home to that office — can you pressure-test the reasoning before it goes to the partner", "should_trigger": true},
+  {"query": "client wants to convert their C corp to an S corp next year — what are the traps we should be thinking about, BIG tax, LIFO recapture, passive income sting tax, that whole area", "should_trigger": true},
+  {"query": "second opinion needed: if the client gifts appreciated stock they've held 8 months to a donor advised fund, do they get the FMV deduction AND avoid the capital gain, or does the short holding period change it?", "should_trigger": true},
+  {"query": "how should we treat crypto staking rewards for this client — income when received or when sold? they've got about $40k of ETH staking rewards in 2025", "should_trigger": true},
+  {"query": "client is selling their SaaS business in a $12M asset deal — how do we think about allocating the purchase price across §197 intangibles vs goodwill and what's the rate impact to the seller", "should_trigger": true},
+  {"query": "is this defensible — client took a $95k bad-debt deduction for a loan to their own S corp that folded. is that a business bad debt (ordinary) or nonbusiness (short-term capital)?", "should_trigger": true},
+  {"query": "partnership is redeeming one partner's interest with a mix of cash and appreciated property, and there are hot assets in the mix. give me the framework for the §736(a) vs §736(b) split and the §751 piece", "should_trigger": true},
+  {"query": "client inherited an IRA from a parent who died in 2024 — with the SECURE Act rules how do the RMDs and the 10-year rule interact here, and is there any way to soften the tax hit", "should_trigger": true},
+  {"query": "draft a client-facing memo writing up our conclusion on the §1031 exchange — we already worked out the position, I just need it written for the client", "should_trigger": false},
+  {"query": "cross-reference this finished 1040 against the W-2s and the consolidated brokerage 1099s and flag anything that doesn't tie before we file", "should_trigger": false},
+  {"query": "build me the workpapers summarizing the 1099s and K-1s this partnership received this year so I can key the return", "should_trigger": false},
+  {"query": "clean up my email reply to the client explaining why their refund is smaller this year — it reads a little blunt and I want it to sound better before I send it", "should_trigger": false},
+  {"query": "client just bought a $3M warehouse — should we do a cost segregation study on it, is it even worth the fee?", "should_trigger": false},
+  {"query": "generate the document request list for the Johnsons off their prior-year 1040 so we can kick off this year's return", "should_trigger": false},
+  {"query": "run a tax projection for the partnership off this QBO trial balance and last year's 1065 and estimate what each partner's K-1 will look like", "should_trigger": false},
+  {"query": "does this manufacturing client with a bunch of process-improvement work qualify for the R&D credit — should we do a study for them?", "should_trigger": false},
+  {"query": "reconcile the AP subledger to the GL for March, there's a $4,200 difference I can't track down", "should_trigger": false},
+  {"query": "what's the month-end close status across my client portfolio right now — who's behind and what's blocking them?", "should_trigger": false}
+]

@@ -1,16 +1,24 @@
 ---
 name: tax-info-request
-version: 2.1.0
+version: 2.2.0
 description: |
-  Review a prior year individual tax return (Form 1040) PDF and generate a
-  flat, one-line-per-item information request for the current tax year.
-  Extracts every income source, deduction, entity, and account from the
-  return, then produces a checklist-style document request with prior year
-  reference amounts — one request per line, ready to paste into a portal
-  or tracker.
+  Turn a prior-year individual tax return (Form 1040) PDF into a flat,
+  one-line-per-item document request for the upcoming filing year. Reads the
+  full return, extracts every income source, deduction, entity, and account,
+  and produces a checklist — one request per line with prior-year reference
+  amounts — ready to paste into a portal, tracker, or client email. Use this
+  whenever you're kicking off a 1040 engagement and need to tell the client
+  what to send: "what do we need from this client", "build the doc request",
+  "start the organizer", "pull together the info request from last year's
+  return", "prep the client checklist for the new season" — even when the
+  words "info request" aren't used. Weaves in meeting notes and known life
+  events (home purchase, stock sale, new baby) as targeted request lines.
 trigger: |
-  "information request", "info request", "tax organizer", "review prior year return",
-  "document request list", "what do we need from the client", "1040 info request"
+  "information request", "info request", "tax organizer", "organizer",
+  "review prior year return", "document request list", "doc request",
+  "client checklist", "what do we need from the client",
+  "what should we ask the client for", "1040 info request",
+  "kick off the 1040", "start the return", "prep the client for tax season"
 allowed-tools:
   - Read
   - Write
@@ -37,14 +45,20 @@ Generate a complete information request for the upcoming tax year by extracting 
 **Prompt for these if not provided.** Ask:
 > Do you have any meeting notes, intake call context, or known life events for this client? Also let me know if you've already collected any documents so I can exclude them.
 
-## Current Tax Year Thresholds (2025)
+## Tax Year Thresholds
 
-Always use the **current filing year** amounts, not the prior year's. Key thresholds:
-- Gift tax annual exclusion: **$19,000** (2025)
-- Standard deduction (MFJ): **$30,000** (2025)
-- Standard deduction (Single): **$15,000** (2025)
+Use the amounts for the **tax year of the return you're collecting documents for** — during filing season that is usually the prior calendar year, not the year you are working in. Key thresholds:
+
+| Item | 2025 | 2026 |
+|---|---|---|
+| Gift tax annual exclusion | $19,000 | $19,000 |
+| Standard deduction (MFJ) | $30,000 | $32,200 |
+| Standard deduction (Single) | $15,000 | $16,100 |
+
 - FBAR threshold: $10,000 aggregate (static)
 - Form 8938 thresholds: $50,000/$75,000/$200,000/$400,000 (static, varies by filing status and residence)
+
+For any tax year beyond those shown, confirm that year's inflation-adjusted figures rather than extrapolating.
 
 Update these amounts if the current date indicates a different filing year.
 
@@ -205,10 +219,10 @@ Any other new income sources or significant life changes in 2025?
 
 ## Safety Constraints
 
-- **Never include full SSNs in the output.** Taxpayer SSNs must be omitted entirely.
-- **EINs for K-1 entities are included** — clients need these to match K-1s they receive.
-- **Account identifiers use last 4 digits only** — do not include full account numbers.
-- **Prior year amounts are reference only** — include in parentheses for context, not as expectations.
-- **Omit lines with no activity** — if no rental property, skip rental lines entirely.
-- **For every category, include an "any not listed?" catch-all line.**
-- **Use current-year thresholds** — never use prior year amounts for exclusion limits, gift limits, etc.
+- **Never include full SSNs in the output.** This checklist gets pasted into portals and emails; a full SSN in a document request is an unnecessary exposure. Omit taxpayer SSNs entirely.
+- **Account identifiers use last 4 digits only** — enough for the client to recognize the account, without transmitting a full account number. Never include full account numbers.
+- **EINs for K-1 entities are included** — this is deliberate. Clients need the EIN to match against K-1s they receive, so keep it.
+- **Prior-year amounts are reference only** — they orient the client, not set an expectation. Keep them in parentheses and brief.
+- **Omit lines with no activity** — a request for documents the client doesn't have wastes their time and erodes trust in the list. If there's no rental property, skip the rental lines entirely.
+- **Include an "any not listed?" catch-all per category** — new accounts, employers, and entities appear every year, and the prior return can't show them. The catch-all is what surfaces them.
+- **Use current-year thresholds, never prior-year** — gift-exclusion, standard-deduction, and reporting thresholds change annually, and a stale limit produces a wrong instruction to the client.

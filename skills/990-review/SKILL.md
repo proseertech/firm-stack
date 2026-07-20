@@ -1,15 +1,23 @@
 ---
 name: 990-review
-version: 1.3.0
+version: 1.4.0
 description: |
   Cross-reference a completed Form 990-PF (private foundation return) against
   source documents — financial statements, investment schedules, grants paid, and
   officer compensation records — to verify accuracy and compliance with private
-  foundation excise tax rules. Grades findings by severity, independently
-  recalculates the distributable amount, and flags audit risk items.
+  foundation excise tax rules. Independently recalculates the 5% distributable
+  amount, checks the net investment income excise tax, screens for self-dealing,
+  grades findings by severity, and flags audit risk items. Use this whenever
+  someone wants a completed 990-PF checked before filing — "review the 990",
+  "tie out the foundation return", "did the foundation meet its distribution
+  requirement", "check the excise tax", "look over the private foundation return"
+  — even if they don't say "990-PF" or "cross-reference."
 trigger: |
-  "review the 990", "private foundation return", "990-PF review",
-  "check the private foundation return", "990 cross-reference"
+  "review the 990", "990-PF review", "private foundation return",
+  "check the private foundation return", "990 cross-reference",
+  "tie out the foundation return", "foundation return review",
+  "check the distribution requirement", "did the foundation distribute enough",
+  "check the excise tax", "self-dealing check"
 allowed-tools:
   - Read
   - Write
@@ -21,11 +29,13 @@ tier: power-user
 
 ## Purpose
 
-Catch errors and compliance issues before a Form 990-PF is filed. Verify that financials tie to source documents and that the distribution requirement, investment income excise tax, and disqualified person transactions are correctly reported.
+Catch errors and compliance issues before a Form 990-PF is filed. Verify that financials tie to source documents and that the distribution requirement, net investment income excise tax, and disqualified person transactions are correctly reported. The private foundation excise regime is unforgiving — a missed distribution or an unflagged self-dealing transaction carries excise tax and, if uncorrected, escalating penalties — so the review has to be independent, not a re-read of the preparer's own numbers.
+
+This produces reviewer findings for a preparer to act on. It does not sign or file the return.
 
 ## Accuracy Standard
 
-Tax returns must be substantially correct. Rounding differences in the $10-$100 range are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
+Tax returns must be substantially correct. Rounding differences of $10 or less are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
 
 There is no percentage-based materiality threshold. Do not use a percentage of total assets or net investment income to determine whether a variance is acceptable. That approach belongs in financial statement audits, not tax review.
 
@@ -58,8 +68,10 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 
 ## Control Points
 
-- **Distribution shortfall** — If qualifying distributions fall below the distributable amount, flag immediately — undistributed income carries an excise tax.
-- **Self-dealing** — Any transaction with a disqualified person must be reviewed by the preparer before the return is finalized.
+Stop and get a preparer decision before treating the return as reviewed-complete when:
+
+- **Distribution shortfall** — If qualifying distributions fall below the distributable amount, flag it immediately. Undistributed income carries an excise tax under IRC 4942, and the shortfall must be resolved (or a valid carryover applied) before filing.
+- **Self-dealing** — Any transaction with a disqualified person must go to the preparer before the return is finalized. Self-dealing is prohibited regardless of fairness or benefit to the foundation, so it is a judgment call the preparer owns, not one to clear silently.
 
 ## Red Flags
 
@@ -93,6 +105,7 @@ Organized into sections:
 
 ## Safety Constraints
 
-- Do not mark the return reviewed-complete if the distribution requirement is not met without preparer resolution.
-- Do not clear self-dealing transactions without preparer review.
+- Do not mark the return reviewed-complete if the distribution requirement is not met without preparer resolution — an unaddressed shortfall means an excise tax the foundation owes.
+- Do not clear self-dealing transactions on your own; they require preparer review.
 - Do not characterize audit risk as a probability or percentage. Professional judgment on acceptable risk levels belongs to the signing partner.
+- Report the distributable-amount and excise-tax math you performed, not just the conclusion, so the preparer can check it — an independent recalculation is only useful if it is auditable.

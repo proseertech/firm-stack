@@ -1,14 +1,21 @@
 ---
 name: excel-formula-refresh
-version: 1.2.0
+version: 1.3.0
 description: |
-  Replace hard-coded totals and subtotals in an accounting system export with
-  proper Excel SUM, SUBTOTAL, or SUMIF formulas. Ensures that total rows sum
-  the amounts above them rather than containing static exported values that
-  won't update when data changes.
+  Replace hard-coded total and subtotal rows in an accounting export (trial balance,
+  P&L, GL detail, or any spreadsheet) with live Excel SUM, SUBTOTAL, or SUMIF formulas,
+  so totals recalculate when the detail changes instead of showing stale exported numbers.
+  Use this whenever the totals in a workbook are typed-in values rather than formulas —
+  even when the user doesn't say "formula." Fires for "the totals don't add up when I edit
+  a row," "these numbers are hard-coded," "make the totals dynamic/live," "the total won't
+  update," "add formulas to this export," and reviewing a spreadsheet whose totals need to
+  tie to their detail. This is about the math in total cells; standardizing fonts, colors,
+  and layout is excel-report-format.
 trigger: |
   "formula refresh", "fix the totals", "add SUM formulas", "add SUBTOTAL formulas",
-  "hard-coded export", "totals aren't formulas", "replace hard-coded numbers", "Excel totals"
+  "hard-coded export", "hard-coded totals", "totals aren't formulas", "replace hard-coded numbers",
+  "Excel totals", "make the totals live", "make the totals dynamic", "totals won't update",
+  "totals don't recalculate", "the total doesn't add up", "convert totals to formulas"
 allowed-tools:
   - Read
   - Write
@@ -20,7 +27,9 @@ tier: all-staff
 
 ## Purpose
 
-Accounting system exports (from Sage Intacct, QBO, or others) often contain hard-coded total rows — static numbers that were accurate at export time but don't update if the data is edited. This skill replaces those hard-coded totals with live Excel formulas — SUM, SUBTOTAL, or SUMIF — chosen based on the structure of the report.
+Accounting system exports often contain hard-coded total rows — static numbers that were accurate at export time but silently go wrong once someone edits a detail row, because the total doesn't recalculate. This skill replaces those hard-coded totals with live Excel formulas — SUM, SUBTOTAL, or SUMIF — choosing the function that fits the report's structure so every total ties to the detail above it and stays correct as the data changes.
+
+Scope is the math in total cells. Formatting the report to the firm's look (fonts, borders, number formats) is `excel-report-format`.
 
 ## Required Inputs
 
@@ -49,8 +58,8 @@ Accounting system exports (from Sage Intacct, QBO, or others) often contain hard
 
 ## Red Flags
 
-- Total row contains a formula that references a different range than expected (may indicate a prior manual adjustment)
-- Multiple layers of subtotals where the structure is ambiguous
+- A total cell already contains a formula, but one referencing a different range than expected — may be a prior manual adjustment. Surface it and confirm before overwriting; don't assume the existing formula is wrong.
+- Multiple layers of nested subtotals where the grouping is ambiguous. Show the user the structure you inferred and confirm before writing formulas.
 
 ## Output Format
 
@@ -72,5 +81,5 @@ Include any notes on ranges the user should verify before applying.
 
 ## Safety Constraints
 
-- Do not modify the source data rows — only replace values in total/subtotal rows.
-- Flag any cells where the correct range or formula choice is ambiguous rather than guessing.
+- Touch only total and subtotal cells. Do not modify, reorder, or delete the source detail rows — those are the client's data, and a formula refresh must never change what the report says, only make the totals recompute it.
+- When the correct range or formula choice is ambiguous, flag it and confirm rather than guessing — a wrong range produces a total that looks right but silently mis-adds, and the error surfaces only after the file has been relied on.

@@ -1,17 +1,25 @@
 ---
 name: 1040-review
-version: 2.2.0
+version: 2.3.0
 description: |
-  Cross-reference a completed Form 1040 (individual income tax return) or
-  extension projection against source documents — W-2s, 1099s, K-1s, brokerage
-  statements, and supporting schedules — to verify every income, deduction,
-  credit, and withholding line ties back correctly. Supports both final return
-  review and extension projection mode. Grades findings by severity and flags
-  audit risk items.
+  Cross-reference a completed Form 1040 (individual income tax return) or an
+  extension projection against its source documents — W-2s, 1099s, K-1s, brokerage
+  statements, and supporting schedules — to confirm every income, deduction, credit,
+  and withholding line ties back correctly and nothing was omitted or miscoded. This
+  is the preparer/reviewer tie-out step. Use it whenever someone wants a 1040 checked
+  before it is filed or before an extension payment is set, even when they don't name
+  the form or the word "review": "does this individual return tie out", "did we miss
+  any income", "second set of eyes on this 1040 before I sign", "is the extension
+  payment reasonable", "self-review before e-file". Grades findings by severity and
+  flags audit-risk items; supports both final-return review and extension-projection
+  mode.
 trigger: |
   "review the 1040", "check the individual return", "1040 cross-reference",
-  "tie out the 1040", "verify the individual return", "extension projection",
-  "check the extension", "review the projection"
+  "tie out the 1040", "tie out the individual return", "verify the individual return",
+  "second review on the 1040", "self-review the 1040", "check the 1040 before filing",
+  "review before I sign", "did we miss any income", "does the return tie out",
+  "extension projection", "check the extension", "review the projection",
+  "is the extension payment reasonable"
 allowed-tools:
   - Read
   - Write
@@ -23,20 +31,21 @@ tier: power-user
 
 ## Purpose
 
-Catch errors before a Form 1040 is filed or an extension payment is calculated. Verify that every line on the return ties to a source document and that no income, deduction, or credit has been omitted or misstated.
+Catch errors before a Form 1040 is filed or an extension payment is calculated. Verify that every line on the return ties to a source document and that no income, deduction, or credit has been omitted or misstated. The deliverable is a scannable dashboard of findings a reviewer can act on — not a narrated walk-through.
 
 ## Accuracy Standard
 
-Tax returns must be substantially correct. Rounding differences in the $1- $2 range are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
+Tax returns must be substantially correct. Rounding differences of $10 or less are acceptable (consistent with IRS whole-dollar rounding instructions and normal software rounding behavior). Beyond that, every discrepancy is a finding.
 
-There is no percentage-based materiality threshold. Do not use a percentage of gross income, total assets, or net income to determine whether a variance is acceptable. That approach belongs in financial statement audits, not tax review.
+There is no percentage-based materiality threshold. Do not use a percentage of gross income, total assets, or net income to decide whether a variance is acceptable — that approach belongs in financial statement audits, not tax review, and here it would wave through a real omission just because it's small relative to the return.
 
-Classify findings by severity (impact + risk) rather than by dollar-amount materiality:
-- **HIGH**: Incorrect tax computation, wrong character of income, missing forms, positions without substantial authority
-- **MEDIUM**: Documentation gaps, questionable positions that are defensible but need support, items that could trigger correspondence
-- **LOW**: Minor rounding differences ($1 - $2 range), presentation preferences, informational items
+Classify findings by severity (impact + risk), not by dollar-amount materiality:
 
-Report every discrepancy outside the rounding tolerance in the findings table, including items you are uncertain about or consider low-severity. Severity is for prioritization, not filtering — all findings go in the table. A separate preparer review step decides what to act on; your job at this stage is coverage.
+- **HIGH** — Incorrect tax computation, wrong character of income, missing forms, positions without substantial authority
+- **MEDIUM** — Documentation gaps, questionable-but-defensible positions needing support, items that could trigger correspondence
+- **LOW** — Minor differences ($10–$100 range), presentation preferences, informational items
+
+Report every discrepancy outside the rounding tolerance in the findings table, including items you are uncertain about or consider low-severity. Severity is for prioritization, not filtering — all findings go in the table. A separate preparer review step decides what to act on; your job at this stage is coverage, and a finding left out of the table is a finding no one gets to weigh.
 
 ## Required Inputs
 
@@ -47,108 +56,54 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 
 ## Workflow
 
-### Step 0 — Determine Review Mode
+Execute the phases below silently, then present the dashboard (Phase E). The detailed,
+line-by-line tie-out mechanics and the special cases that most often trip up a 1040 live in
+**`references/tie-out-procedures.md`** — read that file when you reach Phase D.
 
-Ask whether this is a **final return review** or an **extension projection review**.
+### Phase A — Determine review mode
 
-**Extension projection mode** differs from a final review:
-- K-1s using SALY (same as last year) amounts are expected — flag as "pending actual K-1" rather than as errors
-- Not all 1099s may be final — note which documents are preliminary
-- The primary objective is verifying the extension payment amount is reasonable
-- Instead of a "do not mark review complete" hold, produce an **open items list for final return** tracking what must be resolved before filing
+Ask whether this is a **final return review** or an **extension projection review**. Projection mode changes what counts as an error:
+
+- K-1s using SALY (same as last year) amounts are expected — flag as "pending actual K-1", not as errors.
+- Not all 1099s may be final — note which documents are preliminary.
+- The primary objective is verifying the extension payment amount is reasonable.
+- Instead of a "do not mark review complete" hold, produce an **open items list for final return** tracking what must be resolved before filing.
 - Focus the summary on: is the estimated balance due / overpayment / extension payment reasonable given available information?
 
-### Step 1 — Review Two-Year Comparison
+### Phase B — Orient: two-year comparison and diagnostics
 
-Review the Two-Year Comparison worksheet generated by the tax software. Flag any line with a change greater than 25% or $10,000 for investigation. Each significant variance should be explained by the end of the review. This step surfaces the biggest questions early and focuses the rest of the review.
+- **Two-Year Comparison** — Review the worksheet the tax software generates. Flag any line with a change greater than 25% or $10,000 for investigation; each significant variance should be explained by the end of the review. This surfaces the biggest questions early and focuses the rest of the review.
+- **Diagnostics and overrides** — Read the software's Return Information / Diagnostics page and Input Override Report. Address each diagnostic by severity (QBI errors, missing income type codes, date issues). Document the reason for each input override. Wash sale overrides on capital gains worksheets are common and legitimate — before flagging one, check whether the override amount matches a wash sale disallowed amount on the corresponding 1099-B.
 
-### Step 2 — Review Software Diagnostics and Overrides
+### Phase C — Inventory source documents
 
-Read the tax software's Return Information / Diagnostics page and Input Override Report:
-- Address each diagnostic by severity — QBI errors, missing income type codes, date issues, etc.
-- Document the reason for each input override
-- Wash sale overrides on capital gains worksheets are common and legitimate — before flagging a capital gains override as an issue, check whether the override amount matches a wash sale disallowed amount on the corresponding 1099-B
+List all source docs provided. Flag any that appear missing based on the return (e.g., K-1 income on Schedule E with no K-1 provided). Two source-document situations look like errors but aren't (grantor-trust 1099s), and one looks fine but hides omitted income (unmapped consolidated-1099 sub-accounts) — both are detailed in `references/tie-out-procedures.md`.
 
-### Step 3 — Inventory Source Documents
+### Phase D — Tie out every line
 
-List all source docs provided. Flag any that appear to be missing based on the return (e.g., K-1 income on Schedule E with no K-1 provided).
+Work through each income, deduction, credit, withholding, and carryover category, tying each line to its source document. The per-category procedures and the special cases — structured-note/auto-call income to Form 8960, brokerage cash bonuses, the pass-through loss limitation stack (basis → at-risk → passive → QBI), cost-segregation rental losses, the SALT cap, carryover reconciliation — are in **`references/tie-out-procedures.md`**. Read it before starting this phase; the special cases are where returns quietly go wrong.
 
-**Consolidated 1099 sub-account mapping**: When a taxpayer has consolidated 1099s (e.g., Morgan Stanley), map each account number on the return's Interest & Dividend Summary back to a specific sub-account within the consolidated 1099 in the workpapers. Do not just confirm "a Morgan Stanley 1099 exists" — confirm coverage of each sub-account individually.
+### Phase E — Dashboard summary
 
-**Revocable / grantor trust 1099s**: If any 1099 is in the name of a revocable or grantor trust, confirm the trust is disregarded for income tax purposes and all income is properly reported on the grantor's 1040. This is correct treatment — do not flag it as a name mismatch.
-
-### Step 4 — Verify Wages and Compensation
-
-Tie W-2 Box 1 wages to Line 1a. Check Box 12 codes for deferred comp, HSA, etc.
-
-### Step 5 — Verify Investment Income
-
-Tie 1099-INT, 1099-DIV, and Schedule B. Verify 1099-B transactions on Schedule D / Form 8949.
-
-**Structured notes / auto-call income**: Check 1099-MISC Box 3 for structured note or contingent coupon income (e.g., "BNS CI AUTO TSLA", "GS CI AUTO NVDA"). This is ordinary income that should flow to Form 8960 (NIIT) as investment income. Verify the income type is coded correctly for NIIT purposes — the software may not automatically classify it.
-
-**Brokerage cash bonuses**: Promotional bonuses from brokerages (CashPlus, sign-up bonuses) also appear on 1099-MISC Box 3. These are ordinary income, not investment income. Small amounts ($500-$1,000 range) but commonly recurring.
-
-### Step 6 — Verify Retirement Income
-
-Tie 1099-R distributions to Line 4 or 5. Verify taxable amount and any rollover exclusions.
-
-### Step 7 — Verify Pass-Through Income
-
-Tie each K-1 to the appropriate schedule (E, F, etc.). For each pass-through entity reporting a loss:
-- **Basis limitation**: Does the taxpayer have sufficient basis to absorb the loss? If no basis worksheet is provided and a loss is claimed, this is a hard stop — flag as requiring basis documentation.
-- **At-risk limitation**: Is Form 6198 present? If losses are claimed from an activity, at-risk must be addressed.
-- **Passive activity**: Is Form 8582 present? Flag any pass-through loss flowing through without Form 8582 when the taxpayer has W-2 income (suggesting they may not materially participate).
-- **QBI deduction**: Verify the Section 199A computation. Flag if income is from a specified service trade or business (SSTB) above the income threshold without a phase-out calculation.
-- **Cost segregation losses**: If a large rental loss is present, determine whether it is driven by a cost segregation study. If so, verify:
-  - Real estate professional status — 750-hour log and material participation documentation
-  - Correct bonus depreciation rate for the tax year
-  - Cost seg study report on file
-  - Whether the loss is passive or nonpassive based on RE pro qualification
-
-### Step 8 — Verify Deductions and Credits
-
-Check Schedule A itemized deductions or standard deduction. Verify credits (child tax, EV, education, etc.) against supporting forms.
-
-**SALT cap**: When verifying Schedule A, check the SALT limitation on Line 5e against the current-year statutory cap. Do not hardcode the cap amount — reference the applicable limit for the tax year under review (e.g., $10,000 under original TCJA; $40,000 under One Big Beautiful Bill for 2025+). Confirm the software is applying the correct cap.
-
-### Step 9 — Verify Withholding and Estimated Payments
-
-Tie federal withholding to all W-2s and 1099s. Verify estimated tax payments against IRS records if available.
-
-### Step 10 — Verify Carryovers
-
-Review the tax software's "Tax Return Carryovers to [Next Year]" schedule:
-- Verify prior-year carryovers were correctly brought forward from the prior return's carryforward schedule
-- Verify current-year carryovers are reasonable given the return's activity
-- Specifically reconcile: capital loss carryovers, passive loss carryovers (Form 8582), and foreign tax credit carryovers (Form 1116)
-
-### Presentation Rule
-
-**Do not narrate each step.** Steps 1-10 are internal guidance for thoroughness — execute them silently. Do not write "Step 4 — checking wages… wages tie" or similar play-by-play. Present only the dashboard summary below.
-
-### Step 11 — Dashboard Summary
-
-Present a **compact summary** the reviewer can scan in under 60 seconds:
+**Do not narrate the phases above.** Play-by-play ("checking wages… wages tie") buries the findings the reviewer actually needs. Present only the compact summary — something a reviewer can scan in under 60 seconds:
 
 1. **Bottom line** (2-3 sentences): Is the return / extension payment reasonable? What is the single most important issue?
 2. **Findings table** — one row per issue, no detail paragraphs:
 
-| # | Severity | Line / Schedule | Description | Amount |
-|---|----------|-----------------|-------------|--------|
-| 1 | HIGH | Sch E, Line 28 | K-1 loss with no basis worksheet | ($42,000) |
-| 2 | MEDIUM | Sch B | Sub-account 789 not mapped to 1099 | $3,200 |
+   | # | Severity | Line / Schedule | Description | Amount |
+   |---|----------|-----------------|-------------|--------|
+   | 1 | HIGH | Sch E, Line 28 | K-1 loss with no basis worksheet | ($42,000) |
+   | 2 | MEDIUM | Sch B | Sub-account 789 not mapped to 1099 | $3,200 |
 
 3. **Audit risk** — 1-3 bullet points, factual (not a score or probability).
 4. **Open items count** *(extension mode only)* — e.g., "4 items pending for final return (3 SALY K-1s, 1 preliminary 1099)."
 
-**Do not list confirmed line items.** Lines that tie correctly are the expected case — listing them adds bulk without value. If the reviewer wants a full tie-out schedule, they can request it.
+**Do not list confirmed line items.** Lines that tie correctly are the expected case; listing them adds bulk without value. End the summary with: *"Expand any issue by number, say 'walk through all' to resolve one at a time, or ask for the full tie-out schedule."*
 
-End the summary with: *"Expand any issue by number, say 'walk through all' to resolve one at a time, or ask for the full tie-out schedule."*
+### Phase F — Interactive resolution
 
-### Step 12 — Interactive Resolution
+After the dashboard, the reviewer drives. For each item they raise:
 
-After the dashboard, the reviewer drives the conversation. For each item they raise:
 - **Resolve** — reviewer provides an explanation or correction that clears the item
 - **Defer** — move to the open items list for later follow-up
 - **Escalate** — flag for partner review
@@ -164,26 +119,30 @@ Correction: [recommended action]
 Authority: [IRC §, Reg., or procedure if applicable]
 ```
 
-Track which items are resolved vs. still open. Update the findings table as items are resolved.
+Track which items are resolved vs. still open, and update the findings table as items clear.
 
 ## Control Points
 
-- **Any discrepancy beyond rounding** — Every variance outside the $10-$100 rounding range requires preparer review and correction before filing.
-- **Missing source documents** — Do not mark the review complete if source docs are missing for reported income.
-- **Pass-through loss without basis** — A loss claimed without a basis worksheet is a hard stop requiring documentation before the review can continue.
-- **Extension projection mode** — In projection mode, produce an open items list rather than blocking review completion. The open items list tracks what must be resolved before the final return is filed.
+Stop and get a human decision before treating the review as done when:
+
+- **Any discrepancy beyond rounding remains** — Every variance beyond the $10 rounding tolerance requires preparer review and correction before filing.
+- **Source documents are missing** — Do not mark the review complete if source docs are missing for reported income; income you can't tie to a document is income you can't confirm.
+- **A pass-through loss is claimed without basis** — A loss with no basis worksheet is a hard stop; the loss may not be deductible, so it needs documentation before the review continues.
+- **Extension projection mode** — Produce an open items list rather than blocking completion. The list tracks what must be resolved before the final return is filed.
 
 ## Red Flags
 
+Pause and surface to the reviewer when:
+
 - Reported income doesn't match any source document on file
 - K-1 shows a large loss but no basis worksheet is present
-- Withholding on return exceeds withholding on source documents
-- Prior-year carryforwards present but no supporting schedule
+- Withholding on the return exceeds withholding on source documents
+- Prior-year carryforwards are present but no supporting schedule is
 - QBI deduction taken without a supporting computation
 - Pass-through loss claimed without basis documentation or Form 6198
 - Passive loss allowed without Form 8582 or evidence of material participation
 - QBI deduction taken on SSTB income above threshold without phase-out calculation
-- Large ISO exercise, accelerated depreciation, or preference items present — verify Form 6251 is present and AMT computation is correct
+- Large ISO exercise, accelerated depreciation, or preference items present — verify Form 6251 is present and the AMT computation is correct
 - Cross-return coordination needed: K-1 amounts from a related 1120-S, 1065, or 1041 should tie to the issuing entity's return
 - Large rental loss driven by cost segregation — verify RE pro status and bonus depreciation rate
 - Software diagnostics unresolved or input overrides undocumented
@@ -192,9 +151,8 @@ Track which items are resolved vs. still open. Update the findings table as item
 
 ## Output Format
 
-**Default output is the dashboard summary** (see Step 11) — a compact table plus bottom line. The full detail block for each issue is shown only when the reviewer expands it (see Step 12).
+**Default output is the dashboard summary** (Phase E) — a compact table plus bottom line. The full detail block for each issue appears only when the reviewer expands it (Phase F). The dashboard groups findings into:
 
-The dashboard groups findings into:
 - **Issues** — Severity-graded (HIGH / MEDIUM / LOW), ranked by dollar impact
 - **Missing Support** — Source docs absent
 - **Preparer Questions** — Items requiring judgment or additional facts
@@ -205,18 +163,18 @@ Confirmed line items are **not listed by default**. Request "full tie-out schedu
 
 ### Excel / Workpaper Output
 
-When producing an Excel workpaper (extension payment summary, tax computation, reconciliation, etc.), **all computed cells must use Excel formulas, not hard-coded values**:
+When producing an Excel workpaper (extension payment summary, tax computation, reconciliation, etc.), **all computed cells must use Excel formulas, not hard-coded values** — a hard-coded total can't be traced or re-run, which defeats the point of a workpaper:
 
 - **Totals**: `=SUM(range)` — never type a static total
 - **Balance due / overpayment**: `=tax_cell - payments_cell` (e.g., `=B12-B18`)
 - **Effective rates, differences, variances**: formulas referencing source cells
 - **Subtotals feeding into grand totals**: `=SUM()` of detail rows, not of subtotal rows (avoid double-counting)
 
-Hard-coded totals defeat the purpose of a workpaper. The reviewer needs to see that the math ties by formula, and needs the ability to adjust an input and see the result update automatically.
+The reviewer needs to see the math tie by formula and to adjust an input and watch the result update.
 
 ## Safety Constraints
 
-- Do not mark the return as reviewed-complete if any discrepancies beyond rounding or missing documents remain.
+- Do not mark the return as reviewed-complete while any discrepancies beyond rounding, or any missing documents, remain.
 - Do not draft a response to an IRS notice based on this review without preparer confirmation.
-- Do not characterize audit risk as a probability or percentage. Professional judgment on acceptable risk levels belongs to the signing partner.
+- Do not characterize audit risk as a probability or percentage. Judgment on acceptable risk levels belongs to the signing partner.
 - Do not hardcode SALT caps, bonus depreciation rates, or other amounts that change by tax year — always reference the applicable year's statutory amount.
