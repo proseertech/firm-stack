@@ -1,0 +1,53 @@
+{
+  "skill_name": "tax-advisor",
+  "evals": [
+    {
+      "id": 0,
+      "name": "research-174-rd-capitalization",
+      "prompt": "One of our clients is a software company that spent about $2.1M on developer salaries in 2025 building their own SaaS platform. The controller wants to deduct all of it in 2025. Is that right, or does something have to be capitalized? Walk me through the treatment.",
+      "expected_output": "Identifies this as an IRC §174 specified R&E expenditure question (software development is deemed §174), verifies current law via web rather than answering from memory, reflects the 2025 restoration of domestic R&E expensing while distinguishing foreign R&E, avoids the stale 'just deduct it' answer, and flags CPA sign-off.",
+      "files": [],
+      "assertions": [
+        "Identifies the developer costs as IRC §174 specified research & experimental expenditures (software development is treated as §174), not simply a §162 deduction",
+        "Actually performs a web search / cites current-source verification of the §174 rules rather than answering purely from memory",
+        "Explains that TCJA required capitalization and amortization of §174 costs beginning in 2022 (5-year domestic / 15-year foreign)",
+        "Reflects the 2025 restoration of immediate expensing for domestic R&E (OBBBA / §174A) applicable to the 2025 costs",
+        "Distinguishes domestic R&E (expensible) from foreign R&E (still 15-year amortization)",
+        "Does NOT simply tell the controller to deduct the full $2.1M with no §174 / capitalization analysis",
+        "Notes the conclusion is subject to the responsible CPA's review or that authority should be confirmed"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "review-flawed-qbi-memo",
+      "prompt": "Can you review my associate's memo before it goes out to the partner? It's in draft-qbi-memo.md. She's pretty new and I want to make sure the §199A analysis holds up.",
+      "expected_output": "Catches the NNN safe-harbor exclusion and the omitted wage/UBIA limitation, notes QTB status is fact-dependent, ranks findings by severity, stays teachable, and verifies authority.",
+      "files": ["draft-qbi-memo.md"],
+      "assertions": [
+        "Identifies that triple-net (NNN) leased property is excluded from the Rev. Proc. 2019-38 rental real estate safe harbor, so the memo's 'clearly qualifies' conclusion is wrong",
+        "Notes that rental real estate is not automatically a §162 qualified trade or business — it is fact-dependent, and a single passive NNN lease likely does not rise to a trade or business",
+        "Catches the material omission that at ~$685k MFJ taxable income the taxpayer is above the §199A threshold, so the deduction is subject to the W-2 wage / UBIA limitation",
+        "Notes that with no W-2 wages the wage/UBIA limit could reduce the $62,000 deduction substantially (e.g., toward 2.5% of UBIA) rather than the full 20%",
+        "Organizes or ranks the findings by severity / materiality rather than a flat unprioritized list",
+        "Feedback is constructive and teachable — points to specific spots in the memo and explains why, appropriate for a new associate",
+        "Verifies the authority it relies on (e.g., checks Rev. Proc. 2019-38 / §199A rules) rather than asserting from memory"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "advisory-scorp-succession",
+      "prompt": "Client is 55, owns 100% of an S-corp worth about $8M, and wants to start moving ownership to his two kids who work in the business - but keep control for now and minimize gift tax. What are his options?",
+      "expected_output": "Presents multiple genuine options with trade-offs, respects S-corp constraints, explains a control-retention mechanism, covers gift-tax minimization tools, flags a valuation specialist, and gives a concrete recommendation.",
+      "files": [],
+      "assertions": [
+        "Presents at least two genuinely different alternatives (e.g., annual-exclusion gifting, sale to a grantor trust/IDGT, GRAT, recapitalization)",
+        "Respects S-corp constraints: one-class-of-stock rule (voting/non-voting is permitted) and eligible-shareholder / trust rules (QSST or ESBT election) for any trust",
+        "Explains a mechanism to retain control while transferring value, such as a voting/non-voting stock recapitalization",
+        "Covers gift-tax minimization tools: annual exclusion, lifetime exemption, and valuation discounts (lack of control / marketability)",
+        "Flags that a qualified business valuation is required and recommends specialist / appraiser input",
+        "Gives a concrete recommendation or prioritized path, not merely an undifferentiated list of options",
+        "Notes the need for CPA and/or estate attorney involvement and that this is analysis for review"
+      ]
+    }
+  ]
+}

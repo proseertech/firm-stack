@@ -10,6 +10,9 @@ A Claude Code plugin for accounting firms. This file registers all available ski
 - **`/firm-stack:client-email`** — Polish a CPA-to-client email draft. Trigger: "improve this email", "polish my draft", "client email"
 - **`/firm-stack:tax-memo`** — Draft a client-facing tax memo from position notes. Trigger: "tax memo", "client memo", "write a memo"
 
+### Tax Research & Advisory
+- **`/firm-stack:tax-advisor`** — Senior-advisor hub for open-ended tax work: technical research with verified authority, review of a colleague's memo/analysis, and planning/transaction strategy. Best **invoked explicitly** ("use the tax-advisor skill", "second opinion on this position") — as a broad advisory skill it does not reliably auto-trigger. Hands off to `tax-memo` / `client-email` for a formatted deliverable, and to the review skills for return cross-referencing.
+
 ### Tax Workflow
 - **`/tax-info-request`** — Generate an information request from a prior year 1040. Trigger: "information request", "info request", "tax organizer", "document request list"
 - **`/firm-stack:tax-workpapers`** — Build Excel workpapers summarizing 1099s and K-1s for any return type (1040, 1065, 1120-S, 1041). Trigger: "tax workpapers", "1099 summary", "K-1 summary", "build the workpapers", "partnership workpapers"
