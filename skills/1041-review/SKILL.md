@@ -1,6 +1,6 @@
 ---
 name: 1041-review
-version: 1.4.0
+version: 1.5.0
 description: |
   Cross-reference a completed Form 1041 (fiduciary income tax return) against its
   source documents — the trust instrument, fiduciary accounting, 1099s, and pass-through
@@ -63,8 +63,14 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 4. **Verify DNI and distribution deduction** — Show the DNI calculation explicitly: gross income minus deductions allocable to income, with specific exclusion of capital gains allocated to corpus (unless the trust instrument or local law allocates gains to income). Confirm the income distribution deduction ties to actual distributions. For complex trusts, verify the 65-day election (IRC 663(b)) if distributions in the first 65 days of the following year are being treated as current-year distributions.
 5. **Verify Schedule K-1 allocations** — Confirm K-1 totals for all beneficiaries sum to the income distribution deduction. Verify each K-1 character of income (ordinary, qualified dividends, capital gains) is correctly allocated.
 6. **Verify tax computation** — Confirm the tax is calculated at trust rates (which compress quickly) or that the income is properly flowed out to beneficiaries.
-7. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
-8. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]." Include: trust compressed tax brackets — verify whether distributing more income to beneficiaries in lower brackets would reduce total tax.
+7. **Verify Section 199A / QBI reporting** — Trusts and estates can claim the QBI deduction on Form 8995 or 8995-A for QBI from pass-through interests they hold directly. The fiduciary also reports QBI information to beneficiaries on K-1 Box 13, code P. Confirm:
+   - If the trust receives K-1s from pass-through entities (1065 or 1120-S), the QBI components (QBI amount, W-2 wages, UBIA of qualified property, SSTB flag) are properly received and included in the trust's 199A computation.
+   - If the trust distributes income to beneficiaries, the QBI allocation between the trust and beneficiaries is correctly computed. The IRC 199A allocation is based on the proportion of DNI distributed vs. retained — consistent with the income distribution deduction.
+   - The trust's Form 8995 or 8995-A is present if QBI-eligible income exists and taxable income exceeds zero.
+   - K-1 Box 13, code P reports the beneficiary's share of QBI components (QBI, W-2 wages, UBIA, SSTB flag) — these must tie to the trust's overall 199A computation.
+   - If the trust is a grantor trust, QBI flows to the grantor's 1040 — confirm the grantor-trust K-1 (if issued) reports QBI information correctly.
+8. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
+9. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]." Include: trust compressed tax brackets — verify whether distributing more income to beneficiaries in lower brackets would reduce total tax.
 
 ## Control Points
 

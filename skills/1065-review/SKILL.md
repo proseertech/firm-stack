@@ -1,6 +1,6 @@
 ---
 name: 1065-review
-version: 1.4.0
+version: 1.5.0
 description: |
   Cross-reference a completed Form 1065 (partnership income tax return) against its
   source documents — trial balance, Schedule K-1s, partnership agreement, and supporting
@@ -63,8 +63,15 @@ Before starting, confirm the required inputs are present. A review run against a
 4. **Verify partner outside basis** — For each partner receiving a loss, confirm outside basis is sufficient. Outside basis = capital account (tax basis) + share of liabilities. If liabilities are allocated under IRC 752, check that recourse/nonrecourse allocation is consistent with the partnership agreement. Flag losses exceeding basis — these are suspended under IRC 704(d).
 5. **Verify capital accounts (Schedule L and K-1 Part II)** — Tie beginning capital account balances to prior-year K-1s. Verify contributions, distributions, and income/loss allocations for each partner.
 6. **Check for special allocations** — If the partnership agreement has special allocations, verify they are reflected in the K-1s. Reference IRC 704(b): special allocations must have substantial economic effect. If special allocations are present, flag that the economic effect test (or alternate test) should be documented.
-7. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
-8. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]."
+7. **Verify Section 199A / QBI reporting** — The partnership reports QBI information on each K-1 (Box 20, code Z): QBI amount, W-2 wages (code W), UBIA of qualified property (code Z-2), and SSTB classification. Confirm:
+   - QBI amount on each K-1 equals the partner's share of ordinary income/loss from Schedule K (line 1), adjusted for separately stated items excluded from QBI (e.g., Section 1231 gains, capital gains, guaranteed payments).
+   - W-2 wage allocation (code W) is consistent with the partnership agreement and ownership percentages (or an alternative allocation method if documented).
+   - UBIA of qualified property is reported (Box 20, code Z component) if the partnership has qualified property.
+   - SSTB classification: if the partnership is a Specified Service Trade or Business (health, law, accounting, consulting, athletics, financial services, architecture, engineering, or any trade where the principal asset is reputation/skill), this must be disclosed on the K-1. The SSTB flag flows to each partner's 1040 for the 199A phase-out.
+   - Guaranteed payments to partners are excluded from QBI — confirm they are not included in the Box 20 code Z QBI amount.
+   - If the partnership had a loss for the year, confirm the QBI amount reflects the loss (negative QBI reduces each partner's overall QBI).
+8. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
+9. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]."
 
 ## Control Points
 

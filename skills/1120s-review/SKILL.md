@@ -1,6 +1,6 @@
 ---
 name: 1120s-review
-version: 1.4.0
+version: 1.5.0
 description: |
   Cross-reference a completed Form 1120-S (S-corporation return) against its source
   documents — trial balance, Schedule K-1s, officer W-2s, Form 1125-E, and supporting
@@ -64,8 +64,14 @@ If a required input is missing, say so before starting rather than reviewing aro
 5. **Verify shareholder basis** — For each shareholder taking a loss, check that the K-1 loss does not exceed stock plus debt basis. Cross-reference the basis worksheet if provided; if a loss flows through and no worksheet exists, flag it as requiring basis documentation.
 6. **Verify the balance sheet (Schedule L)** — Tie beginning and ending balances to the prior-year return and current trial balance. Flag unexplained changes.
 7. **Verify AAA and M-2** — Confirm the AAA beginning balance ties to the prior-year return, and that current-year movements are correctly reflected.
-8. **Summarize findings** — Produce the severity-graded report (see Output Format).
-9. **Assess audit risk** — Note 1–3 items presenting elevated audit risk, stated as facts: "This item may draw scrutiny because [specific reason]."
+8. **Verify Section 199A / QBI reporting** — The S-corp reports QBI information on each K-1 (Box 17, codes V through AC): QBI amount, W-2 wages (code W), and UBIA of qualified property (code AC). Confirm:
+   - QBI amount on each K-1 equals the shareholder's share of ordinary income/loss from Schedule K (line 1), adjusted for separately stated income/gains that are excluded from QBI (e.g., Section 1231 gains, capital gains).
+   - W-2 wage amount (code W) is correctly allocated among shareholders per ownership percentage (or an alternative method if documented).
+   - UBIA of qualified property (code AC) is reported if the entity has qualified property.
+   - SSTB classification: if the S-corp is a Specified Service Trade or Business, this must be disclosed on the K-1. The SSTB flag flows to the shareholder's 1040 for the 199A phase-out calculation. An incorrect SSTB classification can overstate or understate the shareholder's QBI deduction.
+   - If the S-corp had a loss for the year, confirm the QBI amount on the K-1 reflects the loss (negative QBI reduces the shareholder's overall QBI).
+9. **Summarize findings** — Produce the severity-graded report (see Output Format).
+10. **Assess audit risk** — Note 1–3 items presenting elevated audit risk, stated as facts: "This item may draw scrutiny because [specific reason]."
 
 ## Control Points
 

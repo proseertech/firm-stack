@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.3.0
+version: 2.4.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or an
   extension projection against its source documents — W-2s, 1099s, K-1s, brokerage
@@ -83,7 +83,18 @@ List all source docs provided. Flag any that appear missing based on the return 
 
 Work through each income, deduction, credit, withholding, and carryover category, tying each line to its source document. The per-category procedures and the special cases — structured-note/auto-call income to Form 8960, brokerage cash bonuses, the pass-through loss limitation stack (basis → at-risk → passive → QBI), cost-segregation rental losses, the SALT cap, carryover reconciliation — are in **`references/tie-out-procedures.md`**. Read it before starting this phase; the special cases are where returns quietly go wrong.
 
-### Phase E — Dashboard summary
+### Phase E — Verify Section 199A / QBI reporting
+
+Check the QBI deduction (Form 8995 or 8995-A) on the 1040:
+
+1. **Confirm QBI deduction is computed** — Line 13 of Form 1040 should have a QBI deduction amount if the taxpayer has pass-through business income (Schedule C, Schedule E K-1s with QBI box codes, trust K-1s with QBI). If no QBI deduction is present but QBI-eligible income exists, flag as a potential omission.
+2. **Verify the correct form** — Form 8995 (simplified) vs Form 8995-A (full): if taxable income exceeds the IRC 199B threshold, the full Form 8995-A is required with the W-2 wage and UBIA of qualified property limitations.
+3. **Check SSTB classification** — If any pass-through entity is a Specified Service Trade or Business (health, law, accounting, consulting, athletics, financial services, or any trade involving reputation/skill), confirm the SSTB phase-out is applied correctly when taxable income is in the phase-in/phase-out range.
+4. **Tie QBI components to K-1s** — Each K-1's Section 199A boxes (Box 20 code Z on 1065 K-1s, Box 17 code V on 1120-S K-1s, Box 13 code P on 1041 K-1s) should flow into the QBI computation. Confirm the amounts match.
+5. **Check aggregation** — If the taxpayer aggregates multiple QBI trades or businesses, confirm the aggregation election is documented and consistent with prior year.
+6. **REIT/PTP dividends** — Confirm any REIT dividends or PTP income reported on 1099-DIV (Box 5, Section 199A dividends) are included in the QBI computation.
+
+### Phase F — Dashboard summary
 
 **Do not narrate the phases above.** Play-by-play ("checking wages… wages tie") buries the findings the reviewer actually needs. Present only the compact summary — something a reviewer can scan in under 60 seconds:
 
@@ -100,7 +111,7 @@ Work through each income, deduction, credit, withholding, and carryover category
 
 **Do not list confirmed line items.** Lines that tie correctly are the expected case; listing them adds bulk without value. End the summary with: *"Expand any issue by number, say 'walk through all' to resolve one at a time, or ask for the full tie-out schedule."*
 
-### Phase F — Interactive resolution
+### Phase G — Interactive resolution
 
 After the dashboard, the reviewer drives. For each item they raise:
 

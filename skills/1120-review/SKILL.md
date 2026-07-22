@@ -1,6 +1,6 @@
 ---
 name: 1120-review
-version: 1.4.0
+version: 1.5.0
 description: |
   Cross-reference a completed Form 1120 (C-corporation income tax return) against its
   source documents — trial balance, supporting schedules, Form 4562, Form 3800, and the
@@ -62,8 +62,12 @@ Confirm these are present before starting. A review run against a missing schedu
 5. **Verify tax computation (Schedule J)** — Recalculate the tax liability. Confirm estimated tax payments and withholding. Check for accumulated earnings tax exposure (IRC 531) if retained earnings are growing without clear business purpose for the accumulation.
 6. **Verify balance sheet (Schedule L)** — Tie beginning and ending balances. Flag unexplained changes.
 7. **Verify retained earnings (M-2)** — Confirm beginning retained earnings ties to prior-year return. Verify current-year movements.
-8. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
-9. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]."
+8. **Verify Section 199A / QBI reporting (if applicable)** — C-corporations are not pass-through entities and do not generate QBI for their shareholders. However, if the C-corp owns pass-through interests (partnership or S-corp K-1s), confirm:
+   - QBI information from incoming K-1s is properly received and documented (the C-corp itself is not eligible for the 199A deduction, but the K-1 data should be retained for the entity's own records and for any ultimate owner-level QBI computation).
+   - If the C-corp is a specified service trade or business (SSTB), note that its income does not qualify for 199A at the owner level — this affects any individual who might own the C-corp stock directly or through a pass-through.
+   - No 199A deduction is claimed at the C-corp level — the QBI deduction is only available to individuals, trusts, and estates under IRC 199A.
+9. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
+10. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]."
 
 ## Control Points
 

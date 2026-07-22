@@ -1,6 +1,6 @@
 ---
 name: 990-review
-version: 1.4.0
+version: 1.5.0
 description: |
   Cross-reference a completed Form 990-PF (private foundation return) against
   source documents — financial statements, investment schedules, grants paid, and
@@ -63,8 +63,12 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 4. **Verify grants paid** — Tie Part XV grants and contributions paid to grant records. Confirm grant recipients and amounts.
 5. **Verify officer compensation** — Tie Part VIII compensation to W-2s and confirm reasonableness.
 6. **Check for self-dealing and restricted transactions** — Flag any transactions with disqualified persons reported in Part VII-A.
-7. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
-8. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]."
+7. **Verify Section 199A / QBI reporting (if applicable)** — Private foundations are tax-exempt entities and are not eligible for the 199A QBI deduction. However, if the foundation owns pass-through interests (partnership or S-corp K-1s), confirm:
+   - QBI information from incoming K-1s is received and documented (the foundation itself cannot claim a QBI deduction, but the K-1 data should be retained for record-keeping).
+   - No 199A deduction is claimed at the foundation level — only individuals, trusts, and estates under IRC 199A are eligible.
+   - If the foundation's pass-through investment is an SSTB, note this for any ultimate individual owners who may have QBI implications.
+8. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
+9. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]."
 
 ## Control Points
 
