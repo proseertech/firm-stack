@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.7.0
+version: 2.8.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or an
   extension projection against its source documents — W-2s, 1099s, K-1s, brokerage
@@ -51,7 +51,7 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 ## Required Inputs
 
 - Completed Form 1040 (PDF or data export)
-- All source documents: W-2s, 1099s (INT, DIV, B, R, SSA, MISC, NEC), K-1s, brokerage statements
+- All source documents: W-2s, 1099s (INT, DIV, B, R, DA, SSA, MISC, NEC), K-1s, brokerage statements
 - Any supporting workpapers or schedules
 - Basis worksheets for pass-through entities (if losses are claimed)
 
@@ -85,6 +85,12 @@ List all source docs provided. Flag any that appear missing based on the return 
 ### Phase D — Tie out every line
 
 Work through each income, deduction, credit, withholding, and carryover category, tying each line to its source document. The per-category procedures and the special cases — structured-note/auto-call income to Form 8960, brokerage cash bonuses, the pass-through loss limitation stack (basis → at-risk → passive → QBI), cost-segregation rental losses, the SALT cap, carryover reconciliation — are in **`references/tie-out-procedures.md`**. Read it before starting this phase; the special cases are where returns quietly go wrong.
+
+Three checks that apply to every return in this phase, regardless of category:
+
+- **Digital-asset question and 1099-DA** — Confirm the digital-asset question on page 1 is answered, and that the answer is consistent with the source documents (a 1099-DA or crypto activity on brokerage statements with a "No" answer is a finding). Reconcile any Forms 1099-DA to the return — broker reporting is new, so basis on the 1099-DA may be missing or wrong; where the taxpayer moved off universal basis tracking, confirm the Rev. Proc. 2024-28 wallet-by-wallet allocation statement exists.
+- **Form 8867 preparer due diligence** — If the return claims EITC, CTC/ACTC/ODC, AOTC, or head-of-household filing status, confirm Form 8867 is attached and the due-diligence documentation exists. A missing 8867 is a MEDIUM finding: the IRC 6695(g) penalty (inflation-adjusted, per credit per return) lands on the preparer, and CTC's high phase-out threshold means this check fires on high-income returns too.
+- **Foreign-item sweep** — If any source document shows foreign tax paid, a foreign address, or foreign accounts, confirm Schedule B Part III is answered correctly and flag potential FinCEN 114 (FBAR) / Form 8938 filing requirements as a preparer question. Building the FBAR workpaper itself is handled by the `fbar-workpaper` skill — hand off rather than reconstructing foreign account detail here.
 
 ### Phase E — Verify Section 199A / QBI reporting
 
@@ -162,6 +168,9 @@ Pause and surface to the reviewer when:
 - CCH Axcess diagnostics unresolved or input overrides undocumented
 - Consolidated 1099 sub-accounts not individually mapped to the return
 - Significant Two-Year Comparison variances unexplained
+- Digital-asset question answered "No" but a 1099-DA or crypto activity appears in the source documents
+- EITC, CTC/ACTC/ODC, AOTC, or HOH claimed with no Form 8867 attached
+- Foreign tax paid or foreign accounts visible in source docs with Schedule B Part III unanswered or "No" — possible FBAR/Form 8938 exposure (hand off to `fbar-workpaper`)
 
 ## Output Format
 
@@ -218,3 +227,4 @@ Write the generation script to a file and run it via `Bash` with the system Pyth
 - Do not draft a response to an IRS notice based on this review without preparer confirmation.
 - Do not characterize audit risk as a probability or percentage. Judgment on acceptable risk levels belongs to the signing partner.
 - Do not hardcode SALT caps, bonus depreciation rates, or other amounts that change by tax year — always reference the applicable year's statutory amount.
+- This review covers the **federal return only**. State the scope limit in the deliverable, and route state items surfaced during the review (PTET credits on state K-1s, composite filings, residency/nexus questions) to Preparer Questions rather than reviewing them here.

@@ -1,6 +1,6 @@
 ---
 name: 1041-review
-version: 1.8.0
+version: 1.9.0
 description: |
   Cross-reference a completed Form 1041 (fiduciary income tax return) against its
   source documents — the trust instrument, fiduciary accounting, 1099s, and pass-through
@@ -62,7 +62,7 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
    - **Simple trust**: Required to distribute all income; no charitable deduction.
    - **Complex trust**: May accumulate income; may have charitable deduction.
    - **Note**: This skill covers trusts. For decedent estates during administration, additional considerations apply including IRC 642(c) charitable deductions and the IRC 645 election to treat a revocable trust as part of the estate.
-2. **Reconcile income to source documents** — Tie interest, dividends, capital gains, and pass-through income to 1099s and K-1s.
+2. **Reconcile income to source documents** — Tie interest, dividends, capital gains, and pass-through income to 1099s and K-1s. Confirm the digital-asset question on page 1 is answered and consistent with the source documents — a 1099-DA or crypto activity on custody statements with a "No" answer is a finding. Reconcile any Forms 1099-DA (broker reporting is new; basis may be missing or wrong).
 3. **Verify deductions** — Confirm fiduciary fees, attorney fees, and other deductions are properly allocated between income and principal per the trust instrument.
 4. **Verify DNI and distribution deduction** — Show the DNI calculation explicitly: gross income minus deductions allocable to income, with specific exclusion of capital gains allocated to corpus (unless the trust instrument or local law allocates gains to income). Confirm the income distribution deduction ties to actual distributions. For complex trusts, verify the 65-day election (IRC 663(b)) if distributions in the first 65 days of the following year are being treated as current-year distributions.
 5. **Verify Schedule K-1 allocations** — Confirm K-1 totals for all beneficiaries sum to the income distribution deduction. Verify each K-1 character of income (ordinary, qualified dividends, capital gains) is correctly allocated.
@@ -90,6 +90,8 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 - Prior-year excess deductions or capital loss carryforwards with no supporting schedule
 - Trust compressed tax brackets: income retained at trust level when distribution to lower-bracket beneficiaries would reduce total tax
 - Cross-return coordination needed: K-1 amounts should tie to each beneficiary's Form 1040; if the trust receives K-1s from pass-throughs, those should tie to the issuing entity's return
+- Digital-asset question answered "No" but a 1099-DA or crypto activity appears in the source documents
+- Foreign tax paid on 1099s, foreign accounts on custody statements, or foreign-trust indicators — possible FinCEN 114 (FBAR) / Form 8938 / Form 3520 exposure; flag as a preparer question and hand the FBAR workpaper itself to `fbar-workpaper`
 
 ## Output Format
 
@@ -142,3 +144,4 @@ Write the generation script to a file and run it via `Bash` with the system Pyth
 - Do not determine income vs. principal allocation without reference to the trust instrument.
 - Do not mark the return reviewed-complete if K-1 totals don't foot to the income distribution deduction.
 - Do not characterize audit risk as a probability or percentage. Professional judgment on acceptable risk levels belongs to the signing partner.
+- This review covers the **federal return only**. State the scope limit in the deliverable, and route state items surfaced during the review (resident-state fiduciary filings driven by trustee/beneficiary residency, state PTET credits on incoming K-1s) to Preparer Questions rather than reviewing them here.

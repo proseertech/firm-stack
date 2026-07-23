@@ -1,6 +1,6 @@
 ---
 name: 990-review
-version: 1.8.0
+version: 1.9.0
 description: |
   Cross-reference a completed Form 990-PF (private foundation return) against
   source documents — financial statements, investment schedules, grants paid, and
@@ -61,12 +61,14 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 
 ## Workflow
 
+Part references below are to the **2021-and-later Form 990-PF revision**. Pre-2021 returns use an older numbering (e.g., the excise tax was Part VI, grants were Part XV) — if reviewing an older return, map accordingly rather than reporting findings against the wrong part.
+
 1. **Reconcile financial statements** — Tie Part I revenue and expenses to the financial statements. Tie Part II balance sheet to the ending balance sheet.
-2. **Verify investment income and excise tax** — Confirm net investment income in Part VI and the 1.39% excise tax computation.
-3. **Verify distributable amount and qualifying distributions (IRC 4942)** — Independently calculate the 5% distributable amount: 5% of the average fair market value of non-charitable-use assets. Show the math in the output. Confirm qualifying distributions meet or exceed the distributable amount. Flag any carryover of undistributed income.
-4. **Verify grants paid** — Tie Part XV grants and contributions paid to grant records. Confirm grant recipients and amounts.
-5. **Verify officer compensation** — Tie Part VIII compensation to W-2s and confirm reasonableness.
-6. **Check for self-dealing and restricted transactions** — Flag any transactions with disqualified persons reported in Part VII-A.
+2. **Verify investment income and excise tax** — Confirm net investment income in Part V and the 1.39% excise tax computation.
+3. **Verify distributable amount and qualifying distributions (IRC 4942)** — Independently calculate the 5% distributable amount: 5% of the average fair market value of non-charitable-use assets (Part IX minimum investment return → Part X distributable amount). Show the math in the output. Confirm qualifying distributions (Part XI) meet or exceed the distributable amount. Flag any carryover of undistributed income (Part XII).
+4. **Verify grants paid** — Tie Part XIV (Supplementary Information) grants and contributions paid to grant records. Confirm grant recipients and amounts.
+5. **Verify officer compensation** — Tie Part VII compensation to W-2s and confirm reasonableness.
+6. **Check for self-dealing and restricted transactions** — Flag any transactions with disqualified persons reported in Part VI-B (Statements Regarding Activities for Which Form 4720 May Be Required).
 7. **Verify Section 199A / QBI reporting (if applicable)** — Private foundations are tax-exempt entities and are not eligible for the 199A QBI deduction. However, if the foundation owns pass-through interests (partnership or S-corp K-1s), confirm:
    - QBI information from incoming K-1s is received and documented (the foundation itself cannot claim a QBI deduction, but the K-1 data should be retained for record-keeping).
    - No 199A deduction is claimed at the foundation level — only individuals, trusts, and estates under IRC 199A are eligible.
@@ -90,6 +92,8 @@ Stop and get a preparer decision before treating the return as reviewed-complete
 - Jeopardizing investments present but not disclosed
 - Program-related investments (PRIs) counted as qualifying distributions — confirm they meet IRC 4944(c) criteria
 - Cross-return coordination needed: if the foundation owns pass-through interests, K-1 income should tie to the issuing entity's return
+- Unrelated business income with no Form 990-T — K-1s showing UBTI (partnership Box 20, code V), debt-financed rental income, or controlled-entity payments trigger a 990-T filing requirement at $1,000 of gross UBI; a missed 990-T is an unfiled return with tax due, and UBI must also be excluded from the Part V excise-tax base
+- Foreign financial accounts — Part VI-A Line 16 answered "Yes" (or foreign custody accounts visible on statements) means a FinCEN 114 (FBAR) filing requirement with its own deadline; flag as a preparer question and hand the FBAR workpaper itself to `fbar-workpaper`
 
 ## Output Format
 
@@ -142,3 +146,4 @@ Write the generation script to a file and run it via `Bash` with the system Pyth
 - Do not clear self-dealing transactions on your own; they require preparer review.
 - Do not characterize audit risk as a probability or percentage. Professional judgment on acceptable risk levels belongs to the signing partner.
 - Report the distributable-amount and excise-tax math you performed, not just the conclusion, so the preparer can check it — an independent recalculation is only useful if it is auditable.
+- This review covers the **federal return only**. State the scope limit in the deliverable, and route state items surfaced during the review (state charitable registrations and attorney-general filings, Part VI-A Line 8 state reporting) to Preparer Questions rather than reviewing them here.

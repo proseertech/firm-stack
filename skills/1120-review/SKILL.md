@@ -1,6 +1,6 @@
 ---
 name: 1120-review
-version: 1.8.0
+version: 1.9.0
 description: |
   Cross-reference a completed Form 1120 (C-corporation income tax return) against its
   source documents — trial balance, supporting schedules, Form 4562, Form 3800, and the
@@ -60,7 +60,7 @@ Confirm these are present before starting. A review run against a missing schedu
 ## Workflow
 
 1. **Reconcile income and deductions to trial balance** — Tie Schedule M-1 book-to-tax differences. Flag unexplained items.
-2. **Verify gross income** — Tie gross receipts and other income lines to the trial balance.
+2. **Verify gross income** — Tie gross receipts and other income lines to the trial balance. Confirm the digital-asset question on page 1 is answered and consistent with the source documents — a 1099-DA or crypto activity on custody statements with a "No" answer is a finding. Reconcile any Forms 1099-DA (broker reporting is new; basis may be missing or wrong).
 3. **Verify deductions** — Spot-check significant deductions (compensation, depreciation, interest) against supporting schedules or Form 4562.
 4. **Verify credits** — Confirm each credit against the applicable form (Form 3800, etc.).
 5. **Verify tax computation (Schedule J)** — Recalculate the tax liability. Confirm estimated tax payments and withholding. Check for accumulated earnings tax exposure (IRC 531) if retained earnings are growing without clear business purpose for the accumulation.
@@ -89,6 +89,8 @@ Stop and route to the preparer before the return is treated as final when:
 - Accumulated earnings appear to exceed reasonable business needs — IRC 531 exposure
 - Related-party transactions present without supporting transfer pricing documentation
 - Cross-return coordination needed: if the corporation owns pass-through interests, K-1 income should tie to the issuing entity's return
+- Digital-asset question answered "No" but a 1099-DA or crypto activity appears in the source documents
+- Foreign accounts, foreign shareholders (25%+), or foreign subsidiaries/interests visible in source docs — possible FinCEN 114 (FBAR) / Form 5471 / Form 5472 exposure with per-form automatic penalties; flag as a preparer question and hand the FBAR workpaper itself to `fbar-workpaper`
 
 ## Output Format
 
@@ -137,5 +139,6 @@ Write the generation script to a file and run it via `Bash` with the system Pyth
 ## Safety Constraints
 
 - Do not mark the return reviewed-complete while any discrepancy beyond rounding is unresolved — a "clean" review with open variances misleads the preparer into filing.
+- This review covers the **federal return only**. State the scope limit in the deliverable, and route state items surfaced during the review (apportionment, state modifications, nexus questions) to Preparer Questions rather than reviewing them here.
 - State audit risk as facts, not as a probability or percentage ("this item may draw scrutiny because…"). Judging what level of risk is acceptable is the signing partner's call, not the reviewer's.
 - Do not invent authority. Cite an IRC §, regulation, or procedure only when you are confident it applies; otherwise describe the issue and leave the citation for the preparer to confirm.

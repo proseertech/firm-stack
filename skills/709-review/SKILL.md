@@ -1,6 +1,6 @@
 ---
 name: 709-review
-version: 1.2.0
+version: 1.3.0
 description: |
   Cross-reference a completed Form 709 (U.S. Gift and Generation-Skipping Transfer Tax
   Return) against source documents — trust agreements, appraisals, Crummey notices,
@@ -89,7 +89,7 @@ Output of Stage 1 is a return-prep action list, not a review report.
 Read `references/gst-mechanics.md` before starting — the classification and allocation rules are where 709s quietly go wrong. If the return involves an ILIT or any trust relying on Crummey withdrawal rights for the annual exclusion, also read `references/ilit-crummey-review.md`.
 
 1. **Verify donor information and filing posture** — Donor identity, tax year, individual vs. gift-splitting filing. If gift-splitting is elected: the gift-splitting questions in **Part I (General Information)** are answered, and a **separately signed and dated Notice of Consent is attached**. On the 2024-and-later form revision the consenting spouse no longer signs the return itself — consent lives entirely in the attached statement, which must include the prescribed election language ("[Name of consenting spouse] elects to treat all gifts made by both spouses to third parties during the calendar year as made one-half by each spouse"). CCH Axcess answering the Part I questions is not consent; the signed attachment is. Both spouses' returns must show matching, complementary halved entries (donor's own gifts in the top half of Schedule A Part 1/2/3; "Gifts made by spouse" in the bottom half).
-2. **Tie every gift to source documents** — Each Schedule A entry ties to bank/wire records, checks, premium payments, or trust receipts. Gift descriptions are accurate and complete (trust name, date, EIN, trustee, beneficiaries).
+2. **Tie every gift to source documents** — Each Schedule A entry ties to bank/wire records, checks, premium payments, or trust receipts. Gift descriptions are accurate and complete (trust name, date, EIN, trustee, beneficiaries). Confirm the digital-asset question in Part 1 (General Information) is answered and consistent with the gifts reported — a crypto or NFT gift with a "No" answer is a finding, and any digital-asset gift needs a supportable valuation method (date-of-gift exchange pricing or appraisal) described in the Schedule A entry.
 3. **Verify Schedule A part classification** — For every trust/entity gift, confirm direct skip (Part 2) vs. indirect skip (Part 3) vs. non-skip (Part 1) against the actual trust instrument. This is the most common consequential error on a 709. Whether a trust is a "GST trust" under §2632(c)(3)(B) turns on six technical statutory exceptions — read the instrument, don't pattern-match on "trust for a child."
 4. **Verify annual exclusions (Schedule D Part 1 and Schedule A Part 4)** — Exclusions match what's actually available per donee (watch split-gift halving). For gifts in trust claiming the exclusion via Crummey powers, work the present-interest analysis in `references/ilit-crummey-review.md` — notice, withdrawal period, lapse mechanics, 5-and-5 / hanging powers.
 5. **Verify marital-deduction gifts (QTIP / SLAT / non-citizen spouse)** — For any gift to or in trust for a spouse: outright gifts to a U.S.-citizen spouse generally need no reporting; terminable interests get **no marital deduction** unless a **§2523(f) QTIP election** is made on the return — confirm the election is affirmatively made (listing the trust on Schedule A and deducting it *is* the election; verify it was intended) and the trust qualifies (all income to spouse for life, no other beneficiary during spouse's life). A **SLAT is deliberately non-QTIP** — confirm it is reported as a taxable gift using lifetime exemption, not accidentally deducted. For a **non-citizen spouse**: no marital deduction; only the enhanced §2523(i) annual exclusion (inflation-adjusted; verify the applicable year's amount) applies, and future-interest gifts get nothing.
@@ -132,6 +132,7 @@ Pause and surface to the reviewer when:
 - A gift to a spouse-beneficiary trust is deducted as marital without a qualifying QTIP structure, or a SLAT shows up with a marital deduction
 - DSUE applied (Part I Line 20 "Yes") but Schedule C is blank, the Form 706 pages aren't attached, or the DSUE claimed isn't from the *last* deceased spouse
 - A transfer to a **GRAT, QPRT, or family entity with retained interests** — §2702/§2701 special valuation rules and enhanced adequate-disclosure requirements apply; hand the substantive valuation analysis to `tax-advisor`
+- The digital-asset question in Part 1 is unanswered or answered "No" while a crypto/NFT gift appears on Schedule A, or a digital-asset gift is reported without a supportable date-of-gift valuation
 
 ## Output Format
 

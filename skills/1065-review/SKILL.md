@@ -1,6 +1,6 @@
 ---
 name: 1065-review
-version: 1.8.0
+version: 1.9.0
 description: |
   Cross-reference a completed Form 1065 (partnership income tax return) against its
   source documents — trial balance, Schedule K-1s, partnership agreement, and supporting
@@ -62,7 +62,7 @@ Report every discrepancy outside the rounding tolerance in the findings table �
 Before starting, confirm the required inputs are present. A review run against a missing K-1 or an absent partnership agreement produces false "confirmed" items and misses real allocation errors — surface what's missing rather than reviewing around the gap.
 
 1. **Reconcile income and deductions to trial balance** — Tie Schedule K ordinary income/loss through M-1. Flag unexplained book-to-tax adjustments.
-2. **Verify Schedule K items** — Check each separately stated item against source (interest, dividends, Section 1231, QBI, credits, etc.).
+2. **Verify Schedule K items** — Check each separately stated item against source (interest, dividends, Section 1231, QBI, credits, etc.). Confirm the digital-asset question on page 1 is answered and consistent with the source documents — a 1099-DA or crypto activity on custody statements with a "No" answer is a finding. Reconcile any Forms 1099-DA (broker reporting is new; basis may be missing or wrong).
 3. **Verify K-1 allocations** — Confirm K-1 totals for all partners sum to Schedule K. Verify percentages tie to the partnership agreement or are consistent with prior year.
 4. **Verify partner outside basis** — For each partner receiving a loss, confirm outside basis is sufficient. Outside basis = capital account (tax basis) + share of liabilities. If liabilities are allocated under IRC 752, check that recourse/nonrecourse allocation is consistent with the partnership agreement. Flag losses exceeding basis — these are suspended under IRC 704(d).
 5. **Verify capital accounts (Schedule L and K-1 Part II)** — Tie beginning capital account balances to prior-year K-1s. Verify contributions, distributions, and income/loss allocations for each partner.
@@ -95,6 +95,8 @@ Before starting, confirm the required inputs are present. A review run against a
 - Guaranteed payments: confirm deductibility and self-employment tax treatment
 - Partnership has not elected out of centralized partnership audit regime (BBA/CPAR) under IRC 6221(b) — entity-level audit adjustments possible; confirm election status
 - Cross-return coordination needed: K-1 amounts should tie to each partner's Form 1040 or entity return
+- Digital-asset question answered "No" but a 1099-DA or crypto activity appears in the source documents
+- Foreign tax paid, foreign accounts, or foreign partners visible in source docs — possible FinCEN 114 (FBAR) / foreign information-return exposure; flag as a preparer question and hand the FBAR workpaper itself to `fbar-workpaper`
 
 ## Output Format
 
@@ -145,3 +147,4 @@ Write the generation script to a file and run it via `Bash` with the system Pyth
 - Do not mark the return reviewed-complete if K-1 totals don't foot to Schedule K.
 - Do not adjust capital accounts or basis without preparer review.
 - Do not characterize audit risk as a probability or percentage. Professional judgment on acceptable risk levels belongs to the signing partner.
+- This review covers the **federal return only**. State the scope limit in the deliverable, and route state items surfaced during the review (PTET elections and payments, composite returns, nonresident-partner withholding, apportionment) to Preparer Questions rather than reviewing them here.

@@ -1,6 +1,6 @@
 ---
 name: 1120s-review
-version: 1.8.0
+version: 1.9.0
 description: |
   Cross-reference a completed Form 1120-S (S-corporation return) against its source
   documents — trial balance, Schedule K-1s, officer W-2s, Form 1125-E, and supporting
@@ -63,7 +63,7 @@ If a required input is missing, say so before starting rather than reviewing aro
 
 1. **Reconcile income and deductions to the trial balance** — Tie Schedule K ordinary income/loss to the book-to-tax reconciliation (M-1). Flag unexplained M-1 adjustments.
 2. **Verify officer compensation** — Confirm officer wages on Form 1125-E tie to the W-2s. Compare officer compensation to distributions: if distributions materially exceed compensation, flag the reasonable-compensation issue. This is a well-known S-corp audit trigger — recharacterization as wages carries FICA employment-tax exposure under IRC 3111/3121, per the *David E. Watson, P.C.* line of cases.
-3. **Verify Schedule K items** — Check each separately stated item (interest, dividends, Section 1231, credits, etc.) against source.
+3. **Verify Schedule K items** — Check each separately stated item (interest, dividends, Section 1231, credits, etc.) against source. Confirm the digital-asset question on page 1 is answered and consistent with the source documents — a 1099-DA or crypto activity on custody statements with a "No" answer is a finding. Reconcile any Forms 1099-DA (broker reporting is new; basis may be missing or wrong).
 4. **Verify K-1 allocations** — Confirm each shareholder's K-1 totals sum to Schedule K. Verify ownership percentages against the shareholder agreement or prior-year return.
 5. **Verify shareholder basis** — For each shareholder taking a loss, check that the K-1 loss does not exceed stock plus debt basis. Cross-reference the basis worksheet if provided; if a loss flows through and no worksheet exists, flag it as requiring basis documentation.
 6. **Verify the balance sheet (Schedule L)** — Tie beginning and ending balances to the prior-year return and current trial balance. Flag unexplained changes.
@@ -97,6 +97,8 @@ Pause and surface to the user when:
 - Shareholder loss exceeds stock plus debt basis without a supporting basis schedule
 - Prior-year credits or carryforwards appear with no schedule supporting the amount
 - Cross-return coordination needed — K-1 amounts should tie to each shareholder's Form 1040, Schedule E
+- Digital-asset question answered "No" but a 1099-DA or crypto activity appears in the source documents
+- Foreign tax paid, foreign accounts, or foreign subsidiaries/interests visible in source docs — possible FinCEN 114 (FBAR) / foreign information-return exposure; flag as a preparer question and hand the FBAR workpaper itself to `fbar-workpaper`
 
 ## Output Format
 
@@ -148,3 +150,4 @@ Write the generation script to a file and run it via `Bash` with the system Pyth
 - Do not mark the return reviewed-complete while K-1 totals don't foot to Schedule K — the return isn't fileable and "complete" would be misleading.
 - Do not adjust AAA or basis yourself — surface the issue for preparer review; those balances drive shareholder-level tax and are the preparer's call.
 - Do not express audit risk as a probability or percentage. State the factual reason an item may draw scrutiny; judging acceptable risk is the signing partner's decision.
+- This review covers the **federal return only**. State the scope limit in the deliverable, and route state items surfaced during the review (PTET elections and payments, composite returns, nonresident-shareholder withholding, apportionment) to Preparer Questions rather than reviewing them here.
