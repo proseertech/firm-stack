@@ -12,7 +12,7 @@ When you install firm-stack as a plugin, you'll be prompted for these settings:
 |---|---|---|
 | `materiality_threshold` | Dollar amount below which Claude auto-corrects; above which it asks | `2500` |
 | `gl_system` | Primary general ledger platform | `Sage Intacct` |
-| `tax_software` | Tax preparation software | `Lacerte` |
+| `tax_software` | Tax preparation software | `CCH Axcess` |
 | `fiscal_year_end` | Fiscal year-end | `December 31` |
 | `capitalization_threshold` | Dollar threshold for capitalizing vs. expensing | `2500` |
 
@@ -30,7 +30,7 @@ If you're not using the plugin install (e.g., using the git clone method or org-
 - Fiscal year-end: December 31
 - GL system: Sage Intacct
 - Capitalization threshold: $2,500
-- Tax software: Lacerte
+- Tax software: CCH Axcess
 - Return types: 1040, 1120S, 1065, 1041, 990PF
 ```
 
@@ -44,7 +44,7 @@ Do **not** edit the firm-stack plugin's CLAUDE.md with your firm's settings — 
 | `Fiscal year-end` | Used by close and reporting skills | `December 31` |
 | `GL system` | Primary general ledger platform | `Sage Intacct` |
 | `Capitalization threshold` | For fixed asset skills — R&M vs. capitalize | `$2,500` |
-| `Tax software` | Used by return review skills for format-specific guidance | `Lacerte` |
+| `Tax software` | Used by return review skills for format-specific guidance | `CCH Axcess` |
 | `Return types` | Which tax return review skills are relevant to your practice | `1040, 1120S, 1065` |
 
 ---

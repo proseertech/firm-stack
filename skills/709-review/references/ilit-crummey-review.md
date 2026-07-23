@@ -68,7 +68,7 @@ Work through the trust agreement and supporting documents:
 - Is the inclusion ratio correctly computed?
 - Should the preparer **affirmatively elect out** of automatic allocation or
   **affirmatively allocate** — and has that decision been made by the client, not
-  defaulted by the software? (Control point — human decision.)
+  defaulted by CCH Axcess? (Control point — human decision.)
 - Is the transfer an indirect skip requiring Part 3 reporting and disclosure?
 
 ## 4. Adequate disclosure (Treas. Reg. §301.6501(c)-1(f))

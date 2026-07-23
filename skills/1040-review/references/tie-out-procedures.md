@@ -33,7 +33,7 @@ Tie 1099-INT, 1099-DIV, and Schedule B. Verify 1099-B transactions on Schedule D
 - **Structured notes / auto-call income.** Check 1099-MISC Box 3 for structured note or
   contingent coupon income (e.g., "BNS CI AUTO TSLA", "GS CI AUTO NVDA"). This is ordinary income
   that should flow to Form 8960 (NIIT) as investment income. Verify the income type is coded
-  correctly for NIIT purposes — the software may not automatically classify it.
+  correctly for NIIT purposes — CCH Axcess may not automatically classify it.
 - **Brokerage cash bonuses.** Promotional bonuses from brokerages (CashPlus, sign-up bonuses)
   also appear on 1099-MISC Box 3. These are ordinary income, not investment income. Small amounts
   ($500-$1,000 range) but commonly recurring.
@@ -72,7 +72,7 @@ education, etc.) against supporting forms.
 - **SALT cap.** When verifying Schedule A, check the SALT limitation on Line 5e against the
   current-year statutory cap. Do not hardcode the cap amount — reference the applicable limit for
   the tax year under review (e.g., $10,000 under original TCJA; $40,000 under One Big Beautiful
-  Bill for 2025+). Confirm the software is applying the correct cap.
+  Bill for 2025+). Confirm CCH Axcess is applying the correct cap.
 
 ## Withholding and estimated payments
 
@@ -81,7 +81,7 @@ if available.
 
 ## Carryovers
 
-Review the tax software's "Tax Return Carryovers to [Next Year]" schedule:
+Review the CCH Axcess Carryover worksheet ("Tax Return Carryovers to [Next Year]"):
 
 - Verify prior-year carryovers were correctly brought forward from the prior return's carryforward
   schedule.

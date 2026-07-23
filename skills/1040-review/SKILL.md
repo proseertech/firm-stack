@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.6.0
+version: 2.7.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or an
   extension projection against its source documents — W-2s, 1099s, K-1s, brokerage
@@ -75,8 +75,8 @@ Ask whether this is a **final return review** or an **extension projection revie
 
 ### Phase B — Orient: two-year comparison and diagnostics
 
-- **Two-Year Comparison** — Review the worksheet the tax software generates. Flag any line with a change greater than 25% or $10,000 for investigation; each significant variance should be explained by the end of the review. This surfaces the biggest questions early and focuses the rest of the review.
-- **Diagnostics and overrides** — Read the software's Return Information / Diagnostics page and Input Override Report. Address each diagnostic by severity (QBI errors, missing income type codes, date issues). Document the reason for each input override. Wash sale overrides on capital gains worksheets are common and legitimate — before flagging one, check whether the override amount matches a wash sale disallowed amount on the corresponding 1099-B.
+- **Two-Year Comparison** — Review the CCH Axcess Prior Year Comparison worksheet. Flag any line with a change greater than 25% or $10,000 for investigation; each significant variance should be explained by the end of the review. This surfaces the biggest questions early and focuses the rest of the review.
+- **Diagnostics and overrides** — Read the CCH Axcess Diagnostics report and Input Override Report. Address each diagnostic by severity (QBI errors, missing income type codes, date issues). Document the reason for each input override. Wash sale overrides on capital gains worksheets are common and legitimate — before flagging one, check whether the override amount matches a wash sale disallowed amount on the corresponding 1099-B.
 
 ### Phase C — Inventory source documents
 
@@ -159,7 +159,7 @@ Pause and surface to the reviewer when:
 - Large ISO exercise, accelerated depreciation, or preference items present — verify Form 6251 is present and the AMT computation is correct
 - Cross-return coordination needed: K-1 amounts from a related 1120-S, 1065, or 1041 should tie to the issuing entity's return
 - Large rental loss driven by cost segregation — verify RE pro status and bonus depreciation rate
-- Software diagnostics unresolved or input overrides undocumented
+- CCH Axcess diagnostics unresolved or input overrides undocumented
 - Consolidated 1099 sub-accounts not individually mapped to the return
 - Significant Two-Year Comparison variances unexplained
 

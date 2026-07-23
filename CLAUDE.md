@@ -67,7 +67,7 @@ If not using the plugin install, add this block to your **project's** `CLAUDE.md
 - Fiscal year-end: [Month DD]
 - GL system: [Sage Intacct | QBO | NetSuite | Xero | Other]
 - Capitalization threshold: $X,XXX
-- Tax software: [Lacerte | ProSystem | Drake | UltraTax | Other]
+- Tax software: [CCH Axcess | Lacerte | ProSystem | Drake | UltraTax | Other]
 - Return types: [1040, 1120S, 1120, 1065, 990PF, 1041, 709]
 ```
 

@@ -1,6 +1,6 @@
 ---
 name: 1041-review
-version: 1.7.0
+version: 1.8.0
 description: |
   Cross-reference a completed Form 1041 (fiduciary income tax return) against its
   source documents — the trust instrument, fiduciary accounting, 1099s, and pass-through
@@ -51,6 +51,7 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 - Financial statements or fiduciary accounting report for the tax year
 - Source documents: 1099s, K-1s from pass-throughs, brokerage statements
 - Prior-year return (for carryforwards, excess deductions)
+- CCH Axcess Diagnostics report and Input Override Report (if available)
 
 **PDF size check before ingestion:** if the return package or any source PDF exceeds ~500 pages, flag it and split it before reading — model PDF limits are 600 pages on ≥1M-context models and 100 pages otherwise (32 MB max). Silent truncation of a source document invalidates the review.
 

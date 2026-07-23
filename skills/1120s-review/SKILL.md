@@ -1,6 +1,6 @@
 ---
 name: 1120s-review
-version: 1.7.0
+version: 1.8.0
 description: |
   Cross-reference a completed Form 1120-S (S-corporation return) against its source
   documents — trial balance, Schedule K-1s, officer W-2s, Form 1125-E, and supporting
@@ -53,6 +53,7 @@ Report *every* discrepancy outside the rounding tolerance, including low-severit
 - Prior-year return (for AAA balance, basis, and carryforwards)
 - Shareholder basis worksheets (if losses flow through)
 - Any supporting workpapers
+- CCH Axcess Diagnostics report and Input Override Report (if available)
 
 If a required input is missing, say so before starting rather than reviewing around the gap — a review that silently skips the basis worksheet or the prior-year return gives false assurance.
 
