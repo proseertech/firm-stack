@@ -25,6 +25,7 @@ A Claude Code plugin for accounting firms. This file registers all available ski
 - **`/firm-stack:1065-review`** — Cross-reference a Form 1065 against source documents. Trigger: "review the 1065", "partnership return review", "check the K-1s"
 - **`/firm-stack:990-review`** — Cross-reference a Form 990-PF against source documents. Trigger: "review the 990", "private foundation return", "990-PF review"
 - **`/firm-stack:1041-review`** — Cross-reference a Form 1041 against source documents. Trigger: "review the 1041", "trust return review", "grantor trust", "fiduciary return"
+- **`/firm-stack:709-review`** — Cross-reference a Form 709 (gift & GST tax return) against source documents. Verifies skip classification, GST automatic allocation, gift-splitting, 529 superfunding elections, and Crummey present-interest support. Trigger: "review the 709", "gift tax return review", "check the GST allocation", "Crummey letters"
 
 ### CAS / Month-End Close
 - **`/firm-stack:close`** — Month-end close checklist and portfolio health check. Trigger: "month-end", "close checklist", "close status"
@@ -67,7 +68,7 @@ If not using the plugin install, add this block to your **project's** `CLAUDE.md
 - GL system: [Sage Intacct | QBO | NetSuite | Xero | Other]
 - Capitalization threshold: $X,XXX
 - Tax software: [Lacerte | ProSystem | Drake | UltraTax | Other]
-- Return types: [1040, 1120S, 1120, 1065, 990PF, 1041]
+- Return types: [1040, 1120S, 1120, 1065, 990PF, 1041, 709]
 ```
 
 If no config is present, skills will prompt the user for required context before proceeding.
