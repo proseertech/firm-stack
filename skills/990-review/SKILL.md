@@ -1,6 +1,6 @@
 ---
 name: 990-review
-version: 1.6.0
+version: 1.7.0
 description: |
   Cross-reference a completed Form 990-PF (private foundation return) against
   source documents — financial statements, investment schedules, grants paid, and
@@ -55,6 +55,8 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 - Investment account statements
 - Officer/disqualified person compensation records
 - Prior-year return (for distributable amount carryover)
+
+**PDF size check before ingestion:** if the return package or any source PDF exceeds ~500 pages, flag it and split it before reading — model PDF limits are 600 pages on ≥1M-context models and 100 pages otherwise (32 MB max). Silent truncation of a source document invalidates the review.
 
 ## Workflow
 

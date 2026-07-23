@@ -1,6 +1,6 @@
 ---
 name: 1065-review
-version: 1.6.0
+version: 1.7.0
 description: |
   Cross-reference a completed Form 1065 (partnership income tax return) against its
   source documents — trial balance, Schedule K-1s, partnership agreement, and supporting
@@ -53,6 +53,8 @@ Report every discrepancy outside the rounding tolerance in the findings table �
 - Prior-year return (for capital account balances, basis, carryforwards)
 - Partner basis schedules (if losses are allocated)
 - Any supporting workpapers
+
+**PDF size check before ingestion:** if the return package or any source PDF exceeds ~500 pages, flag it and split it before reading — model PDF limits are 600 pages on ≥1M-context models and 100 pages otherwise (32 MB max). Silent truncation of a source document invalidates the review.
 
 ## Workflow
 

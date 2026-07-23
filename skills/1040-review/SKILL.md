@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.5.0
+version: 2.6.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or an
   extension projection against its source documents — W-2s, 1099s, K-1s, brokerage
@@ -54,6 +54,8 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 - All source documents: W-2s, 1099s (INT, DIV, B, R, SSA, MISC, NEC), K-1s, brokerage statements
 - Any supporting workpapers or schedules
 - Basis worksheets for pass-through entities (if losses are claimed)
+
+**PDF size check before ingestion:** if the return package or any source PDF exceeds ~500 pages, flag it and split it before reading — model PDF limits are 600 pages on ≥1M-context models and 100 pages otherwise (32 MB max). Silent truncation of a source document invalidates the review.
 
 ## Workflow
 

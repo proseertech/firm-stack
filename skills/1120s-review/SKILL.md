@@ -1,6 +1,6 @@
 ---
 name: 1120s-review
-version: 1.6.0
+version: 1.7.0
 description: |
   Cross-reference a completed Form 1120-S (S-corporation return) against its source
   documents — trial balance, Schedule K-1s, officer W-2s, Form 1125-E, and supporting
@@ -55,6 +55,8 @@ Report *every* discrepancy outside the rounding tolerance, including low-severit
 - Any supporting workpapers
 
 If a required input is missing, say so before starting rather than reviewing around the gap — a review that silently skips the basis worksheet or the prior-year return gives false assurance.
+
+**PDF size check before ingestion:** if the return package or any source PDF exceeds ~500 pages, flag it and split it before reading — model PDF limits are 600 pages on ≥1M-context models and 100 pages otherwise (32 MB max). Silent truncation of a source document invalidates the review.
 
 ## Workflow
 
