@@ -1,6 +1,6 @@
 ---
 name: 990-review
-version: 1.5.0
+version: 1.6.0
 description: |
   Cross-reference a completed Form 990-PF (private foundation return) against
   source documents — financial statements, investment schedules, grants paid, and
@@ -21,6 +21,7 @@ trigger: |
 allowed-tools:
   - Read
   - Write
+  - Bash
   - AskUserQuestion
 tier: power-user
 ---
@@ -106,6 +107,31 @@ Organized into sections:
 - **Compliance Flags** — Foundation-specific compliance items
 - **Preparer Questions** — Items requiring judgment
 - **Audit Risk Items** — 1-3 items with factual risk assessment
+
+### .docx Output
+
+**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary; the .docx is the artifact the preparer works from and the firm keeps on file.
+
+Use `python-docx` to build the document. Structure:
+
+1. **Header** — Firm name, "Tax Return Review", "Form 990-PF", client/Foundation name, tax year, preparer name, review date
+2. **Bottom line** — 2-3 sentence summary
+3. **Findings table** — One row per issue: #, Severity (HIGH/MEDIUM/LOW), Line/Schedule, Description, Amount. Use `Table Grid` style
+4. **Compliance flags** — Foundation-specific compliance items (distribution requirement, excise tax, self-dealing)
+5. **Missing support** — Bulleted list of absent source documents
+6. **Preparer questions** — Bulleted list of items requiring judgment
+7. **Audit risk** — 1-3 bullet points, factual
+8. **199A/QBI verification** — Summary of the QBI check results (no 199A at foundation level; incoming K-1 QBI data documented)
+
+Save as `[ClientName]_[TaxYear]_990PF_Review.docx` (e.g., `SmithFoundation_2025_990PF_Review.docx`).
+
+Key python-docx patterns:
+- `doc.add_paragraph(text)` with `paragraph.style = 'Normal'` for body text
+- `doc.add_table(rows, cols)` with `table.style = 'Table Grid'` for the findings table
+- Bold the header row and severity column
+- Use `doc.add_heading(text, level=1)` for section titles
+
+Write the generation script to a file and run it via `Bash` with the system Python — do not try to generate the .docx inline in the chat.
 
 ## Safety Constraints
 

@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.4.0
+version: 2.5.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or an
   extension projection against its source documents — W-2s, 1099s, K-1s, brokerage
@@ -23,6 +23,7 @@ trigger: |
 allowed-tools:
   - Read
   - Write
+  - Bash
   - AskUserQuestion
 tier: power-user
 ---
@@ -182,6 +183,32 @@ When producing an Excel workpaper (extension payment summary, tax computation, r
 - **Subtotals feeding into grand totals**: `=SUM()` of detail rows, not of subtotal rows (avoid double-counting)
 
 The reviewer needs to see the math tie by formula and to adjust an input and watch the result update.
+
+### .docx Output
+
+**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary; the .docx is the artifact the preparer works from and the firm keeps on file.
+
+Use `python-docx` to build the document. Structure:
+
+1. **Header** — Firm name, "Tax Return Review", return type (e.g., "Form 1040"), client name, tax year, preparer name, review date
+2. **Review mode** — Final return review or extension projection
+3. **Bottom line** — 2-3 sentence summary (same as the chat dashboard)
+4. **Findings table** — One row per issue: #, Severity (HIGH/MEDIUM/LOW), Line/Schedule, Description, Amount. Use `Table Grid` style
+5. **Missing support** — Bulleted list of absent source documents
+6. **Preparer questions** — Bulleted list of items requiring judgment
+7. **Audit risk** — 1-3 bullet points, factual
+8. **Open items for final return** *(extension mode only)* — SALY K-1s, preliminary documents
+9. **199A/QBI verification** — Summary of the QBI check results
+
+Save as `[ClientName]_[TaxYear]_[ReturnType]_Review.docx` (e.g., `Smith_2025_1040_Review.docx`).
+
+Key python-docx patterns:
+- `doc.add_paragraph(text)` with `paragraph.style = 'Normal'` for body text
+- `doc.add_table(rows, cols)` with `table.style = 'Table Grid'` for the findings table
+- Bold the header row and severity column
+- Use `doc.add_heading(text, level=1)` for section titles
+
+Write the generation script to a file and run it via `Bash` with the system Python — do not try to generate the .docx inline in the chat.
 
 ## Safety Constraints
 

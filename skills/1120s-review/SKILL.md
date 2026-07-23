@@ -1,6 +1,6 @@
 ---
 name: 1120s-review
-version: 1.5.0
+version: 1.6.0
 description: |
   Cross-reference a completed Form 1120-S (S-corporation return) against its source
   documents — trial balance, Schedule K-1s, officer W-2s, Form 1125-E, and supporting
@@ -20,6 +20,7 @@ trigger: |
 allowed-tools:
   - Read
   - Write
+  - Bash
   - AskUserQuestion
 tier: power-user
 ---
@@ -114,6 +115,30 @@ Organized into:
 - **Missing Support** — Items where source docs are absent
 - **Preparer Questions** — Items requiring judgment
 - **Audit Risk Items** — 1–3 items with a factual risk assessment
+
+### .docx Output
+
+**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary; the .docx is the artifact the preparer works from and the firm keeps on file.
+
+Use `python-docx` to build the document. Structure:
+
+1. **Header** — Firm name, "Tax Return Review", "Form 1120-S", client/S-Corp name, tax year, preparer name, review date
+2. **Bottom line** — 2-3 sentence summary
+3. **Findings table** — One row per issue: #, Severity (HIGH/MEDIUM/LOW), Line/Schedule, Description, Amount. Use `Table Grid` style
+4. **Missing support** — Bulleted list of absent source documents
+5. **Preparer questions** — Bulleted list of items requiring judgment
+6. **Audit risk** — 1-3 bullet points, factual
+7. **199A/QBI verification** — Summary of the QBI check results (K-1 Box 17 codes V–AC, W-2 wage allocation, SSTB classification, loss QBI)
+
+Save as `[ClientName]_[TaxYear]_1120S_Review.docx` (e.g., `ABCCorp_2025_1120S_Review.docx`).
+
+Key python-docx patterns:
+- `doc.add_paragraph(text)` with `paragraph.style = 'Normal'` for body text
+- `doc.add_table(rows, cols)` with `table.style = 'Table Grid'` for the findings table
+- Bold the header row and severity column
+- Use `doc.add_heading(text, level=1)` for section titles
+
+Write the generation script to a file and run it via `Bash` with the system Python — do not try to generate the .docx inline in the chat.
 
 ## Safety Constraints
 
