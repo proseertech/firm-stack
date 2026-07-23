@@ -93,11 +93,13 @@ returns, where **each spouse's own exemption is separately consumed**.
 | Schedule A, Part 1 | Gifts subject only to gift tax (non-skip donees) |
 | Schedule A, Part 2 | Direct skips |
 | Schedule A, Part 3 | Indirect skips / other transfers in trust |
-| Schedule A, Part 4 | Taxable gift reconciliation; §529(c)(2)(B) election box (Line B) |
-| Part III (page 2) | Spouse's consent to gift-splitting (§2513); requires a **signed Notice of Consent attached**, not just the box checked |
+| Schedule A, Part 4 | Taxable gift reconciliation; §529(c)(2)(B) election box (Line B); marital and charitable deduction lines |
+| Part I, General Information (page 1) | Gift-splitting election questions (§2513). On the 2024-and-later revision the consenting spouse does **not** sign the return — consent requires a **separately signed and dated Notice of Consent attached** with the prescribed election language |
+| Schedule B | Prior taxable gifts and prior applicable-credit/exemption usage — ties to prior-year 709s |
+| Schedule C | DSUE from deceased spouse(s) and Restored Exclusion Amount — feeds Part 2, Line 7 applicable credit; requires first four pages of the decedent's Form 706 attached |
 | Schedule D, Part 1 | GST transfers with nontaxable portions (from annual exclusion) |
 | Schedule D, Part 2 | GST exemption reconciliation — maximum exemption, amount used, automatic allocation to Part 3 transfers (Line 5), exemption remaining (Line 8) |
-| Schedule D, Part 3 | Tax computation — inclusion ratio × 40% rate × net transfer |
+| Schedule D, Part 3 | Tax computation — inclusion ratio × the top transfer-tax rate for the gift year × net transfer (verify the applicable year's rate; don't hardcode) |
 
 **Adequate disclosure** for hard-to-value assets (LLC/closely-held interests):
 attach a qualified appraisal and the underlying trust agreements. This is what

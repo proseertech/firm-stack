@@ -25,7 +25,7 @@ A Claude Code plugin for accounting firms. This file registers all available ski
 - **`/firm-stack:1065-review`** — Cross-reference a Form 1065 against source documents. Trigger: "review the 1065", "partnership return review", "check the K-1s"
 - **`/firm-stack:990-review`** — Cross-reference a Form 990-PF against source documents. Trigger: "review the 990", "private foundation return", "990-PF review"
 - **`/firm-stack:1041-review`** — Cross-reference a Form 1041 against source documents. Trigger: "review the 1041", "trust return review", "grantor trust", "fiduciary return"
-- **`/firm-stack:709-review`** — Cross-reference a Form 709 (gift & GST tax return) against source documents. Verifies skip classification, GST automatic allocation, gift-splitting, 529 superfunding elections, and Crummey present-interest support. Trigger: "review the 709", "gift tax return review", "check the GST allocation", "Crummey letters"
+- **`/firm-stack:709-review`** — Cross-reference a Form 709 (gift & GST tax return) against source documents. Verifies skip classification, GST automatic allocation, gift-splitting, 529 superfunding elections, Crummey present-interest support, marital-deduction/QTIP/SLAT treatment, and DSUE (Schedule C). Trigger: "review the 709", "gift tax return review", "check the GST allocation", "Crummey letters"
 
 ### CAS / Month-End Close
 - **`/firm-stack:close`** — Month-end close checklist and portfolio health check. Trigger: "month-end", "close checklist", "close status"
