@@ -42,6 +42,7 @@ A Claude Code plugin for accounting firms. This file registers all available ski
 - **`/firm-stack:tax-projection-estimate`** — Build a standardized tax projection for a 1065 or 1120S from any GL trial balance and prior-year return. Tags every TB account, uses SUMIF-linked formulas, produces K-1 allocation by line item per partner/shareholder. Trigger: "tax projection", "tax estimate", "K-1 estimate", "estimate taxable income"
 - **`/firm-stack:costseg-analysis`** — Screen a client for cost segregation study candidacy. Trigger: "cost seg", "cost segregation", "bonus depreciation candidate", "should we do a cost seg"
 - **`/firm-stack:rd-analysis`** — Screen a client for R&D tax credit study candidacy. Trigger: "R&D credit", "research credit", "should we do an R&D study", "179 research"
+- **`/firm-stack:nexus-screen`** — Screen a business client for state tax nexus exposure (income/franchise and sales/use) from sales-by-state, payroll, and inventory data; state-by-state exposure matrix with P.L. 86-272 activity analysis. Flags exposure — never concludes nexus. Trigger: "nexus", "state tax exposure", "do we need to file in", "economic nexus", "remote employee in another state", "Amazon FBA"
 
 ---
 
