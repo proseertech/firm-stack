@@ -45,6 +45,27 @@ allocation amount, and **Line 8** (exemption available for future transfers) sho
 be reduced accordingly. Verify this reconciles — including across split-gift
 returns, where **each spouse's own exemption is separately consumed**.
 
+## 2a. Reverse QTIP election (§2652(a)(3))
+
+When a lifetime QTIP election is made under §2523(f), the *spouse* becomes the
+transferor of the QTIP property for GST purposes when it later passes — which
+strands the donor's GST exemption as to that trust. The **reverse QTIP election**
+under §2652(a)(3) treats the donor as remaining the GST transferor, so the donor's
+exemption can be allocated to the trust. On Form 709 it is made in **Schedule A,
+Part 1, column m**. The election is all-or-nothing per trust (severing the trust
+into exempt and non-exempt shares is the standard workaround when only partial
+exemption is available).
+
+**Review checkpoint:** any return with a lifetime QTIP deduction and skip-person
+contingent beneficiaries should show a deliberate yes/no on reverse QTIP — silence
+is usually an oversight, and like the other GST elections it is irrevocable after
+the return's due date (with extensions).
+
+Related: for **direct skips** on Schedule A Part 2, the §2632(b) automatic
+allocation is prevented by its own mechanism — the election-out checkbox on Part 2
+(column j on the current revision) or an attached statement — separate from the
+§2632(c) election-out statement used for Part 3 indirect skips.
+
 ## 3. GST annual exclusion and 529 plans
 
 - **§2642(c)**: a direct skip that is a *nontaxable gift* (qualifies for the gift

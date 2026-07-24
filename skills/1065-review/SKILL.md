@@ -1,6 +1,6 @@
 ---
 name: 1065-review
-version: 1.9.0
+version: 1.11.0
 description: |
   Cross-reference a completed Form 1065 (partnership income tax return) against its
   source documents — trial balance, Schedule K-1s, partnership agreement, and supporting
@@ -52,6 +52,8 @@ Report every discrepancy outside the rounding tolerance in the findings table �
 - Partnership agreement (for allocation percentages and special allocations)
 - Prior-year return (for capital account balances, basis, carryforwards)
 - Partner basis schedules (if losses are allocated)
+- Distribution detail by partner and date (to test distributions against basis)
+- Forms 8804/8805 and withholding records, if any partner is foreign
 - Any supporting workpapers
 - CCH Axcess Diagnostics report and Input Override Report (if available)
 
@@ -61,21 +63,33 @@ Report every discrepancy outside the rounding tolerance in the findings table �
 
 Before starting, confirm the required inputs are present. A review run against a missing K-1 or an absent partnership agreement produces false "confirmed" items and misses real allocation errors — surface what's missing rather than reviewing around the gap.
 
-1. **Reconcile income and deductions to trial balance** — Tie Schedule K ordinary income/loss through M-1. Flag unexplained book-to-tax adjustments.
-2. **Verify Schedule K items** — Check each separately stated item against source (interest, dividends, Section 1231, QBI, credits, etc.). Confirm the digital-asset question on page 1 is answered and consistent with the source documents — a 1099-DA or crypto activity on custody statements with a "No" answer is a finding. Reconcile any Forms 1099-DA (broker reporting is new; basis may be missing or wrong).
-3. **Verify K-1 allocations** — Confirm K-1 totals for all partners sum to Schedule K. Verify percentages tie to the partnership agreement or are consistent with prior year.
-4. **Verify partner outside basis** — For each partner receiving a loss, confirm outside basis is sufficient. Outside basis = capital account (tax basis) + share of liabilities. If liabilities are allocated under IRC 752, check that recourse/nonrecourse allocation is consistent with the partnership agreement. Flag losses exceeding basis — these are suspended under IRC 704(d).
-5. **Verify capital accounts (Schedule L and K-1 Part II)** — Tie beginning capital account balances to prior-year K-1s. Verify contributions, distributions, and income/loss allocations for each partner.
-6. **Check for special allocations** — If the partnership agreement has special allocations, verify they are reflected in the K-1s. Reference IRC 704(b): special allocations must have substantial economic effect. If special allocations are present, flag that the economic effect test (or alternate test) should be documented.
-7. **Verify Section 199A / QBI reporting** — The partnership reports QBI information on each K-1 (Box 20, code Z): QBI amount, W-2 wages (code W), UBIA of qualified property (code Z-2), and SSTB classification. Confirm:
+Detailed procedures for the loss-limitation tiers, distributions, and interest transfers live in **`references/loss-limits-and-transactions.md`**; the first-year checks live in **`references/initial-return-checklist.md`**. Read each when you reach the step that points to it.
+
+1. **Reconcile income and deductions to trial balance** — Tie Schedule K ordinary income/loss through M-1. Flag unexplained book-to-tax adjustments. Trace prior-year carryovers into the current return: a §481(a) adjustment spread, installment-sale gross profit, §179 carryover, excess business interest expense, and suspended losses — the prior-year return is a required input, and a dropped carryover is a straight income omission the TB reconciliation can't catch.
+2. **Verify Schedule K items** — Check each separately stated item against source (interest, dividends, Section 1231, QBI, credits, etc.). Confirm the digital-asset question on page 1 is answered and consistent with the source documents — a 1099-DA or crypto activity on custody statements with a "No" answer is a finding. Reconcile any Forms 1099-DA (broker reporting is new; basis may be missing or wrong). Confirm rental activities are segregated on Form 8825 / Schedule K line 2 rather than commingled with line 1 — commingled rentals are wrong character of income and corrupt both the passive-loss and QBI analyses. Verify self-employment earnings (line 14a / K-1 code A) are computed for general partners and active LLC members and include guaranteed payments for services; confirm no partner received a W-2 — all partner compensation flows through the K-1. Guaranteed payments for services and for capital must be stated separately (K-1 lines 4a/4b).
+3. **Verify K-1 allocations** — Confirm K-1 totals for all partners sum to Schedule K. Verify percentages tie to the partnership agreement or are consistent with prior year. Foot the Analysis of Net Income (Loss) grid to Schedule K and verify partner-type classification (general vs. limited, individual vs. corporate) — misclassification feeds SE income errors and IRS matching notices.
+4. **Verify partner outside basis** — For each partner receiving a loss, confirm outside basis is sufficient. Outside basis = capital account (tax basis) + share of liabilities. If liabilities are allocated under IRC 752, check that recourse/nonrecourse allocation is consistent with the partnership agreement. Flag losses exceeding basis — these are suspended under IRC 704(d). Check the K-1 Item K detail, not just the total: the three-way split (recourse / qualified nonrecourse / nonrecourse) drives each partner's at-risk amount, a partner guarantee (Item K3 checkbox) flips recourse allocation, and lower-tier partnership liabilities must be separately reported.
+5. **Verify the remaining loss-limitation tiers (at-risk and passive)** — Basis is only the first gate. Work the at-risk (IRC 465) and passive-activity (IRC 469) tiers per `references/loss-limits-and-transactions.md`: aggregation/grouping checkboxes (page 1 Item K), activity-by-activity K-1 reporting, grouping consistency with prior year, and self-rental recharacterization. A loss can clear basis and still be non-deductible — and missing activity segregation makes every downstream partner return wrong.
+6. **Verify capital accounts (Schedule L and K-1 Part II)** — Tie beginning capital account balances to prior-year K-1s. Verify contributions, distributions, and income/loss allocations for each partner. Confirm tax-basis capital uses the transactional approach with IRC 743(b) basis adjustments **excluded** — 743(b) embedded in tax capital is a pervasive software/legacy error that misstates the partner's capital every year thereafter.
+7. **Check for special allocations and IRC 704(c)** — If the partnership agreement has special allocations, verify they are reflected in the K-1s. Reference IRC 704(b): special allocations must have substantial economic effect. If special allocations are present, flag that the economic effect test (or alternate test) should be documented. For property contributed with FMV ≠ basis, verify the 704(c) allocation method is identified and applied to depreciation/gain allocations, and that K-1 Item N (net unrecognized 704(c) gain/loss) is completed — a mandatory disclosure the IRS matches; see `references/loss-limits-and-transactions.md`.
+8. **Verify distributions and interest transfers** — Test every distribution against the distributee's outside basis (IRC 731 gain, Form 7217 for property distributions, IRC 737, marketable securities as cash) and, for any transfer of a partnership interest, verify K-1 Item J changes are supported and Form 8308 is filed with the required IRC 751(a) detail. Procedures in `references/loss-limits-and-transactions.md` — these transactional events are invisible to the TB reconciliation and carry their own penalties.
+9. **Verify Section 199A / QBI reporting** — The partnership reports QBI information on each K-1 (Box 20, code Z): QBI amount, W-2 wages (code W), UBIA of qualified property (code Z-2), and SSTB classification. Confirm:
    - QBI amount on each K-1 equals the partner's share of ordinary income/loss from Schedule K (line 1), adjusted for separately stated items excluded from QBI (e.g., Section 1231 gains, capital gains, guaranteed payments).
    - W-2 wage allocation (code W) is consistent with the partnership agreement and ownership percentages (or an alternative allocation method if documented).
    - UBIA of qualified property is reported (Box 20, code Z component) if the partnership has qualified property.
    - SSTB classification: if the partnership is a Specified Service Trade or Business (health, law, accounting, consulting, athletics, financial services, architecture, engineering, or any trade where the principal asset is reputation/skill), this must be disclosed on the K-1. The SSTB flag flows to each partner's 1040 for the 199A phase-out.
    - Guaranteed payments to partners are excluded from QBI — confirm they are not included in the Box 20 code Z QBI amount.
    - If the partnership had a loss for the year, confirm the QBI amount reflects the loss (negative QBI reduces each partner's overall QBI).
-8. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
-9. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]."
+10. **Verify depreciation and R&E capitalization** — Tie Form 4562 to the fixed-asset schedule or trial-balance additions; depreciation is a book-tax difference the TB reconciliation alone can't validate. Two 2025 regime changes make software defaults unreliable:
+   - **Split-rate bonus depreciation** — 40% for property acquired before January 20, 2025; 100% for property acquired and placed in service on or after that date (OBBBA). Confirm each significant addition uses the rate matching its **acquisition** date; a fixed-asset register that applies one rate to the whole year is a finding.
+   - **Section 174/174A** — Domestic research costs are currently deductible for tax years beginning after 2024; foreign R&E remains capitalized over 15 years. Any catch-up deduction of previously capitalized domestic R&E must be supported by a Rev. Proc. 2025-28 transition election or Form 3115 — an M-1 that "ties" can still reflect an unauthorized method change.
+   - Verify Section 179 amounts against the applicable year's limits and phase-out.
+11. **Verify the Section 163(j) interest limitation** — If aggregate average annual gross receipts exceed the IRC 448(c) small-business threshold (inflation-adjusted; verify the applicable year's amount) or the partnership is a tax shelter under 448(d)(3), confirm Form 8990 is attached and the limitation computed. For tax years beginning after 2024, depreciation/amortization/depletion is **added back to ATI again** (OBBBA) — a computation carried forward on the 2024 EBIT basis understates the limit. Confirm excess business interest expense is allocated to partners on K-1 (code K) and prior-year disallowed-interest carryforwards tie to the prior return.
+12. **Verify Schedules K-2/K-3 and foreign-partner withholding** — Confirm K-2/K-3 were filed, or the domestic filing exception is documented (no or limited foreign activity, all partners are eligible types, partners notified, and no partner requested a K-3 by the one-month date). Silence is not an exception — the failure-to-file penalty runs per partner, per month. If any partner is foreign, verify IRC 1446 withholding on effectively connected income was computed, paid, and reported on Forms 8804/8805/8813 — the withholding liability is the partnership's own, with entity-level penalties and interest.
+13. **Verify state PTET (federal side)** — If a state pass-through entity tax election was made: confirm the election is valid for the year, the tax was **actually paid within the year** (deduction timing under Notice 2020-75 — accrued-but-unpaid PTET is a common mistimed deduction), the deduction is taken at the entity level on page 1 rather than passed through as a separately stated state tax, and partner-level credit information appears on K-1 footnotes or state schedules.
+14. **Initial-return branch** — If the Initial Return box is checked (or this is otherwise year 1), run the first-year checks in `references/initial-return-checklist.md`: election statements attached, entity-classification posture, tax-year selection, BBA election status, beginning capital equal to initial contributions, and basis tracking initiated. First-year elections missed here are often permanent or costly to fix late.
+15. **Summarize findings** — Produce a severity-graded findings list (see Output Format).
+16. **Audit risk assessment** — Note 1-3 items that present elevated audit risk. State facts: "This item may draw scrutiny because [specific reason]."
 
 ## Control Points
 
@@ -97,6 +111,16 @@ Before starting, confirm the required inputs are present. A review run against a
 - Cross-return coordination needed: K-1 amounts should tie to each partner's Form 1040 or entity return
 - Digital-asset question answered "No" but a 1099-DA or crypto activity appears in the source documents
 - Foreign tax paid, foreign accounts, or foreign partners visible in source docs — possible FinCEN 114 (FBAR) / foreign information-return exposure; flag as a preparer question and hand the FBAR workpaper itself to `fbar-workpaper`
+- 2025 fixed-asset additions straddling January 19 all claimed at a single bonus rate, or a catch-up R&E deduction with no Rev. Proc. 2025-28 election or Form 3115 in the file
+- Interest expense deducted in full with no Form 8990 despite gross receipts above the IRC 448(c) threshold
+- No Schedules K-2/K-3 and no documented domestic filing exception
+- PTET deduction on page 1 with no evidence the tax was paid during the year
+- A partner on payroll (W-2), or line 14a blank while general partners/active LLC members have ordinary income or guaranteed payments for services
+- A distribution exceeding the distributee's outside basis with no IRC 731 gain reported, or a property distribution with no Form 7217
+- K-1 Item J percentages changed from prior year with no Form 8308 and no transfer documentation
+- Tax-basis capital accounts that include IRC 743(b) adjustments
+- A foreign partner with no Forms 8804/8805 in the file
+- Initial Return box checked but no election statements attached and no first-year review performed
 
 ## Output Format
 

@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.8.0
+version: 2.10.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or an
   extension projection against its source documents — W-2s, 1099s, K-1s, brokerage
@@ -51,7 +51,7 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 ## Required Inputs
 
 - Completed Form 1040 (PDF or data export)
-- All source documents: W-2s, 1099s (INT, DIV, B, R, DA, SSA, MISC, NEC), K-1s, brokerage statements
+- All source documents: W-2s and W-2Gs, 1099s (INT, DIV, B, R, DA, G, S, K, Q, SA, SSA, MISC, NEC), Forms 1098 and 1095-A, K-1s, brokerage statements
 - Any supporting workpapers or schedules
 - Basis worksheets for pass-through entities (if losses are claimed)
 
@@ -84,13 +84,18 @@ List all source docs provided. Flag any that appear missing based on the return 
 
 ### Phase D — Tie out every line
 
-Work through each income, deduction, credit, withholding, and carryover category, tying each line to its source document. The per-category procedures and the special cases — structured-note/auto-call income to Form 8960, brokerage cash bonuses, the pass-through loss limitation stack (basis → at-risk → passive → QBI), cost-segregation rental losses, the SALT cap, carryover reconciliation — are in **`references/tie-out-procedures.md`**. Read it before starting this phase; the special cases are where returns quietly go wrong.
+Work through each income, deduction, credit, withholding, and carryover category, tying each line to its source document. The per-category procedures and the special cases — filing status and dependents, equity-compensation basis adjustments, 1099-R distribution codes (RMD/early-distribution/QCD), residence sales and Section 121, structured-note/auto-call income to Form 8960, brokerage cash bonuses, the pass-through loss limitation stack (basis → at-risk → passive → excess business loss → QBI), cost-segregation rental losses, the SALT cap, mortgage-interest limits, charitable substantiation, the 1095-A/Form 8962 reconciliation, carryover reconciliation — are in **`references/tie-out-procedures.md`**. Read it before starting this phase; the special cases are where returns quietly go wrong.
 
-Three checks that apply to every return in this phase, regardless of category:
+Four checks that apply to every return in this phase, regardless of category:
 
 - **Digital-asset question and 1099-DA** — Confirm the digital-asset question on page 1 is answered, and that the answer is consistent with the source documents (a 1099-DA or crypto activity on brokerage statements with a "No" answer is a finding). Reconcile any Forms 1099-DA to the return — broker reporting is new, so basis on the 1099-DA may be missing or wrong; where the taxpayer moved off universal basis tracking, confirm the Rev. Proc. 2024-28 wallet-by-wallet allocation statement exists.
 - **Form 8867 preparer due diligence** — If the return claims EITC, CTC/ACTC/ODC, AOTC, or head-of-household filing status, confirm Form 8867 is attached and the due-diligence documentation exists. A missing 8867 is a MEDIUM finding: the IRC 6695(g) penalty (inflation-adjusted, per credit per return) lands on the preparer, and CTC's high phase-out threshold means this check fires on high-income returns too.
 - **Foreign-item sweep** — If any source document shows foreign tax paid, a foreign address, or foreign accounts, confirm Schedule B Part III is answered correctly and flag potential FinCEN 114 (FBAR) / Form 8938 filing requirements as a preparer question. Building the FBAR workpaper itself is handled by the `fbar-workpaper` skill — hand off rather than reconstructing foreign account detail here.
+- **New-for-2025 OBBBA deductions (Schedule 1-A)** — First filing season for these, so verify the mechanics rather than trusting software defaults, and check every amount against the applicable year's statutory caps and phase-outs:
+  - **Tips deduction** — W-2/employer reporting supports the amount (Notice 2025-69 transition rules apply for 2025), the occupation is on the IRS qualified-occupation list, and the same tip income is **excluded from QBI** (IRC 199A(c)(4)(D)) — deducting tips on Schedule 1-A while they also inflate the QBI deduction is a double dip.
+  - **Overtime deduction** — Only the premium (over-regular-rate) portion qualifies; tie to employer reporting, not total overtime pay.
+  - **Car-loan interest deduction** — VIN reported, vehicle meets the U.S. final-assembly requirement, loan and use qualify, amount within the statutory cap.
+  - **Senior deduction** — Taxpayer (and spouse, if claimed for both) is 65+, SSN requirement met, filing-status requirement met (MFJ if married), MAGI phase-out applied.
 
 ### Phase E — Verify Section 199A / QBI reporting
 
@@ -171,6 +176,10 @@ Pause and surface to the reviewer when:
 - Digital-asset question answered "No" but a 1099-DA or crypto activity appears in the source documents
 - EITC, CTC/ACTC/ODC, AOTC, or HOH claimed with no Form 8867 attached
 - Foreign tax paid or foreign accounts visible in source docs with Schedule B Part III unanswered or "No" — possible FBAR/Form 8938 exposure (hand off to `fbar-workpaper`)
+- A Schedule 1-A deduction (tips, overtime, car-loan interest, senior) claimed without the supporting W-2/employer reporting, VIN, or age/SSN facts — or a tips deduction while the same income remains in the QBI computation
+- Form 1095-A in the file with no Form 8962 — automatic e-file reject or guaranteed IRS correspondence
+- Large aggregate business losses with no Form 461 — the Section 461(l) excess business loss gate is the final layer of the limitation stack and the one most often skipped
+- W-2 Box 12 Code V or RSU vesting income with same-year broker sales but no Form 8949 basis adjustment — the compensation element gets taxed twice
 
 ## Output Format
 
