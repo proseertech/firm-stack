@@ -119,11 +119,12 @@ A markdown table in chat, a Word table in .docx. One row per item. **Exactly the
 
 | Line / Schedule | Current treatment | Recommended treatment | Reason | Authority |
 |---|---|---|---|---|
-| **[HIGH]** Part I, Line 25b | Qualifying distributions $42,000 | $48,500 required | Distributable amount is $48,500; shortfall of $6,500 triggers §4942 excise tax. | §4942; Form 990-PF instr. |
+| **[HIGH]** Part XI, Line 4 | Qualifying distributions $42,000 | $48,500 required | Distributable amount is $48,500; shortfall of $6,500 triggers §4942 excise tax. | §4942; Form 990-PF instr. |
 | **[MEDIUM]** Part VII, Line 1 | Investment-advisor fees netted against returns | Gross report in Part VII, column (b) | Fees netted against investment returns are missing from Part VII compensation. | Form 990-PF instr. |
-| **[LOW]** Part I, Line 1 | Fair market value $2.1M | No change — confirmed correct | Tied to brokerage year-end statements. | Form 990-PF instr. |
+| Part II, Line 16(c) | Total assets FMV $2.1M | No change — confirmed correct | Tied to brokerage year-end statements. | Form 990-PF instr. |
+
 Column rules:
-- **Line / Schedule** — Specific form reference (e.g., "Part I, Line 1", "Part VII, Line 1", "Part IX, Line 1"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
+- **Line / Schedule** — Specific form reference (e.g., "Part I, Line 1", "Part VII, Line 1", "Part XI, Line 4"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
 - **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
 - **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. For optional improvements, prefix with "Optional:".
 - **Reason** — The factual or legal basis for the recommendation. Explain *why*, not just *what*.

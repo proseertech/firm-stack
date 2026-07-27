@@ -132,10 +132,11 @@ A markdown table in chat, a Word table in .docx. One row per item. **Exactly the
 | Line / Schedule | Current treatment | Recommended treatment | Reason | Authority |
 |---|---|---|---|---|
 | **[HIGH]** Sch C, Line 2 | DRD $15,000 | $22,500 per ownership % | 45% owned payer; 65% DRD applies to $34,615 dividend. | §243(c) |
-| **[MEDIUM]** Sch M-1, Line 4 | Travel $3,200 on books, $0 return | Add back $3,200 on M-1 | Travel per GL not on return; M-1 reconciliation incomplete. | §274; Form 1120 instr. |
-| **[LOW]** Sch J, Line 3 | Tax $2,100 | No change — confirmed correct | Tax computed at 21% flat rate; verified. | §11(b) |
+| **[MEDIUM]** Sch M-1, Line 5c | Travel $3,200 on books, $0 return | Add back $3,200 on M-1 | Travel per GL not on return; M-1 reconciliation incomplete. | §274; Form 1120 instr. |
+| Sch J, Line 2 | Tax $2,100 | No change — confirmed correct | Tax computed at 21% flat rate; verified. | §11(b) |
+
 Column rules:
-- **Line / Schedule** — Specific form reference (e.g., "Sch A, Line 1", "Sch C, Line 2", "Sch J, Line 3"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
+- **Line / Schedule** — Specific form reference (e.g., "Sch C, Line 2", "Sch J, Line 2", "Sch M-1, Line 5c"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
 - **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
 - **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. For optional improvements, prefix with "Optional:".
 - **Reason** — The factual or legal basis for the recommendation. Explain *why*, not just *what*.
@@ -143,7 +144,7 @@ Column rules:
 
 Table rules:
 - **Every reviewed item goes in the table** — issues, confirmed items, and optional recommendations alike. Do not omit correct items; they show the reviewer checked them.
-- **Sort rows by form/schedule order** (page 1, then Schedule A, C, D, G, J, K, M-1, M-2, M-3), not by severity. Severity tags handle prioritization within the natural reading flow.
+- **Sort rows by form/schedule order** (page 1, then Schedules C, J, K, L, M-1, M-2 or M-3, and attached forms), not by severity. Severity tags handle prioritization within the natural reading flow.
 - **One row per line item.** Do not split a single issue across multiple rows.
 
 ### Section Organization

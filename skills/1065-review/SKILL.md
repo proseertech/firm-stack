@@ -134,9 +134,10 @@ A markdown table in chat, a Word table in .docx. One row per item. **Exactly the
 |---|---|---|---|---|
 | **[HIGH]** Sch K, Line 1 | Ordinary income $78,500 | $79,200 per trial balance | Trial balance ordinary income totals $79,200; return understates by $700. | Trial balance; §702 |
 | **[MEDIUM]** K-1, Box 20, code Z | QBI component blank | Report QBI, W-2 wages, UBIA per §199A | K-1 missing QBI information required for partners' 199A deduction. | §199A; Form 8995 instr. |
-| **[LOW]** Sch B, Line 1 | Guaranteed payments $24,000 | No change — confirmed correct | Tied to payroll registers and partnership agreement. | §707(c) |
+| Page 1, Line 10 | Guaranteed payments $24,000 | No change — confirmed correct | Tied to payroll registers and partnership agreement. | §707(c) |
+
 Column rules:
-- **Line / Schedule** — Specific form reference (e.g., "Sch A, Line 1", "Sch K, Line 1", "K-1 Box 1"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
+- **Line / Schedule** — Specific form reference (e.g., "Page 1, Line 10", "Sch K, Line 1", "K-1 Box 1"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
 - **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
 - **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. For optional improvements, prefix with "Optional:".
 - **Reason** — The factual or legal basis for the recommendation. Explain *why*, not just *what*.
@@ -144,7 +145,7 @@ Column rules:
 
 Table rules:
 - **Every reviewed item goes in the table** — issues, confirmed items, and optional recommendations alike. Do not omit correct items; they show the reviewer checked them.
-- **Sort rows by form/schedule order** (page 1, then Schedule A, B, C, D, E, G, J, K, K-1s), not by severity. Severity tags handle prioritization within the natural reading flow.
+- **Sort rows by form/schedule order** (page 1, then Schedules B, K, L, M-1, M-2, then K-1s and attached forms), not by severity. Severity tags handle prioritization within the natural reading flow.
 - **One row per line item.** Do not split a single issue across multiple rows.
 
 ### Section Organization

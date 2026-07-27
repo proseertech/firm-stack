@@ -156,6 +156,7 @@ A markdown table in chat, a Word table in .docx. One row per item. **Exactly the
 | **[HIGH]** Sch A, Pt 3, Item 1 | Trust date shown as 4/2/2023 | Change to April 12, 2023 | Instrument was executed and notarized 4/12/2023; date on return is wrong. | Trust agmt. execution page |
 | **[MEDIUM]** Sch D, Pt 2, Line 5 | Automatic GST allocation of $75,873 | Confirm inclusion ratio; likely allocate to full $94,873 via Notice of Allocation | Trust appears not to meet §2642(c)(2), so the $19,000 annual-exclusion portion is not a GST nontaxable gift. | §§2632(c), 2642(c) |
 | **[LOW]** Pt I, Line 19 | Blank | Mark "No" | Donor is unmarried; field should be affirmatively answered. | Form 709 instr. |
+
 Column rules:
 - **Line / Schedule** — Specific form reference (e.g., "Sch A, Pt 3, Item 1", "Sch D, Pt 2, Line 5", "Pt I, Line 19"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
 - **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
