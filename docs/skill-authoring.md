@@ -43,6 +43,18 @@ tier: all-staff           # all-staff | power-user | developer
 
 ---
 
+## Review Skills: the Findings Table
+
+Every tax return review skill (`skills/*-review/`) delivers the same 5-column findings table (Line/Schedule, Current treatment, Recommended treatment, Reason, Authority). The shared wording of that block is canonical and lives in `templates/findings-table.md` — only the example rows, the form-reference examples, and the sort order are per-form.
+
+CI runs `scripts/lint_review_skills.py` on every PR and fails if any review skill drifts from the canonical block, uses a malformed example row, tags a confirmed row with a severity, or still contains the retired text-block format. To change the shared wording, edit `templates/findings-table.md` and every review skill together in the same PR. Run the lint locally before pushing:
+
+```bash
+python3 scripts/lint_review_skills.py
+```
+
+---
+
 ## Skill Naming
 
 All skills live as flat folders under `skills/`. No nesting.

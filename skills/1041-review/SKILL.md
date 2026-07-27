@@ -1,6 +1,6 @@
 ---
 name: 1041-review
-version: 1.11.0
+version: 1.11.1
 description: |
   Cross-reference a completed Form 1041 (fiduciary income tax return) against its
   source documents — the trust instrument, fiduciary accounting, 1099s, and pass-through
@@ -119,11 +119,12 @@ A markdown table in chat, a Word table in .docx. One row per item. **Exactly the
 
 | Line / Schedule | Current treatment | Recommended treatment | Reason | Authority |
 |---|---|---|---|---|
-| **[HIGH]** Sch A, Pt 3, Item 1 | Trust date shown as 4/2/2023 | Change to April 12, 2023 | Instrument was executed and notarized 4/12/2023; date on return is wrong. | Trust agmt. execution page |
-| **[LOW]** Sch A, Pt 4, Line 2 | One annual exclusion, $19,000; 1 donee | No change — confirmed correct | Jane is the only demand beneficiary/donee for 2025. Revisit if she has a child. | §2503(b); Rev. Rul. 73-405 |
+| **[HIGH]** Sch B, Line 15 | Income distribution deduction $38,000 | $31,400 per DNI computation | Deduction is limited to the lesser of DNI or actual distributions; DNI computes to $31,400. | §§651/661; Sch B |
+| **[MEDIUM]** Page 1, Line 12 | Fiduciary fees $9,000 fully deducted | Allocate $1,800 to tax-exempt income | 20% of trust income is tax-exempt; a pro-rata share of fees is nondeductible. | §265(a)(1); Reg. §1.652(b)-3 |
+| Page 1, Line 1 | Interest income $4,120 | No change — confirmed correct | Tied to consolidated 1099-INT. | 1099-INT |
 
 Column rules:
-- **Line / Schedule** — Specific form reference (e.g., "Sch A, Pt 3, Item 1", "Pt I, Line 16"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
+- **Line / Schedule** — Specific form reference (e.g., "Page 1, Line 1", "Sch B, Line 15", "K-1 Box 1"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
 - **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
 - **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. For optional improvements, prefix with "Optional:".
 - **Reason** — The factual or legal basis for the recommendation. Explain *why*, not just *what*.
@@ -131,7 +132,7 @@ Column rules:
 
 Table rules:
 - **Every reviewed item goes in the table** — issues, confirmed items, and optional recommendations alike. Do not omit correct items; they show the reviewer checked them.
-- **Sort rows by form/schedule order** (page 1, then Schedule A, B, D, G, I, J, K-1), not by severity. Severity tags handle prioritization within the natural reading flow.
+- **Sort rows by form/schedule order** (page 1, then Schedules A, B, G, then attached Schedules D, I, J and K-1s), not by severity. Severity tags handle prioritization within the natural reading flow.
 - **One row per line item.** Do not split a single issue across multiple rows.
 
 ### Section Organization

@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.10.0
+version: 2.11.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or an
   extension projection against its source documents — W-2s, 1099s, K-1s, brokerage
@@ -32,7 +32,7 @@ tier: power-user
 
 ## Purpose
 
-Catch errors before a Form 1040 is filed or an extension payment is calculated. Verify that every line on the return ties to a source document and that no income, deduction, or credit has been omitted or misstated. The deliverable is a scannable dashboard of findings a reviewer can act on — not a narrated walk-through.
+Catch errors before a Form 1040 is filed or an extension payment is calculated. Verify that every line on the return ties to a source document and that no income, deduction, or credit has been omitted or misstated. The deliverable is a scannable findings table a reviewer can act on — not a narrated walk-through.
 
 ## Accuracy Standard
 
@@ -59,7 +59,7 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 
 ## Workflow
 
-Execute the phases below silently, then present the dashboard (Phase E). The detailed,
+Execute the phases below silently, then present the findings summary (Phase F). The detailed,
 line-by-line tie-out mechanics and the special cases that most often trip up a 1040 live in
 **`references/tie-out-procedures.md`** — read that file when you reach Phase D.
 
@@ -108,43 +108,21 @@ Check the QBI deduction (Form 8995 or 8995-A) on the 1040:
 5. **Check aggregation** — If the taxpayer aggregates multiple QBI trades or businesses, confirm the aggregation election is documented and consistent with prior year.
 6. **REIT/PTP dividends** — Confirm any REIT dividends or PTP income reported on 1099-DIV (Box 5, Section 199A dividends) are included in the QBI computation.
 
-### Phase F — Dashboard summary
+### Phase F — Findings summary
 
-**Do not narrate the phases above.** Play-by-play ("checking wages… wages tie") buries the findings the reviewer actually needs. Present only the compact summary — something a reviewer can scan in under 60 seconds:
+**Do not narrate the phases above.** Play-by-play ("checking wages… wages tie") buries the findings the reviewer actually needs. Present only the compact chat summary defined in Output Format — something a reviewer can scan in under 60 seconds: the bottom line (2-3 sentences: is the return / extension payment reasonable, and what is the single most important issue), then the 5-column findings table filtered to findings only, then the surrounding sections.
 
-1. **Bottom line** (2-3 sentences): Is the return / extension payment reasonable? What is the single most important issue?
-2. **Findings table** — one row per issue, no detail paragraphs:
-
-   | # | Severity | Line / Schedule | Description | Amount |
-   |---|----------|-----------------|-------------|--------|
-   | 1 | HIGH | Sch E, Line 28 | K-1 loss with no basis worksheet | ($42,000) |
-   | 2 | MEDIUM | Sch B | Sub-account 789 not mapped to 1099 | $3,200 |
-
-3. **Audit risk** — 1-3 bullet points, factual (not a score or probability).
-4. **Open items count** *(extension mode only)* — e.g., "4 items pending for final return (3 SALY K-1s, 1 preliminary 1099)."
-
-**Do not list confirmed line items.** Lines that tie correctly are the expected case; listing them adds bulk without value. End the summary with: *"Expand any issue by number, say 'walk through all' to resolve one at a time, or ask for the full tie-out schedule."*
+**Do not list confirmed line items in chat.** Lines that tie correctly are the expected case; they belong in the .docx table, where every reviewed item appears. End the summary with: *"Expand any finding by line reference, say 'walk through all' to resolve one at a time, or ask for the full tie-out schedule."*
 
 ### Phase G — Interactive resolution
 
-After the dashboard, the reviewer drives. For each item they raise:
+After the findings summary, the reviewer drives. For each item they raise:
 
 - **Resolve** — reviewer provides an explanation or correction that clears the item
 - **Defer** — move to the open items list for later follow-up
 - **Escalate** — flag for partner review
 
-When expanding an issue, show the full detail block:
-
-```
-Issue #[X] — [HIGH / MEDIUM / LOW]
-Line/Schedule: [specific form reference]
-Finding: [what was found]
-Amount: $[X]
-Correction: [recommended action]
-Authority: [IRC §, Reg., or procedure if applicable]
-```
-
-Track which items are resolved vs. still open, and update the findings table as items clear.
+When expanding a finding, stay anchored to its table row: restate the row, then add the detail the row couldn't hold — the tie-out math, the source-document cites, and the specific correction. Track which items are resolved vs. still open, and update the findings table as items clear.
 
 ## Control Points
 
@@ -183,15 +161,42 @@ Pause and surface to the reviewer when:
 
 ## Output Format
 
-**Default output is the dashboard summary** (Phase E) — a compact table plus bottom line. The full detail block for each issue appears only when the reviewer expands it (Phase F). The dashboard groups findings into:
+**The chat response and the .docx use the same 5-column findings table format.** The table is the primary deliverable — each reviewed line item appears with its current treatment, recommended treatment, reason, and authority. The .docx carries the complete table; the chat shows the compact version (findings only — see the chat rule below).
 
-- **Issues** — Severity-graded (HIGH / MEDIUM / LOW), ranked by dollar impact
-- **Missing Support** — Source docs absent
-- **Preparer Questions** — Items requiring judgment or additional facts
-- **Audit Risk** — 1-3 bullet points
-- **Open Items for Final Return** *(extension projection mode only)* — SALY K-1s, preliminary documents, items pending for final filing
+### Findings Table (required format)
 
-Confirmed line items are **not listed by default**. Request "full tie-out schedule" to see them.
+A markdown table in chat, a Word table in .docx. One row per item. **Exactly these 5 columns, in this order:**
+
+| Line / Schedule | Current treatment | Recommended treatment | Reason | Authority |
+|---|---|---|---|---|
+| **[HIGH]** Sch B, Line 1 | Interest income $2,340 | $2,410 per 1099-INT | 1099-INT shows $2,410; return understates by $70. | 1099-INT; §61 |
+| Form 8995, Line 15 | QBI deduction $3,200 | No change — confirmed correct | QBI tie-out verified against K-1 Box 20 code Z. | §199A |
+
+Column rules:
+- **Line / Schedule** — Specific form reference (e.g., "Sch A, Line 4", "Sch B, Line 1", "Form 8995, Line 15"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
+- **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
+- **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. For optional improvements, prefix with "Optional:".
+- **Reason** — The factual or legal basis for the recommendation. Explain *why*, not just *what*.
+- **Authority** — IRC section, Reg., Revenue Ruling, form instructions, or source document. Use "—" if none applies.
+
+Table rules:
+- **Every reviewed item goes in the table** — issues, confirmed items, and optional recommendations alike. Do not omit correct items; they show the reviewer checked them.
+- **Sort rows by form/schedule order** (page 1, then Schedules 1-3, Sch A, B, C, D, E, R, SE, and attached forms), not by severity. Severity tags handle prioritization within the natural reading flow.
+- **One row per line item.** Do not split a single issue across multiple rows.
+
+**Chat rule — the chat table is compact.** In chat, include only rows that carry a severity tag or an "Optional:" recommendation. Confirmed rows ("No change — confirmed correct") appear in the .docx table only — the .docx is where every reviewed item goes. If the reviewer asks for the "full tie-out schedule", show the complete table in chat as well.
+
+### Section Organization
+
+Surround the table with these sections:
+
+1. **Bottom line** — 2-3 sentence summary
+2. **Review mode** — Final return review or extension projection
+3. **Findings Table** — The 5-column table above (compact — findings only)
+4. **Missing Support** — Bulleted list of absent source documents
+5. **Preparer Questions** — Items requiring judgment or additional facts
+6. **Audit Risk** — 1-3 bullet points
+7. **Open Items for Final Return** *(extension projection mode only)* — SALY K-1s, preliminary documents, items pending for final filing
 
 ### Excel / Workpaper Output
 
@@ -206,14 +211,14 @@ The reviewer needs to see the math tie by formula and to adjust an input and wat
 
 ### .docx Output
 
-**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary; the .docx is the artifact the preparer works from and the firm keeps on file.
+**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary + the compact findings table; the .docx is the artifact the preparer works from and the firm keeps on file.
 
 Use `python-docx` to build the document. Structure:
 
 1. **Header** — Firm name, "Tax Return Review", return type (e.g., "Form 1040"), client name, tax year, preparer name, review date
 2. **Review mode** — Final return review or extension projection
-3. **Bottom line** — 2-3 sentence summary (same as the chat dashboard)
-4. **Findings table** — One row per issue: #, Severity (HIGH/MEDIUM/LOW), Line/Schedule, Description, Amount. Use `Table Grid` style
+3. **Bottom line** — 2-3 sentence summary (same as the chat)
+4. **Findings table** — 5 columns: Line/Schedule, Current treatment, Recommended treatment, Reason, Authority. The complete table — every reviewed item, confirmed rows included. Use `Table Grid` style. Bold the header row. Severity tags (**[HIGH]**, etc.) are bold prefixes in column 1.
 5. **Missing support** — Bulleted list of absent source documents
 6. **Preparer questions** — Bulleted list of items requiring judgment
 7. **Audit risk** — 1-3 bullet points, factual
@@ -225,7 +230,7 @@ Save as `[ClientName]_[TaxYear]_[ReturnType]_Review.docx` (e.g., `Smith_2025_104
 Key python-docx patterns:
 - `doc.add_paragraph(text)` with `paragraph.style = 'Normal'` for body text
 - `doc.add_table(rows, cols)` with `table.style = 'Table Grid'` for the findings table
-- Bold the header row and severity column
+- Bold the header row and severity tags in column 1
 - Use `doc.add_heading(text, level=1)` for section titles
 
 Write the generation script to a file and run it via `Bash` with the system Python — do not try to generate the .docx inline in the chat.

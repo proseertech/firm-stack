@@ -1,6 +1,6 @@
 ---
 name: 1120s-review
-version: 1.11.0
+version: 1.12.0
 description: |
   Cross-reference a completed Form 1120-S (S-corporation return) against its source
   documents — trial balance, Schedule K-1s, officer W-2s, Form 1125-E, and supporting
@@ -138,34 +138,49 @@ Pause and surface to the user when:
 
 ## Output Format
 
-A structured findings report. Each issue reads:
+**The chat response and the .docx both use the same 5-column findings table.** This is the primary deliverable — a single table where every reviewed line item appears, with its current treatment, recommended treatment, reason, and authority.
 
-```
-Issue #[X] — [HIGH / MEDIUM / LOW]
-Line/Schedule: [specific form reference]
-Finding: [what was found]
-Amount: $[X]
-Correction: [recommended action]
-Authority: [IRC §, Reg., or procedure if applicable]
-```
+### Findings Table (required format)
 
-Organized into:
+A markdown table in chat, a Word table in .docx. One row per item. **Exactly these 5 columns, in this order:**
 
-- **Confirmed** — Line items that tie
-- **Issues** — Severity-graded findings (HIGH / MEDIUM / LOW), ranked within severity by dollar impact for preparer attention
-- **Missing Support** — Items where source docs are absent
-- **Preparer Questions** — Items requiring judgment
-- **Audit Risk Items** — 1–3 items with a factual risk assessment
+| Line / Schedule | Current treatment | Recommended treatment | Reason | Authority |
+|---|---|---|---|---|
+| **[HIGH]** Page 1, Line 21 | Ordinary income $45,200 | $46,100 per trial balance | Trial balance ordinary income totals $46,100; return understates by $900. | Trial balance; §61 |
+| **[MEDIUM]** K-1, Box 17, code V | QBI component blank | Report QBI, W-2 wages, UBIA per §199A | K-1 missing QBI information required for shareholders' 199A deduction. | §199A; Form 8995 instr. |
+| Page 1, Line 7 | Officer comp $12,000 | No change — confirmed correct | Tied to W-2 and payroll registers. | §162 |
+
+Column rules:
+- **Line / Schedule** — Specific form reference (e.g., "Page 1, Line 7", "Sch K, Line 1", "K-1 Box 17"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
+- **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
+- **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. For optional improvements, prefix with "Optional:".
+- **Reason** — The factual or legal basis for the recommendation. Explain *why*, not just *what*.
+- **Authority** — IRC section, Reg., Revenue Ruling, form instructions, or source document. Use "—" if none applies.
+
+Table rules:
+- **Every reviewed item goes in the table** — issues, confirmed items, and optional recommendations alike. Do not omit correct items; they show the reviewer checked them.
+- **Sort rows by form/schedule order** (page 1, then Schedules B, K, L, M-1, M-2, then K-1s and attached forms), not by severity. Severity tags handle prioritization within the natural reading flow.
+- **One row per line item.** Do not split a single issue across multiple rows.
+
+### Section Organization
+
+Surround the table with these sections:
+
+1. **Bottom line** — 2-3 sentence summary
+2. **Findings Table** — The 5-column table above
+3. **Missing Support** — Bulleted list of absent source documents
+4. **Preparer Questions** — Bulleted list of items requiring judgment
+5. **Audit Risk** — 1-3 bullet points with factual risk assessment
 
 ### .docx Output
 
-**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary; the .docx is the artifact the preparer works from and the firm keeps on file.
+**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary + the findings table; the .docx is the artifact the preparer works from and the firm keeps on file.
 
 Use `python-docx` to build the document. Structure:
 
 1. **Header** — Firm name, "Tax Return Review", "Form 1120-S", client/S-Corp name, tax year, preparer name, review date
 2. **Bottom line** — 2-3 sentence summary
-3. **Findings table** — One row per issue: #, Severity (HIGH/MEDIUM/LOW), Line/Schedule, Description, Amount. Use `Table Grid` style
+3. **Findings table** — 5 columns: Line/Schedule, Current treatment, Recommended treatment, Reason, Authority. Use `Table Grid` style. Bold the header row. Severity tags (**[HIGH]**, etc.) are bold prefixes in column 1.
 4. **Missing support** — Bulleted list of absent source documents
 5. **Preparer questions** — Bulleted list of items requiring judgment
 6. **Audit risk** — 1-3 bullet points, factual
@@ -176,7 +191,7 @@ Save as `[ClientName]_[TaxYear]_1120S_Review.docx` (e.g., `ABCCorp_2025_1120S_Re
 Key python-docx patterns:
 - `doc.add_paragraph(text)` with `paragraph.style = 'Normal'` for body text
 - `doc.add_table(rows, cols)` with `table.style = 'Table Grid'` for the findings table
-- Bold the header row and severity column
+- Bold the header row and severity tags in column 1
 - Use `doc.add_heading(text, level=1)` for section titles
 
 Write the generation script to a file and run it via `Bash` with the system Python — do not try to generate the .docx inline in the chat.
