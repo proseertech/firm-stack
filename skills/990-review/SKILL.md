@@ -1,6 +1,6 @@
 ---
 name: 990-review
-version: 1.10.0
+version: 1.11.0
 description: |
   Cross-reference a completed Form 990-PF (private foundation return) against
   source documents — financial statements, investment schedules, grants paid, and
@@ -111,33 +111,49 @@ Stop and get a preparer decision before treating the return as reviewed-complete
 
 ## Output Format
 
-A structured findings report with severity-graded issues:
+**The chat response and the .docx both use the same 5-column findings table.** This is the primary deliverable — a single table where every reviewed line item appears, with its current treatment, recommended treatment, reason, and authority.
 
-```
-Issue #[X] — [HIGH / MEDIUM / LOW]
-Line/Schedule: [specific form reference]
-Finding: [what was found]
-Amount: $[X]
-Correction: [recommended action]
-Authority: [IRC §, Reg., or procedure if applicable]
-```
+### Findings Table (required format)
 
-Organized into sections:
-- **Confirmed** — Line items that tie
-- **Issues** — Severity-graded findings (HIGH / MEDIUM / LOW), ranked by dollar impact for preparer attention
-- **Compliance Flags** — Foundation-specific compliance items
-- **Preparer Questions** — Items requiring judgment
-- **Audit Risk Items** — 1-3 items with factual risk assessment
+A markdown table in chat, a Word table in .docx. One row per item. **Exactly these 5 columns, in this order:**
+
+| Line / Schedule | Current treatment | Recommended treatment | Reason | Authority |
+|---|---|---|---|---|
+| **[HIGH]** Part I, Line 25b | Qualifying distributions $42,000 | $48,500 required | Distributable amount is $48,500; shortfall of $6,500 triggers §4942 excise tax. | §4942; Form 990-PF instr. |
+| **[MEDIUM]** Part VII, Line 1 | Investment-advisor fees netted against returns | Gross report in Part VII, column (b) | Fees netted against investment returns are missing from Part VII compensation. | Form 990-PF instr. |
+| **[LOW]** Part I, Line 1 | Fair market value $2.1M | No change — confirmed correct | Tied to brokerage year-end statements. | Form 990-PF instr. |
+Column rules:
+- **Line / Schedule** — Specific form reference (e.g., "Part I, Line 1", "Part VII, Line 1", "Part IX, Line 1"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
+- **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
+- **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. For optional improvements, prefix with "Optional:".
+- **Reason** — The factual or legal basis for the recommendation. Explain *why*, not just *what*.
+- **Authority** — IRC section, Reg., Revenue Ruling, form instructions, or source document. Use "—" if none applies.
+
+Table rules:
+- **Every reviewed item goes in the table** — issues, confirmed items, and optional recommendations alike. Do not omit correct items; they show the reviewer checked them.
+- **Sort rows by form/schedule order** (Parts I through XV in order), not by severity. Severity tags handle prioritization within the natural reading flow.
+- **One row per line item.** Do not split a single issue across multiple rows.
+
+### Section Organization
+
+Surround the table with these sections:
+
+1. **Bottom line** — 2-3 sentence summary
+2. **Findings Table** — The 5-column table above
+3. **Compliance Flags** — Foundation-specific compliance items (distribution requirement, excise tax, Chapter 42 screens, Form 4720 status)
+4. **Missing Support** — Bulleted list of absent source documents
+5. **Preparer Questions** — Bulleted list of items requiring judgment
+6. **Audit Risk Items** — 1-3 bullet points with factual risk assessment
 
 ### .docx Output
 
-**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary; the .docx is the artifact the preparer works from and the firm keeps on file.
+**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary + the findings table; the .docx is the artifact the preparer works from and the firm keeps on file.
 
 Use `python-docx` to build the document. Structure:
 
 1. **Header** — Firm name, "Tax Return Review", "Form 990-PF", client/Foundation name, tax year, preparer name, review date
 2. **Bottom line** — 2-3 sentence summary
-3. **Findings table** — One row per issue: #, Severity (HIGH/MEDIUM/LOW), Line/Schedule, Description, Amount. Use `Table Grid` style
+3. **Findings table** — 5 columns: Line/Schedule, Current treatment, Recommended treatment, Reason, Authority. Use `Table Grid` style. Bold the header row. Severity tags (**[HIGH]**, etc.) are bold prefixes in column 1.
 4. **Compliance flags** — Foundation-specific compliance items (distribution requirement, excise tax, Chapter 42 screens, Form 4720 status)
 5. **Missing support** — Bulleted list of absent source documents
 6. **Preparer questions** — Bulleted list of items requiring judgment
@@ -149,7 +165,7 @@ Save as `[ClientName]_[TaxYear]_990PF_Review.docx` (e.g., `SmithFoundation_2025_
 Key python-docx patterns:
 - `doc.add_paragraph(text)` with `paragraph.style = 'Normal'` for body text
 - `doc.add_table(rows, cols)` with `table.style = 'Table Grid'` for the findings table
-- Bold the header row and severity column
+- Bold the header row and severity tags in column 1
 - Use `doc.add_heading(text, level=1)` for section titles
 
 Write the generation script to a file and run it via `Bash` with the system Python — do not try to generate the .docx inline in the chat.

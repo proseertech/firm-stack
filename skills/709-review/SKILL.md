@@ -1,6 +1,6 @@
 ---
 name: 709-review
-version: 1.4.0
+version: 1.5.0
 description: |
   Cross-reference a completed Form 709 (U.S. Gift and Generation-Skipping Transfer Tax
   Return) against source documents — trust agreements, appraisals, Crummey notices,
@@ -145,37 +145,54 @@ Pause and surface to the reviewer when:
 
 ## Output Format
 
-A structured findings report with severity-graded issues:
+**The chat response and the .docx both use the same 5-column findings table.** This is the primary deliverable — a single table where every reviewed line item appears, with its current treatment, recommended treatment, reason, and authority.
 
-```
-Issue #[X] — [HIGH / MEDIUM / LOW]
-Line/Schedule: [specific form reference]
-Finding: [what was found]
-Amount: $[X]
-Correction: [recommended action]
-Authority: [IRC §, Reg., Rev. Rul., or procedure if applicable]
-```
+### Findings Table (required format)
 
-For each issue, classify the nature of the finding: **clear technical error**, **potential issue requiring further fact-gathering**, **judgment call / disclosure recommendation**, or **no issue noted** (for items specifically checked and cleared where the preparer would expect commentary).
+A markdown table in chat, a Word table in .docx. One row per item. **Exactly these 5 columns, in this order:**
 
-Organized into sections:
-- **Confirmed** — Entries that tie
-- **Issues** — Severity-graded findings (HIGH / MEDIUM / LOW), ranked by consequence for preparer attention
-- **Missing Support** — Source docs absent (trust instruments, notices, appraisals, proof of extension)
-- **Preparer Questions** — Items requiring judgment or client facts
-- **Missing Information Request List** — Concise client/trustee/attorney request list (transfers confirmation, checks/wires, premium invoices, Crummey notices + proof of delivery, confirmation no withdrawal right was exercised, beneficiary information, prior 709s, gift-splitting intent, GST allocation intent, confirmation of any family loans, bargain sales, debt forgiveness, or direct tuition/medical payments during the year)
-- **Audit Risk Items** — 1–3 items with factual risk assessment
-- **Reviewer Conclusion** — Ready to file / ready subject to minor changes / not ready, plus the top 3–5 items that must be resolved before filing
+| Line / Schedule | Current treatment | Recommended treatment | Reason | Authority |
+|---|---|---|---|---|
+| **[HIGH]** Sch A, Pt 3, Item 1 | Trust date shown as 4/2/2023 | Change to April 12, 2023 | Instrument was executed and notarized 4/12/2023; date on return is wrong. | Trust agmt. execution page |
+| **[MEDIUM]** Sch D, Pt 2, Line 5 | Automatic GST allocation of $75,873 | Confirm inclusion ratio; likely allocate to full $94,873 via Notice of Allocation | Trust appears not to meet §2642(c)(2), so the $19,000 annual-exclusion portion is not a GST nontaxable gift. | §§2632(c), 2642(c) |
+| **[LOW]** Pt I, Line 19 | Blank | Mark "No" | Donor is unmarried; field should be affirmatively answered. | Form 709 instr. |
+Column rules:
+- **Line / Schedule** — Specific form reference (e.g., "Sch A, Pt 3, Item 1", "Sch D, Pt 2, Line 5", "Pt I, Line 19"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
+- **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
+- **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. For optional improvements, prefix with "Optional:".
+- **Reason** — The factual or legal basis for the recommendation. Explain *why*, not just *what*.
+- **Authority** — IRC section, Reg., Revenue Ruling, form instructions, or source document. Use "—" if none applies.
+
+Table rules:
+- **Every reviewed item goes in the table** — issues, confirmed items, and optional recommendations alike. Do not omit correct items; they show the reviewer checked them.
+- **Sort rows by form/schedule order** (Part I, then Schedule A, B, C, D), not by severity. Severity tags handle prioritization within the natural reading flow.
+- **One row per line item.** Do not split a single issue across multiple rows.
+
+### Section Organization
+
+Surround the table with these sections:
+
+1. **Executive summary / bottom line** — 2-3 sentences plus the ready-to-file conclusion
+2. **Findings Table** — The 5-column table above
+3. **GST Allocation Reconciliation** — Show the Schedule D Part 2 math explicitly (exemption available, automatic allocation, remaining), per spouse if split
+4. **Crummey / Present-Interest Analysis** *(ILIT returns)* — Notice status per beneficiary, lapse analysis
+5. **Missing Support** — Source docs absent (trust instruments, notices, appraisals, proof of extension)
+6. **Missing Information Request List** — Concise client/trustee/attorney request list (transfers confirmation, checks/wires, premium invoices, Crummey notices + proof of delivery, confirmation no withdrawal right was exercised, beneficiary information, prior 709s, gift-splitting intent, GST allocation intent, confirmation of any family loans, bargain sales, debt forgiveness, or direct tuition/medical payments during the year)
+7. **Preparer Questions** — Items requiring judgment or client facts
+8. **Audit Risk Items** — 1-3 items with factual risk assessment
+9. **Reviewer Conclusion** — Ready to file / ready subject to minor changes / not ready, plus the top 3-5 items that must be resolved before filing
+
+For each row, classify the nature of the finding in the Reason column: **clear technical error**, **potential issue requiring further fact-gathering**, **judgment call / disclosure recommendation**, or **no issue noted** (for items specifically checked and cleared where the preparer would expect commentary).
 
 ### .docx Output
 
-**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary; the .docx is the artifact the preparer works from and the firm keeps on file.
+**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary + the findings table; the .docx is the artifact the preparer works from and the firm keeps on file.
 
 Use `python-docx` to build the document. Structure:
 
 1. **Header** — Firm name, "Tax Return Review", "Form 709", donor name, gift tax year, preparer name, review date
 2. **Executive summary / bottom line** — 2-3 sentences plus the ready-to-file conclusion
-3. **Findings table** — One row per issue: #, Severity (HIGH/MEDIUM/LOW), Line/Schedule, Description, Amount, Nature (error / fact-gathering / judgment). Use `Table Grid` style
+3. **Findings table** — 5 columns: Line/Schedule, Current treatment, Recommended treatment, Reason, Authority. Use `Table Grid` style. Bold the header row. Severity tags (**[HIGH]**, etc.) are bold prefixes in column 1.
 4. **GST allocation reconciliation** — Show the Schedule D Part 2 math explicitly (exemption available, automatic allocation, remaining), per spouse if split
 5. **Crummey / present-interest analysis** *(ILIT returns)* — Notice status per beneficiary, lapse analysis
 6. **Missing support** — Bulleted list
@@ -189,7 +206,7 @@ Save as `[DonorName]_[GiftYear]_709_Review.docx` (e.g., `Smith_2025_709_Review.d
 Key python-docx patterns:
 - `doc.add_paragraph(text)` with `paragraph.style = 'Normal'` for body text
 - `doc.add_table(rows, cols)` with `table.style = 'Table Grid'` for the findings table
-- Bold the header row and severity column
+- Bold the header row and severity tags in column 1
 - Use `doc.add_heading(text, level=1)` for section titles
 
 Write the generation script to a file and run it via `Bash` with the system Python — do not try to generate the .docx inline in the chat.

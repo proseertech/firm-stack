@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.10.0
+version: 2.11.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or an
   extension projection against its source documents — W-2s, 1099s, K-1s, brokerage
@@ -183,15 +183,39 @@ Pause and surface to the reviewer when:
 
 ## Output Format
 
-**Default output is the dashboard summary** (Phase E) — a compact table plus bottom line. The full detail block for each issue appears only when the reviewer expands it (Phase F). The dashboard groups findings into:
+**The chat response and the .docx both use the same 5-column findings table.** This is the primary deliverable — a single table where every reviewed line item appears, with its current treatment, recommended treatment, reason, and authority.
 
-- **Issues** — Severity-graded (HIGH / MEDIUM / LOW), ranked by dollar impact
-- **Missing Support** — Source docs absent
-- **Preparer Questions** — Items requiring judgment or additional facts
-- **Audit Risk** — 1-3 bullet points
-- **Open Items for Final Return** *(extension projection mode only)* — SALY K-1s, preliminary documents, items pending for final filing
+### Findings Table (required format)
 
-Confirmed line items are **not listed by default**. Request "full tie-out schedule" to see them.
+A markdown table in chat, a Word table in .docx. One row per item. **Exactly these 5 columns, in this order:**
+
+| Line / Schedule | Current treatment | Recommended treatment | Reason | Authority |
+|---|---|---|---|---|
+| **[HIGH]** Sch B, Line 1 | Interest income $2,340 | $2,410 per 1099-INT | 1099-INT shows $2,410; return understates by $70. | 1099-INT; §61 |
+| **[LOW]** Form 8995, Line 5 | QBI deduction $3,200 | No change — confirmed correct | QBI tie-out verified against K-1 Box 19 code Z. | §199A |
+Column rules:
+- **Line / Schedule** — Specific form reference (e.g., "Sch A, Line 4", "Sch B, Line 1", "Form 8995, Line 5"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
+- **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
+- **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. For optional improvements, prefix with "Optional:".
+- **Reason** — The factual or legal basis for the recommendation. Explain *why*, not just *what*.
+- **Authority** — IRC section, Reg., Revenue Ruling, form instructions, or source document. Use "—" if none applies.
+
+Table rules:
+- **Every reviewed item goes in the table** — issues, confirmed items, and optional recommendations alike. Do not omit correct items; they show the reviewer checked them.
+- **Sort rows by form/schedule order** (page 1, then Schedules 1-3, Sch A, B, C, D, E, R, SE, and attached forms), not by severity. Severity tags handle prioritization within the natural reading flow.
+- **One row per line item.** Do not split a single issue across multiple rows.
+
+### Section Organization
+
+Surround the table with these sections:
+
+1. **Bottom line** — 2-3 sentence summary
+2. **Review mode** — Final return review or extension projection
+3. **Findings Table** — The 5-column table above
+4. **Missing Support** — Bulleted list of absent source documents
+5. **Preparer Questions** — Items requiring judgment or additional facts
+6. **Audit Risk** — 1-3 bullet points
+7. **Open Items for Final Return** *(extension projection mode only)* — SALY K-1s, preliminary documents, items pending for final filing
 
 ### Excel / Workpaper Output
 
@@ -203,29 +227,28 @@ When producing an Excel workpaper (extension payment summary, tax computation, r
 - **Subtotals feeding into grand totals**: `=SUM()` of detail rows, not of subtotal rows (avoid double-counting)
 
 The reviewer needs to see the math tie by formula and to adjust an input and watch the result update.
-
 ### .docx Output
 
-**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary; the .docx is the artifact the preparer works from and the firm keeps on file.
+**Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary + the findings table; the .docx is the artifact the preparer works from and the firm keeps on file.
 
 Use `python-docx` to build the document. Structure:
 
 1. **Header** — Firm name, "Tax Return Review", return type (e.g., "Form 1040"), client name, tax year, preparer name, review date
 2. **Review mode** — Final return review or extension projection
-3. **Bottom line** — 2-3 sentence summary (same as the chat dashboard)
-4. **Findings table** — One row per issue: #, Severity (HIGH/MEDIUM/LOW), Line/Schedule, Description, Amount. Use `Table Grid` style
-5. **Missing support** — Bulleted list of absent source documents
-6. **Preparer questions** — Bulleted list of items requiring judgment
-7. **Audit risk** — 1-3 bullet points, factual
-8. **Open items for final return** *(extension mode only)* — SALY K-1s, preliminary documents
-9. **199A/QBI verification** — Summary of the QBI check results
+3. **Bottom line** — 2-3 sentence summary (same as the chat)
+4. **Findings table** — 5 columns: Line/Schedule, Current treatment, Recommended treatment, Reason, Authority. Use `Table Grid` style. Bold the header row. Severity tags (**[HIGH]**, etc.) are bold prefixes in column 1.
+4. **Missing support** — Bulleted list of absent source documents
+5. **Preparer questions** — Bulleted list of items requiring judgment
+6. **Audit risk** — 1-3 bullet points, factual
+7. **Open items for final return** *(extension mode only)* — SALY K-1s, preliminary documents
+8. **199A/QBI verification** — Summary of the QBI check results
 
 Save as `[ClientName]_[TaxYear]_[ReturnType]_Review.docx` (e.g., `Smith_2025_1040_Review.docx`).
 
 Key python-docx patterns:
 - `doc.add_paragraph(text)` with `paragraph.style = 'Normal'` for body text
 - `doc.add_table(rows, cols)` with `table.style = 'Table Grid'` for the findings table
-- Bold the header row and severity column
+- Bold the header row and severity tags in column 1
 - Use `doc.add_heading(text, level=1)` for section titles
 
 Write the generation script to a file and run it via `Bash` with the system Python — do not try to generate the .docx inline in the chat.
