@@ -1,98 +1,136 @@
 # 1120 Review — Detailed Verification Procedures
 
-Read this file when the workflow in SKILL.md points here. Each section expands a workflow step; the step numbers below match the SKILL.md workflow.
+**This file is an internal procedures manual.** When `SKILL.md` points here, use the checks below to decide what to test, then report the results in the findings table. **Do not quote or paste this file to the user** — the deliverable is the table, not the procedures.
 
-## Step 1 — Prior-year orientation and carryover sweep
+Section names match the pointers in the SKILL.md workflow. Terminology follows the Terminology section of `SKILL.md`.
 
-The prior-year return is a required input, but using it only to tie the NOL amount wastes it. Two procedures:
+**Posture throughout: presence and consistency, not reprojection.** For every regime below, the job is to confirm the workpaper exists, spot-check its inputs and conclusion against the return, and flag mismatches. Do not rebuild §382, CAMT, PHC, the accumulated earnings tax, the foreign tax credit, or transfer pricing from scratch — a partial recomputation produces a confident wrong number, and the preparer owns the computation.
 
-**Correspondence and adjustments.** Ask for IRS and state correspondence, exam adjustments, and amended returns since the prior filing. Beginning balances (Schedule L, M-2, every carryover) must tie to the prior year **as adjusted**, not as filed — if the prior return was later amended or adjusted on exam, every tie-out to the as-filed numbers inherits the stale figures and gives false comfort.
+---
 
-**Carryover completeness sweep.** Trace each of these from the prior return into the current one; a dropped carryover is a straight income or deduction misstatement:
+## Prior-year orientation and carryover sweep
 
-- Charitable contribution carryforward (5-year life — confirm nothing expired unused, and oldest-first ordering)
-- Capital loss carryforward — corporate capital losses offset **only capital gains** (3 back / 5 forward); a capital loss netted against ordinary income is a HIGH finding
-- Section 1231(c) five-year lookback — prior 1231 losses recharacterize current 1231 gain as **ordinary** up to the unrecaptured amount; software misses this when prior-year data wasn't proforma'd
-- Section 481(a) adjustment spread from a prior method change — confirm the correct year's installment is on the return
-- Installment sale gross-profit recognition (Form 6252) for payments received this year
-- Section 179 carryforward
-- Section 163(j) disallowed-interest carryforward (also verified in step 14)
+**Goal: confirm every beginning balance and carryforward on this return comes from the prior year as adjusted, and that nothing was dropped.**
 
-## Step 2 — Schedule M-1 / M-3 mechanics
+Checks:
 
-**Which schedule.** If total assets at year-end are $10 million or more, Schedule M-3 (with Form 8916-A where applicable) is required in place of M-1 — a review that reconciles M-1 on a $10M+ client is reviewing the wrong schedule and missing a required-form failure. If audited financial statements report uncertain tax positions (ASC 740 UTBs), confirm Schedule UTP was considered.
+1. **Correspondence and adjustments** — Request IRS and state correspondence, exam adjustments, and amended returns filed since the prior return. Tie Schedule L, M-2, and every carryover to the prior year **as adjusted**. A tie-out to as-filed figures inherits stale numbers and gives false comfort.
+2. **Carryover completeness** — Trace each of the following from the prior return into this one. A dropped carryover is a straight income or deduction misstatement that the trial balance cannot surface:
+   - Charitable contribution carryforward — five-year life; confirm nothing expired unused and that oldest-first ordering was applied
+   - Capital loss carryforward — corporate capital losses offset **only capital gains** (three-year carryback, five-year carryforward); a capital loss against ordinary income is a hard stop
+   - §1231(c) five-year lookback — prior §1231 losses recharacterize current §1231 gain as **ordinary** up to the unrecaptured amount. Returns prepared without prior-year data often miss this
+   - §481(a) adjustment spread from a prior method change — confirm the correct year's installment is on the return
+   - Installment sale gross profit (Form 6252) for payments received this year
+   - §179 carryforward
+   - §163(j) disallowed-interest carryforward — also tested in the §163(j) step
+   - General business credit and other credit carryforwards, used oldest-first
+3. **Blocking input** — Prior-year return plus the prior-year NOL, credit, and carryover schedules. Absent either, stop and record Missing Support at **[HIGH]**; the sweep is unverifiable without them.
 
-**Expected-addback checklist.** The common M-1 failure is not an unexplained item — it's a **missing** addback, which looks clean because nothing is there to question. Confirm each of these appears as a permanent addback wherever the underlying expense exists in the trial balance:
+---
 
-- 50% of meals; 100% of entertainment
-- Club dues
-- Lobbying and political expenditures (including the lobbying portion of association dues — check the association's disclosure)
-- Fines and penalties (Sec. 162(f))
-- Officer/key-person life insurance premiums where the corporation is beneficiary
-- Employee parking and other qualified transportation fringes disallowed under Sec. 274(a)(4)
-- Business gifts over $25 per recipient
-- Settlement payments subject to a nondisclosure agreement in sexual-harassment matters (Sec. 162(q))
+## Schedule M-1 / M-3 mechanics
 
-A trial-balance account (meals, dues, penalties, insurance) with no corresponding M-1/M-3 adjustment is a finding even though the reconciliation "ties."
+**Goal: confirm the required reconciliation schedule was used, and that the reconciliation is complete in both directions.**
 
-## Step 4 — Deduction mechanics
+Checks:
 
-**Charitable contributions.** Beyond tying the amount: (a) the deduction is capped at 10% of taxable income computed before the deduction (and before NOL/capital-loss carrybacks) — recompute the cap; (b) any carryforward created or used ties to the prior return; (c) property gifts over $500 need Form 8283, over $5,000 a qualified appraisal with the signed appraiser/donee sections — substantiation failure voids the deduction entirely; (d) an accrual-basis corporation deducting a year-end accrual needs board authorization before year-end and payment within 3.5 months after (Sec. 170(a)(2)).
+1. **Which schedule is required** — Total assets at year end of $10 million or more requires **Schedule M-3** (with Form 8916-A where applicable) in place of M-1. A review that reconciles M-1 on a $10M+ client is reviewing the wrong schedule *and* missing a required-form failure. Confirm the page 1 / Schedule K indicators and the schedule actually attached agree.
+2. **Uncertain tax positions** — If audited financial statements report uncertain tax positions (ASC 740 UTBs) and the asset threshold is met, confirm **Schedule UTP** was considered.
+3. **Both endpoints tie** — Book income on M-1 line 1 (or M-3 Part I) to the financial statements or trial balance, and taxable income before NOL and special deductions to Form 1120 line 28.
+4. **Expected-addback sweep** — The common M-1 failure is not an unexplained item; it is a **missing** addback, which looks clean because nothing is there to question. For each item below, confirm a permanent addback appears wherever the underlying expense exists in the trial balance:
+   - 50% of business meals; 100% of entertainment
+   - Club dues
+   - Lobbying and political expenditures, including the lobbying portion of association dues — check the association's annual disclosure
+   - Fines and penalties (§162(f))
+   - Officer and key-person life insurance premiums where the corporation is the beneficiary
+   - Employee parking and other qualified transportation fringes disallowed under §274(a)(4)
+   - Business gifts over $25 per recipient
+   - Settlement payments subject to a nondisclosure agreement in sexual-harassment matters (§162(q))
+5. **Flag the clean-looking gap** — A trial-balance account for meals, dues, penalties, lobbying, or officer life insurance with no corresponding M-1/M-3 adjustment is a finding even though the reconciliation "ties."
 
-**Related-party accruals (Sec. 267(a)(2)).** Amounts accrued to a cash-basis related party (including a >50% shareholder) — interest, compensation, rent, bonuses — are not deductible until actually paid. Year-end accrued owner bonuses are the most common closely-held C-corp adjustment; tie the accrual to a payment date, not just to the trial balance.
+---
 
-**Compensation cap (Sec. 162(m)).** If the corporation is an applicable corporation (publicly held, including certain foreign-private-issuer and debt-registrant cases), compensation over $1 million per covered employee is nondeductible regardless of reasonableness. Rare for a small-firm client base, but a one-line check when compensation is large.
+## Deduction mechanics
 
-**UNICAP and inventory.** If aggregate average gross receipts exceed the Sec. 448(c) threshold (inflation-adjusted; verify the applicable year's amount): accrual method is required, and Sec. 263A UNICAP applies to produced or acquired-for-resale inventory — confirm the 263A addback exists or the small-business exemption is documented. Whatever the size: book lower-of-cost-or-market write-downs and inventory reserves are generally not deductible for tax — confirm they are added back. COGS is usually the largest number on the return; an untouched book write-down flowing into tax COGS is material and invisible to the M-1 "tie."
+**Goal: confirm significant deductions are supported, correctly limited, and timed to the right year.**
 
-## Step 5 — Dividends-received deduction mechanics
+Checks:
 
-The existing red flag (large DRD without ownership documentation) catches the crude case. The mechanics to verify on Schedule C:
+1. **Charitable contributions** — Verify the 10% limitation computation (taxable income before the charitable deduction and before NOL and capital-loss carrybacks); spot-check rather than rebuilding the return. Confirm any carryforward created or used ties to the prior return. Confirm substantiation: Form 8283 for property gifts over $500, and a qualified appraisal with signed appraiser and donee sections over $5,000 — a substantiation failure voids the deduction entirely. For an accrual-basis corporation deducting a year-end accrual, confirm board authorization before year end and payment within 3½ months after (§170(a)(2)).
+2. **Related-party accruals (§267(a)(2))** — Amounts accrued to a cash-basis related party, including a >50% shareholder — interest, compensation, rent, bonuses — are not deductible until actually paid. Tie the accrual to a payment date, not just to the trial balance. Year-end accrued owner bonuses are the most common closely held C-corp adjustment.
+3. **Officer compensation** — Confirm **Form 1125-E** is attached at total receipts of $500,000 or more, and that the officer compensation on it agrees with page 1 and the W-2s.
+4. **Compensation cap (§162(m))** — If the corporation is publicly held (including certain foreign private issuer and debt-registrant cases), compensation over $1 million per covered employee is nondeductible regardless of reasonableness. Rare in a small-firm client base, but a one-line check when compensation is large.
+5. **UNICAP and inventory** — Above the §448(c) threshold (aggregated under the controlled-group rules): the accrual method is required and §263A UNICAP applies to produced and acquired-for-resale inventory. Confirm the 263A addback exists or the small-business exemption is documented. Regardless of size: book lower-of-cost-or-market write-downs and inventory reserves are generally not deductible for tax — confirm they are added back. COGS is usually the largest number on the return, and an untouched book write-down flowing into tax COGS is material and invisible to the M-1 "tie."
 
-- **Percentage tier** — 50% DRD below 20% ownership; 65% at 20–79%; 100% at 80%+ (affiliated group). Confirm the percentage claimed matches documented ownership.
-- **Holding period** — 45 days during the 91-day window around the ex-dividend date (Sec. 246(c)); stock bought and sold around a dividend fails even when ownership documentation exists.
-- **Debt-financed portfolio stock** — the DRD is reduced under Sec. 246A where the stock is debt-financed.
-- **Taxable-income limitation** — the aggregate DRD is limited to the applicable percentage of taxable income unless it creates or increases an NOL (Sec. 246(b)); recompute rather than trusting the software flag.
+---
 
-## Step 7 — Entity-level taxes beyond the 21% rate
+## Dividends-received deduction mechanics
 
-- **Form 2220 underpayment test** — Don't stop at "estimates were paid": test the payments against the required annual installments (prior-year safe harbor unavailable to large corporations; annualization if income was uneven). An underpayment penalty the software didn't compute survives a payments-only check.
-- **Corporate AMT (CAMT)** — If the corporation (with its controlled group and, where applicable, foreign parent group) could plausibly have three-year average adjusted financial statement income over $1 billion, confirm applicable-corporation status was tested and Form 4626 attached or the exemption documented. A Schedule J recompute at 21% "ties" and still misses a 15% floor tax.
-- **Personal holding company (Schedule PH)** — For closely held corporations (5 or fewer individuals own >50% by value) where passive income (dividends, interest, rents, royalties) is 60%+ of adjusted ordinary gross income: PHC status is mechanical and self-assessed — 20% tax on undistributed PHC income, reported on Schedule PH. This is distinct from the accumulated earnings tax the skill already screens (AET is exam-asserted; PHC belongs on the return).
+**Goal: verify a DRD workpaper exists, then spot-check the tier, holding period, and limitations against Schedule C. Flag mismatches; do not rebuild the schedule.**
 
-## Step 8 — NOL usage legality
+Checks:
 
-The amount tying to the prior year is necessary but not sufficient — the **usage** can still be illegal:
+1. **Workpaper exists, payer by payer** — Ownership percentage, acquisition and disposition dates, dividend dates and amounts, and any debt financing. Without it, a Schedule C amount is unverifiable: record Missing Support at **[MEDIUM]**, or **[HIGH]** where the DRD is significant.
+2. **Percentage tier** — 50% below 20% ownership; 65% at 20–79%; 100% at 80% or more (affiliated group). Confirm the percentage claimed matches documented ownership for each payer (§243).
+3. **Holding period** — 45 days within the 91-day window around the ex-dividend date (§246(c)), extended for certain preferred dividends. Stock bought and sold around a dividend fails even where ownership documentation exists.
+4. **Debt-financed portfolio stock** — The DRD is reduced under §246A to the extent the stock is debt-financed. Confirm the reduction where portfolio stock was acquired with borrowed funds.
+5. **Taxable-income limitation** — The aggregate DRD is limited to the applicable percentage of taxable income, unless the full DRD creates or increases an NOL (§246(b)). Spot-check the limitation computation and confirm the exception was applied correctly rather than trusting a software flag.
+6. **Foreign-source dividends are a different regime** — Dividends from specified 10%-owned foreign corporations run through the §245A participation exemption, not §243, with their own holding-period and hybrid-dividend rules. Confirm the correct Schedule C lines were used and that a §245A position has support; do not net the two regimes together.
 
-- **80% limitation** — Post-2017 NOLs are deductible only up to 80% of taxable income (computed before the NOL). Pre-2018 NOLs remain 100% usable and expire (20-year life) — the two vintages must be tracked separately and ordered correctly. An NOL deduction equal to 100% of taxable income sourced from post-2017 losses is a HIGH finding.
-- **Section 382** — If an ownership change occurred (>50 percentage-point shift among 5% shareholders over 3 years — ask about equity raises, buyouts, and gifts/estates of stock), the annual usage is capped at the value of the loss corporation × the long-term tax-exempt rate. If a change happened and no 382 limitation appears, stop and route to the preparer.
+---
 
-## Step 11 — International information-return presence check
+## Entity-level taxes beyond the 21% rate
 
-This is a presence check, not a substantive review: confirm the form is attached (or documented N/A) wherever the trigger exists. Penalties are automatic, per-form, five figures, and keep the statute open — the largest exposure on many returns is a form that isn't there.
+**Goal: confirm each regime was tested and that the corresponding form is present or a documented N/A. Confirm status; do not compute the tax.**
+
+Checks:
+
+1. **Form 2220 underpayment test** — Don't stop at "estimates were paid": test the payments against the required annual installments. The prior-year safe harbor is unavailable to large corporations, and annualization applies where income was uneven. An underpayment penalty the software never computed survives a payments-only check.
+2. **Corporate AMT (CAMT)** — Where the corporation, together with its controlled group and any foreign parent group, could plausibly reach the three-year average adjusted financial statement income threshold, confirm applicable-corporation status was **tested** and that **Form 4626** is attached or the exemption is documented. A Schedule J recompute at 21% "ties" and still misses a 15% floor tax. Confirm the test was run; do not compute AFSI.
+3. **Personal holding company (Schedule PH)** — Applies to closely held corporations (5 or fewer individuals own more than 50% by value) where passive income — dividends, interest, rents, royalties — is 60% or more of adjusted ordinary gross income. PHC status is mechanical and **self-assessed on the return**: a 20% tax on undistributed PHC income, reported on **Schedule PH**. Confirm the test was run and the schedule is present or N/A is documented. Treat a borderline AOGI classification as a "Preparer to analyze" row rather than concluding it.
+4. **Accumulated earnings tax (§531)** — Distinct from PHC: AET is asserted on examination, not self-reported. Screen for growing retained earnings without a documented business purpose, and note the §535(c) accumulated earnings credit. Flag the exposure and the absence of a documented reasonable-needs analysis; do not compute the tax.
+
+---
+
+## NOL usage legality
+
+**Goal: confirm the NOL deduction is supported, correctly reported, and legally usable. The amount tying to the prior year is necessary but not sufficient.**
+
+Checks:
+
+1. **Sort the carryforward into vintages first** — the rules differ by the year the loss arose, and mixing them is the root of most NOL errors:
+   - **Pre-2018 NOLs** — 20-year carryforward, no 80% limitation; confirm nothing expired unused.
+   - **2018–2020 NOLs** — indefinite carryforward and a five-year carryback under the CARES Act; the 80% limitation did **not** apply for tax years beginning before 2021 but **does** apply now.
+   - **Post-2020 NOLs** — indefinite carryforward, no carryback, and the 80% limitation applies.
+2. **80% limitation** — Post-2017 NOLs are deductible only up to 80% of taxable income computed before the NOL deduction. An NOL deduction equal to 100% of taxable income sourced from post-2017 losses is a **[HIGH]** finding.
+3. **Ordering** — Pre-2018 losses are used first and must be tracked separately from later vintages. Confirm the schedule applies them in the correct order rather than netting one pool.
+4. **Reporting on the return** — Confirm the available NOL carryover from prior years is reported on **Schedule K** (line 12 on recent forms — verify the line against the applicable year's instructions), stated **before** reduction by the current-year deduction, and that the line 29a deduction agrees with the attached NOL computation schedule.
+5. **§382 ownership change** — Ask about equity raises, buyouts, redemptions, and transfers of stock by gift or at death. A shift of more than 50 percentage points among 5% shareholders over a three-year testing period triggers an annual limitation equal to the value of the loss corporation multiplied by the long-term tax-exempt rate. **If an ownership change is indicated, verify a §382 limitation schedule exists in the file; if it does not, hard-stop and route to the preparer.** Do not attempt to compute the limitation.
+6. **Blocking inputs** — Prior-year NOL schedule by vintage; ownership and cap-table history.
+
+---
+
+## International information-return presence check
+
+**Goal: confirm the required form is attached, or a documented N/A exists, for every trigger visible in the file. Presence, not substance.**
+
+Penalties here are automatic, per-form, five figures, and they keep the statute of limitations open on the entire return. On many corporate returns the largest single exposure is a form that isn't there.
 
 | Trigger visible in the file | Required form |
 |---|---|
 | 25%+ foreign shareholder, or foreign related-party transactions | 5472 (one per related party) |
-| Officer/director/10%+ shareholder of a foreign corporation; CFC | 5471 (+ 8992 GILTI/NCTI where CFC income exists) |
+| Officer, director, or 10%+ shareholder of a foreign corporation; a CFC | 5471 (+ 8992 for GILTI/NCTI where CFC income exists) |
 | Interest in a foreign partnership | 8865 |
 | Foreign disregarded entity or foreign branch | 8858 |
-| Foreign mutual funds / pooled investments | 8621 (PFIC) |
+| Foreign mutual funds or pooled investments | 8621 (PFIC) |
 | Property transferred to a foreign corporation | 926 |
 | Foreign financial accounts | FinCEN 114 — hand to `fbar-workpaper` |
-| FDII-eligible export income | 8993 (deduction opportunity, not just compliance) |
-| Gross receipts ≥ $500M with base-eroding payments | 8991 (BEAT) |
+| FDII-eligible export income | 8993 (a deduction opportunity, not just compliance) |
+| Gross receipts at or above $500M with base-eroding payments | 8991 (BEAT) |
 
-Foreign tax credit claimed → Form 1118 attached and sourced.
+Additional checks:
 
-## Step 15 — Initial-return branch
-
-Run this branch when the Initial Return box (Item E) is checked or the filing history shows year 1. First-year elections are where permanent damage happens — most are due with the first return and cannot be fixed later without relief:
-
-1. **Entity classification** — If the entity is an LLC taxed as a corporation, confirm Form 8832 was filed and accepted (or is attached for the election year); confirm the effective date matches the return's start date.
-2. **Tax year** — Confirm the year-end selected is permissible and matches any stated business purpose; short-period return mechanics (proration, annualization for estimates) applied correctly.
-3. **Accounting method** — The method box (cash/accrual) is consistent with Sec. 448 (C corporations above the gross-receipts threshold, and certain entities regardless of size, cannot use cash). First-year method selection IS the election — no Form 3115 needed now, but the wrong box sets a method that later requires one.
-4. **Election statements attached** — Sweep for the statements that must ride with the first return: Sec. 195/248 startup and organizational cost amortization (deemed elected if costs are deducted/amortized, but confirm the amounts and 15-year life), de minimis safe harbor under Reg. 1.263(a)-1(f), and any inventory/UNICAP method choices.
-5. **Schedule L** — Beginning balance column should be zero/blank for a true first year; a populated beginning balance means a predecessor or a wrong Initial Return box — either way, a finding.
-6. **Estimated-tax setup** — First-year corporations have no prior-year safe harbor; confirm current-year estimates were computed and the client has an EFTPS enrollment.
-7. **Depreciation conventions** — First-year placed-in-service dates drive convention (mid-quarter test if >40% of additions in Q4) — check it; year 1 is when the register's conventions get set.
+1. **Foreign tax credit** — If an FTC is claimed, confirm **Form 1118** is attached with its required schedules, that the creditable taxes tie to the foreign tax carryover schedule, and that the income is assigned to the correct §904(d) separate categories and sourced consistently with the Schedule C and Form 8992/8993 positions. Confirm presence and consistency; do not rebuild the limitation or the carryover.
+2. **Cross-check Schedule K** — The foreign-ownership answer and the reported count of Forms 5472 must agree with the forms actually attached.
+3. **Blocking input** — Foreign activity detail. If the source documents show foreign operations, ownership, or accounts and no detail was provided, record Missing Support at **[HIGH]**; an undocumented trigger *is* the exposure.
+4. **Scope** — This check is presence and consistency only. Substantive review of a 5471, GILTI, FDII, or BEAT computation is a separate engagement; say so rather than partially working it.
