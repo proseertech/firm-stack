@@ -126,14 +126,14 @@ A markdown table in chat, a Word table in .docx. One row per item. **Exactly the
 Column rules:
 - **Line / Schedule** — Specific form reference (e.g., "Page 1, Line 1", "Sch B, Line 15", "K-1 Box 1"). **Severity** is a bold tag at the start of this cell: **[HIGH]**, **[MEDIUM]**, **[LOW]**. Omit the tag for confirmed items.
 - **Current treatment** — What the return currently shows. State "Blank" or "Not checked" when a field is omitted. Include the dollar amount inline if relevant.
-- **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. For optional improvements, prefix with "Optional:".
+- **Recommended treatment** — The specific correction, or "No change — confirmed correct" for items that tie. Use "Preparer to analyze" where the answer needs judgment or data you don't have. For optional improvements, prefix with "Optional:".
 - **Reason** — The factual or legal basis for the recommendation. Explain *why*, not just *what*.
 - **Authority** — IRC section, Reg., Revenue Ruling, form instructions, or source document. Use "—" if none applies.
 
 Table rules:
-- **Every reviewed item goes in the table** — issues, confirmed items, and optional recommendations alike. Do not omit correct items; they show the reviewer checked them.
+- **Every reviewed item goes in the table** — issues, confirmed items, items confirmed not applicable, and optional recommendations alike. Do not omit correct items; they show the reviewer checked them.
 - **Sort rows by form/schedule order** (page 1, then Schedules A, B, G, then attached Schedules D, I, J and K-1s), not by severity. Severity tags handle prioritization within the natural reading flow.
-- **One row per line item.** Do not split a single issue across multiple rows.
+- **One row per line item.** Do not split a single issue across multiple rows, and do not merge two issues into one.
 
 ### Section Organization
 
