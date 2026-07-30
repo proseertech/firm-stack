@@ -1,21 +1,102 @@
-MIT License
+Firm-Stack Dual License
+Copyright (c) 2026 Laurence Bernstein / Proseer
 
-Copyright (c) 2026 Laurence Bernstein
+This software is dual-licensed. Your rights depend on your firm's annual
+revenue, as defined below.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+======================================================================
+TIER 1 — FREE LICENSE (Firms with annual revenue under $10 million USD)
+======================================================================
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+If your firm's annual revenue is less than ten million US dollars ($10,000,000)
+in the most recent fiscal year, you are granted a free, non-exclusive,
+non-transferable license to:
+
+  1. Use the software internally within your firm
+  2. Modify the software for your own internal use
+  3. Copy and distribute unmodified copies of the software, provided this
+     license file and all copyright notices are retained
+
+CONDITIONS:
+
+  a. COPYRIGHT NOTICE — You must retain the copyright notice above and this
+     license file in all copies or substantial portions of the software.
+
+  b. NO RESALE — You may not sell, resell, sublicense, rent, lease, or
+     otherwise commercialize the software or any derivative works.
+
+  c. NO REPACKAGING — You may not repackage, rebrand, or distribute the
+     software as part of a product or service you offer to third parties,
+     whether paid or free. This includes bundling the skills into another
+     plugin, platform, or distribution without express written permission.
+
+  d. ATTRIBUTION — If you publicly describe or demonstrate your use of this
+     software, you must attribute it to "Proseer (proseertech/firm-stack)."
+
+  e. MODIFICATIONS — You may modify the software for your own internal use.
+     You may not distribute modified versions without express written
+     permission. Modifications you make for internal use are yours to keep.
+
+This free license is personal to your firm and may not be transferred to
+or shared with affiliated entities that separately meet the $10M revenue
+threshold.
+
+======================================================================
+TIER 2 — COMMERCIAL LICENSE (Firms with annual revenue of $10 million+)
+======================================================================
+
+If your firm's annual revenue is ten million US dollars ($10,000,000) or
+greater, the free license above does not apply. You must obtain a
+commercial license from the copyright holder before using this software
+in any capacity.
+
+To obtain a commercial license, contact:
+
+  Laurence Bernstein
+  Proseer
+  Email: larry@proseer.co
+
+See COMMERCIAL-LICENSE-AGREEMENT.md for the standard commercial license
+terms. Custom terms are available by negotiation.
+
+Until a commercial license is executed, firms at or above the $10M
+threshold have no rights to use, copy, or distribute this software.
+
+======================================================================
+DEFINITIONS
+======================================================================
+
+  "Firm" means the legal entity (or consolidated group of entities under
+  common ownership) that will use the software. If your firm is part of a
+  parent company or holding group, the relevant revenue is the consolidated
+  annual revenue of the entire group, not just the subsidiary.
+
+  "Annual revenue" means total revenue recognized in the most recent
+  completed fiscal year, as reported in your firm's financial statements
+  or tax returns, whichever is higher.
+
+  "Software" means the firm-stack plugin, including all SKILL.md files,
+  scripts, templates, references, and associated documentation contained
+  in this repository.
+
+======================================================================
+WARRANTY DISCLAIMER
+======================================================================
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE,
+ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+======================================================================
+Tax Return Review Disclaimer
+======================================================================
+
+This software provides workflow guidance for reviewing tax returns. It does
+not constitute tax advice, does not replace the professional judgment of a
+licensed CPA or tax preparer, and does not guarantee the accuracy or
+completeness of any tax return. The copyright holder is not responsible
+for errors, omissions, or outcomes resulting from use of this software.

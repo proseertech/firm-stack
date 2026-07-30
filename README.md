@@ -95,4 +95,9 @@ firm-stack is designed to grow with contributions from accounting professionals.
 
 ## License
 
-MIT — free to use, fork, and adapt.
+Dual-licensed by Proseer.
+
+- **Free** for firms with annual revenue under $10M USD — use internally, modify for your own use, keep the copyright notice. No resale or repackaging.
+- **Commercial license required** for firms with $10M+ annual revenue — contact larry@proseer.co for licensing.
+
+See [LICENSE](LICENSE) for full terms and [COMMERCIAL-LICENSE-AGREEMENT.md](COMMERCIAL-LICENSE-AGREEMENT.md) for commercial terms.
