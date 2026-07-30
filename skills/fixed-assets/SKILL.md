@@ -14,18 +14,19 @@ description: |
   conventions, and disposals. Fire it even when the form or the word
   "depreciation" isn't said, as long as the question is about whether a cost gets
   capitalized or how an asset is being depreciated.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- AskUserQuestion
+when-to-use: |
   "fixed assets", "depreciation", "capitalize or expense", "capitalize vs expense",
   "R&M review", "repairs and maintenance", "repair or improvement",
   "asset additions", "fixed asset schedule", "depreciation schedule",
   "should I capitalize this", "should we expense this", "useful life",
   "Section 179", "bonus depreciation", "179 or bonus", "leasehold improvement",
   "QIP", "MACRS", "did we book the disposal", "asset disposal"
-allowed-tools:
-  - Read
-  - Write
-  - AskUserQuestion
-tier: all-staff
+metadata:
+  tier: all-staff
 ---
 
 # Fixed Assets: Capitalization Review & Depreciation Schedule

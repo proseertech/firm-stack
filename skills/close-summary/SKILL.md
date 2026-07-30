@@ -10,16 +10,17 @@ description: |
   meeting", "what do I tell the client about last month", "build the monthly financial
   review", "summarize the financials for [client]". This produces the client-facing
   deliverable; it is not the close checklist itself (that's `close`).
-trigger: |
+allowed-tools:
+- Read
+- Write
+- AskUserQuestion
+when-to-use: |
   "executive summary", "close summary", "monthly summary", "financial summary",
   "client meeting prep", "prep for the client meeting", "meeting agenda",
   "package the financials", "write up the month", "summarize the financials",
   "monthly financial review", "what do I tell the client", "client-ready summary"
-allowed-tools:
-  - Read
-  - Write
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # Close Summary: Executive Summary & Client Meeting Agenda

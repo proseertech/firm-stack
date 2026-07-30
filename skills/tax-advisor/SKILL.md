@@ -1,33 +1,29 @@
 ---
 name: tax-advisor
 version: 1.0.0
-description: >-
-  Use for substantive US tax questions about how something should be taxed, structured,
-  or defended — the open-ended thinking work, not a fixed deliverable. Trigger whenever
-  someone asks how to treat or characterize an item, whether something is
-  taxable/excludable/deductible, how rules interact, how a transaction or planning move
-  plays out, how to reduce a client's tax hit, or wants a second opinion or a review of
-  someone's tax analysis or position. Covers income timing and character, gains, gifts
-  and estates, retirement/IRA rules, deals and purchase-price allocation, entity and
-  self-rental issues, settlements, credits, international, and SALT — across corporate,
-  partnership, S-corp, individual, and nonprofit. Applies to real client scenarios even
-  when phrased casually and even if the words "research," "analyze," or "tax" aren't
-  used. Do NOT use for pure bookkeeping, close, or reconciliations, or when a narrow
-  skill owns the deliverable (drafting a memo, cross-referencing a filed return, running
-  a projection).
-trigger: |
+description: Use for substantive US tax questions about how something should be taxed, structured, or defended — the open-ended
+  thinking work, not a fixed deliverable. Trigger whenever someone asks how to treat or characterize an item, whether something
+  is taxable/excludable/deductible, how rules interact, how a transaction or planning move plays out, how to reduce a client's
+  tax hit, or wants a second opinion or a review of someone's tax analysis or position. Covers income timing and character,
+  gains, gifts and estates, retirement/IRA rules, deals and purchase-price allocation, entity and self-rental issues, settlements,
+  credits, international, and SALT — across corporate, partnership, S-corp, individual, and nonprofit. Applies to real client
+  scenarios even when phrased casually and even if the words "research," "analyze," or "tax" aren't used. Do NOT use for pure
+  bookkeeping, close, or reconciliations, or when a narrow skill owns the deliverable (drafting a memo, cross-referencing
+  a filed return, running a projection).
+allowed-tools:
+- Read
+- Write
+- WebSearch
+- WebFetch
+- AskUserQuestion
+when-to-use: |
   "tax research", "research this issue", "how should we treat", "is this deductible",
   "is this position defensible", "what's the tax treatment", "analyze this position",
   "review this memo", "review my associate's work", "check this analysis",
   "tax planning options", "how should we structure", "what are the tax implications",
   "is this taxable", "does this qualify", "second opinion on"
-allowed-tools:
-  - Read
-  - Write
-  - WebSearch
-  - WebFetch
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # Tax Advisor: Research, Work-Product Review & Planning Strategy

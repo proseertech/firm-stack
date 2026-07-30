@@ -13,17 +13,18 @@ description: |
   out the door — "review the 1041", "check the trust return", "does the DNI tie", "tie the
   K-1s to the distribution deduction", "look over the trust return before we file" — even
   if they don't name the form or say the word "review".
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "review the 1041", "trust return review", "fiduciary return", "grantor trust",
   "1041 cross-reference", "tie out the trust return", "trust K-1 review",
   "check the trust return", "verify the 1041", "does the DNI tie", "check the DNI",
   "distribution deduction", "estate return review", "look over the trust return before we file"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # 1041 Review: Fiduciary Return Cross-Reference

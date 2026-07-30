@@ -10,18 +10,19 @@ description: |
   client — even when they don't say "formatting." This is presentation only: it
   restyles cells and never touches values or formulas. If the ask is to fix static
   totals into live SUM formulas, that's `excel-formula-refresh`, not this skill.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- AskUserQuestion
+- Bash
+when-to-use: |
   "format this report", "standardize this Excel", "apply firm formatting",
   "make this look professional", "make it look nice", "make it presentable",
   "clean up this spreadsheet", "tidy up this workbook", "make it client-ready",
   "on-brand formatting", "polish this spreadsheet", "fix the formatting",
   "Excel formatting", "style this report", "consistent formatting"
-allowed-tools:
-  - Read
-  - Write
-  - AskUserQuestion
-  - Bash
-tier: all-staff
+metadata:
+  tier: all-staff
 ---
 
 # Excel Report Format: Standardize to Firm Look and Feel

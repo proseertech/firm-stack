@@ -13,17 +13,18 @@ description: |
   door — "review the 1065", "check the K-1s", "does this partnership return tie", "look over
   the LLC return before we file", "the K-1s don't foot" — even if they don't name the form or
   say the word "review".
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "review the 1065", "partnership return review", "check the K-1s", "1065 cross-reference",
   "tie out the partnership return", "verify the 1065", "check the partnership return",
   "review the LLC return", "do the K-1s foot", "K-1s don't tie", "partner allocations",
   "check partner basis", "look over the 1065 before we file"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # 1065 Review: Partnership Return Cross-Reference

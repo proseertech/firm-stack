@@ -11,17 +11,18 @@ description: |
   credit", "is the dev shop a good R&D candidate", "can they use the credit", "what would
   an R&D study get them" — even when they don't say "Section 41" or "screening". This is
   the candidacy screen, not the study itself and not open-ended tax research.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- AskUserQuestion
+when-to-use: |
   "R&D credit", "R&D study", "research credit", "research and development tax credit",
   "should we do an R&D study", "does this client qualify for the R&D credit",
   "R&D candidate", "is this an R&D candidate", "Section 41", "§41 credit",
   "qualified research", "four-part test", "R&D analysis", "R&D screening",
   "payroll tax offset", "can they use the research credit"
-allowed-tools:
-  - Read
-  - Write
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # R&D Analysis: Research & Development Tax Credit Candidate Screening

@@ -14,18 +14,19 @@ description: |
   tax exposure review", "do they need to file in other states" — even if they
   never say the word "nexus." This is an exposure screen, not a nexus study or
   legal conclusion.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "nexus", "nexus screen", "state tax nexus", "do we have nexus", "economic nexus",
   "state tax exposure", "where does the client need to file", "do they need to register",
   "remote employee in another state", "sales tax registration", "P.L. 86-272",
   "86-272", "marketplace facilitator", "Amazon FBA state tax", "trailing nexus",
   "voluntary disclosure", "which states"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # Nexus Screen: State Tax Exposure Screening

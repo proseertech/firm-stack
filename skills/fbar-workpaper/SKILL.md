@@ -12,19 +12,20 @@ description: |
   never say "FBAR" or "FinCEN 114." Also covers the related U.S. reporting the same
   documents feed: Schedule B foreign accounts, Form 1116 foreign tax credit, and Form
   8938 (FATCA) threshold screening.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "FBAR", "FinCEN 114", "foreign bank account", "foreign accounts", "BSA filing",
   "Report of Foreign Bank", "foreign financial account", "FBAR workpaper",
   "foreign account disclosure", "foreign interest income", "Schedule B foreign",
   "Form 1116", "FATCA", "Form 8938", "foreign bank statement", "money overseas",
   "offshore account", "account in [country]", "do we need to report a foreign account",
   "did they file an FBAR"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # FBAR Workpaper Builder

@@ -13,19 +13,20 @@ description: |
   statements into Excel," "get the return ready to input," "organize the tax docs,"
   "build the capital gains schedule," or "compile the K-1s." This is the bridge
   between the source PDFs and the return.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "tax work papers", "tax workpapers", "1099 summary", "K-1 summary",
   "capital gains work papers", "capital gains schedule", "tax return prep",
   "summarize 1099s", "summarize the brokerage statements", "pull together 1099 and K-1",
   "compile tax documents", "organize the tax docs", "get the return ready to input",
   "tax season workpapers", "brokerage statement summary", "build the workpapers",
   "fund workpapers", "partnership workpapers", "investment fund 1099s"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: all-staff
+metadata:
+  tier: all-staff
 ---
 
 # Tax Work Papers: 1099 & K-1 Workbook Builder

@@ -12,18 +12,19 @@ description: |
   return", "give the partners a Q3 estimate", "build a K-1 estimate from the trial balance".
   Ingests a TB from any GL (QBO, Sage Intacct, Xero, NetSuite, or a manual export). For
   pass-throughs only — not 1040, 1120 (C-corp), 1041, or 990.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "tax projection", "tax estimate", "K-1 estimate", "project the return",
   "project the K-1s", "what will the K-1s look like", "estimate taxable income",
   "estimate the partners' income", "pass-through projection", "partnership projection",
   "S-corp projection", "projection from the trial balance", "quarterly estimate for the partnership",
   "give the owners an estimate"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # Tax Projection Estimate — Pass-Through Entities

@@ -13,19 +13,20 @@ description: |
   payment reasonable", "self-review before e-file". Grades findings by severity and
   flags audit-risk items; supports both final-return review and extension-projection
   mode.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "review the 1040", "check the individual return", "1040 cross-reference",
   "tie out the 1040", "tie out the individual return", "verify the individual return",
   "second review on the 1040", "self-review the 1040", "check the 1040 before filing",
   "review before I sign", "did we miss any income", "does the return tie out",
   "extension projection", "check the extension", "review the projection",
   "is the extension payment reasonable"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # 1040 Review: Individual Return Cross-Reference

@@ -10,14 +10,15 @@ description: |
   accuracy first so it never makes an unsupported claim sound more authoritative. This is
   for short client correspondence — for a formal, standalone position write-up, use
   `tax-memo` instead.
-trigger: |
+allowed-tools:
+- AskUserQuestion
+when-to-use: |
   "improve this email", "polish my draft", "client email", "rewrite this email",
   "make this email better", "edit my reply", "clean up this email", "help me respond",
   "reply to this client", "does this sound okay to send", "make this sound more professional",
   "soften this email", "how should I respond to this client"
-allowed-tools:
-  - AskUserQuestion
-tier: all-staff
+metadata:
+  tier: all-staff
 ---
 
 # Client Email: Polish CPA-to-Client Communications

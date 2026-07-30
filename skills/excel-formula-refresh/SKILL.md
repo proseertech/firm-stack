@@ -11,16 +11,17 @@ description: |
   update," "add formulas to this export," and reviewing a spreadsheet whose totals need to
   tie to their detail. This is about the math in total cells; standardizing fonts, colors,
   and layout is excel-report-format.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- AskUserQuestion
+when-to-use: |
   "formula refresh", "fix the totals", "add SUM formulas", "add SUBTOTAL formulas",
   "hard-coded export", "hard-coded totals", "totals aren't formulas", "replace hard-coded numbers",
   "Excel totals", "make the totals live", "make the totals dynamic", "totals won't update",
   "totals don't recalculate", "the total doesn't add up", "convert totals to formulas"
-allowed-tools:
-  - Read
-  - Write
-  - AskUserQuestion
-tier: all-staff
+metadata:
+  tier: all-staff
 ---
 
 # Excel Formula Refresh: Replace Hard-Coded Totals with Live Formulas

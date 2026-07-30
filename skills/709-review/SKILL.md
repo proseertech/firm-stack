@@ -1,7 +1,7 @@
 ---
 name: 709-review
 version: 1.5.0
-description: |
+description: |-
   Cross-reference a completed Form 709 (U.S. Gift and Generation-Skipping Transfer Tax
   Return) against source documents — trust agreements, appraisals, Crummey notices,
   bank/wire records, prior-year 709s, and estate counsel's planning memos — to catch
@@ -14,9 +14,13 @@ description: |
   unreported deemed gifts (bargain sales, §7872 loans, §2514 lapses, entity
   capital shifts). Use whenever a gift tax return needs a second set of eyes
   before it goes out the door — "review the 709", "check the gift tax return", "does
-  the GST allocation look right", "tie out the gift tax return" — even if they don't
-  say "GST" or "709".
-trigger: |
+  the GST allocation look right", "tie out the gift tax return" —
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "review the 709", "gift tax return review", "check the gift tax return",
   "709 cross-reference", "tie out the gift tax return", "verify the 709",
   "does the GST allocation look right", "check the GST exemption",
@@ -24,12 +28,8 @@ trigger: |
   "Crummey letters", "ILIT gift review", "529 superfunding election",
   "gift splitting review", "SLAT gift review", "check the DSUE",
   "QTIP election on the 709"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # 709 Review: Gift & GST Tax Return Cross-Reference

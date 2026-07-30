@@ -13,17 +13,18 @@ description: |
   return", "prep the client checklist for the new season" — even when the
   words "info request" aren't used. Weaves in meeting notes and known life
   events (home purchase, stock sale, new baby) as targeted request lines.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- AskUserQuestion
+when-to-use: |
   "information request", "info request", "tax organizer", "organizer",
   "review prior year return", "document request list", "doc request",
   "client checklist", "what do we need from the client",
   "what should we ask the client for", "1040 info request",
   "kick off the 1040", "start the return", "prep the client for tax season"
-allowed-tools:
-  - Read
-  - Write
-  - AskUserQuestion
-tier: all-staff
+metadata:
+  tier: all-staff
 ---
 
 # Tax Info Request: Prior Year Return → Document Request

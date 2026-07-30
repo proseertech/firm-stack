@@ -12,18 +12,19 @@ description: |
   the month-end push. Packaging one finished client's financials into an
   executive summary is close-summary's job; reconciling a specific account is
   reconcile's.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- AskUserQuestion
+when-to-use: |
   "month-end", "close checklist", "close status", "close status update",
   "how is the close going", "where are we on close", "are we on track to close",
   "will we make the deadline", "what's blocking the close", "close blockers",
   "portfolio health", "which clients are behind", "who's behind on close",
   "is this client director-ready", "ready to release", "close push",
   "daily standup", "month-end review"
-allowed-tools:
-  - Read
-  - Write
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # Close: Month-End Close Checklist & Portfolio Health

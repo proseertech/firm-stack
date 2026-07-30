@@ -14,18 +14,19 @@ description: |
   wants it checked, tied out, or reviewed against the books — "review the 1120-S", "does
   the S-corp return tie to the TB", "check the K-1 allocations", "second set of eyes on
   this S-corp before we file" — even if they don't name the form or say the word "review."
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "review the 1120-S", "review the 1120S", "S-corp return review", "check the S-corp",
   "1120-S cross-reference", "tie out the S-corp return", "verify the 1120S",
   "does the S-corp tie to the trial balance", "check the K-1 allocations",
   "reasonable comp check", "did we tie out the S-corp", "S-corp return before we file",
   "second look at the S-corp"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # 1120-S Review: S-Corporation Return Cross-Reference

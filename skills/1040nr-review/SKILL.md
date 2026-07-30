@@ -13,18 +13,19 @@ description: |
   nonresident or foreign-national return needs a second set of eyes — "review the
   1040-NR", "check the nonresident return", "does the treaty rate look right", "review
   the dual-status return" — even if they don't say "NRA" or "review".
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "review the 1040-NR", "1040-NR review", "nonresident return review",
   "foreign national return", "NRA return", "check the nonresident return",
   "dual-status return", "review the dual status", "1040-NR cross-reference",
   "substantial presence", "check the treaty position", "does the treaty rate look right",
   "Schedule NEC", "1042-S reconciliation", "closer connection"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # 1040-NR Review: Foreign National Return Cross-Reference

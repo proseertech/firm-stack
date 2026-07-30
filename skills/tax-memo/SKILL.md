@@ -12,15 +12,16 @@ description: |
   gray areas honestly hedged, and quality-checks every citation before finalizing.
   For the underlying research, or a technical read of whether the position actually
   holds up, that's tax-advisor — this skill formats the deliverable.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- AskUserQuestion
+when-to-use: |
   "tax memo", "client memo", "write a memo", "draft a memo", "memo to client",
   "put this in a memo", "write this up for the client", "turn these notes into a memo",
   "write up this position for the client", "client-facing summary of this position"
-allowed-tools:
-  - Read
-  - Write
-  - AskUserQuestion
-tier: all-staff
+metadata:
+  tier: all-staff
 ---
 
 # Tax Memo: Client-Facing Tax Position Memo

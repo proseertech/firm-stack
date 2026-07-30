@@ -14,18 +14,19 @@ description: |
   "review the 1120", "tie out the C-corp return", "does the 1120 match the trial balance",
   "check the corporate return before we file" — even if they don't name the form or say the
   word "review".
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "review the 1120", "1120 review", "C-corp return review", "check the C-corp return",
   "1120 cross-reference", "tie out the C-corp return", "verify the 1120",
   "does the 1120 tie out", "check the 1120 before filing", "review the corporate return",
   "cross-reference the 1120 to the trial balance", "the C-corp return doesn't tie",
   "first year corporate return", "initial return review"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # 1120 Review: C-Corporation Return Cross-Reference

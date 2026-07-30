@@ -12,18 +12,19 @@ description: |
   "tie out the foundation return", "did the foundation meet its distribution
   requirement", "check the excise tax", "look over the private foundation return"
   — even if they don't say "990-PF" or "cross-reference."
-trigger: |
+allowed-tools:
+- Read
+- Write
+- Bash
+- AskUserQuestion
+when-to-use: |
   "review the 990", "990-PF review", "private foundation return",
   "check the private foundation return", "990 cross-reference",
   "tie out the foundation return", "foundation return review",
   "check the distribution requirement", "did the foundation distribute enough",
   "check the excise tax", "self-dealing check"
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # 990 Review: Private Foundation Return Cross-Reference

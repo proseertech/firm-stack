@@ -12,17 +12,18 @@ description: |
   variance I can't explain." An account either reconciles or it doesn't — there is
   no materiality cushion, so reach for this even for small differences that won't
   clear.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- AskUserQuestion
+when-to-use: |
   "reconcile", "reconciliation", "bank rec", "tie out", "tie it out",
   "GL to subledger", "subledger doesn't match", "AP doesn't match the GL",
   "AR reconciliation", "intercompany rec", "intercompany doesn't net",
   "accounts don't match", "cash doesn't tie", "why doesn't this tie",
   "unexplained variance", "clean up the bank rec", "help me reconcile"
-allowed-tools:
-  - Read
-  - Write
-  - AskUserQuestion
-tier: all-staff
+metadata:
+  tier: all-staff
 ---
 
 # Reconcile: Account Reconciliation

@@ -11,16 +11,17 @@ description: |
   cost seg pay off", "they just bought a building — worth accelerating depreciation?",
   "can we free up depreciation this year", or a look-back / catch-up study question —
   even if they don't say "cost segregation." This is a candidacy screen, not the study.
-trigger: |
+allowed-tools:
+- Read
+- Write
+- AskUserQuestion
+when-to-use: |
   "cost seg", "cost segregation", "cost seg analysis", "should we do a cost seg",
   "is this a cost seg candidate", "would a cost seg pay off", "bonus depreciation candidate",
   "accelerated depreciation", "accelerate depreciation on the building", "reclassify building components",
   "5/7/15-year property", "look-back study", "catch-up depreciation", "they bought a building"
-allowed-tools:
-  - Read
-  - Write
-  - AskUserQuestion
-tier: power-user
+metadata:
+  tier: power-user
 ---
 
 # Cost Seg Analysis: Cost Segregation Study Candidate Screening
