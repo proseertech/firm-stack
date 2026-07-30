@@ -14,7 +14,7 @@ subject to the terms below.
 ## 2. Eligibility
 
 This commercial license is required for any firm with annual revenue of
-$10,000,000 USD or greater. Firms below this threshold may use the Software
+$5,000,000 USD or greater. Firms below this threshold may use the Software
 under the free license terms in the LICENSE file.
 
 ## 3. Permitted Uses

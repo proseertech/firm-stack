@@ -97,7 +97,7 @@ firm-stack is designed to grow with contributions from accounting professionals.
 
 Dual-licensed by Proseer.
 
-- **Free** for firms with annual revenue under $10M USD — use internally, modify for your own use, keep the copyright notice. No resale or repackaging.
-- **Commercial license required** for firms with $10M+ annual revenue — contact larry@proseer.co for licensing.
+- **Free** for firms with annual revenue under $5M USD — use internally, modify for your own use, keep the copyright notice. No resale or repackaging.
+- **Commercial license required** for firms with $5M+ annual revenue — contact larry@proseer.co for licensing.
 
 See [LICENSE](LICENSE) for full terms and [COMMERCIAL-LICENSE-AGREEMENT.md](COMMERCIAL-LICENSE-AGREEMENT.md) for commercial terms.
