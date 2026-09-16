@@ -140,7 +140,10 @@ what was computed — a black number that should be blue (or vice versa) is a te
    - LibreOffice headless recalculation to verify formulas
    - Cross-check workbook totals against source PDFs
    - Qualified dividends <= ordinary dividends (per custodian and total)
-   - 1099-B gain/loss = proceeds - cost basis - wash (per row)
+   - 1099-B gain/loss = proceeds - cost basis - wash (per row). **Column E must
+     hold the wash adjustment as a NEGATIVE number** — the 1099-B prints it
+     positive. Re-derive at least one wash-sale row by hand against the source
+     statement; a sign error foots perfectly and is invisible to every other check.
    - K-1 total row sums match across entities
    - Every input cell has blue font; every total cell is a formula
    - Tax year on every source document matches the declared year
@@ -167,6 +170,14 @@ Do not rebuild the workbook from scratch unless the user explicitly asks.
 
 ## Control Points
 
+- **Wash-sale sign confirmation** — Before delivering any workbook containing a
+  1099-B tab with wash-sale adjustments, state the convention to the preparer
+  explicitly ("column E is entered as a negative; your 1099-B prints it as a
+  positive") and confirm each wash-sale row's sign against the source statement.
+  Do not treat the convention as understood. An inverted sign overstates the
+  allowable loss by twice the disallowed amount, ties out against every internal
+  total, and understates taxable income.
+
 - **Missing source documents** — If the expected document list has items not
   found in the source folder, flag them before building. Do not silently omit.
   Ask the user whether to proceed without them or wait.
@@ -179,7 +190,8 @@ Do not rebuild the workbook from scratch unless the user explicitly asks.
 - **K-1 estimates vs. finals** — Flag estimate K-1s prominently. When the final
   K-1 arrives, confirm it should replace the estimate.
 - **Materiality exceptions** — Any discrepancy between the source document total
-  and the workpaper transcription that exceeds $100 requires investigation
+  and the workpaper transcription that exceeds the configured materiality
+  threshold (`${user_config.materiality_threshold}`) requires investigation
   before delivery.
 
 ## Red Flags

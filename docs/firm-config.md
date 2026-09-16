@@ -16,7 +16,17 @@ When you install firm-stack as a plugin, you'll be prompted for these settings:
 | `fiscal_year_end` | Fiscal year-end | `December 31` |
 | `capitalization_threshold` | Dollar threshold for capitalizing vs. expensing | `2500` |
 
-These values are stored in your plugin config and available to all skills automatically. To update them later, use `/plugin config firm-stack`.
+These values are stored in your plugin config. A skill picks one up only where
+it explicitly references the variable — e.g. `${user_config.capitalization_threshold}`
+in `fixed-assets`. Skills that do not reference a setting are not affected by it,
+so a new skill must opt in by naming the variable in its `SKILL.md`. To update the
+values later, use `/plugin config firm-stack`.
+
+**Which settings are firm policy.** Only `materiality_threshold` and
+`capitalization_threshold` are firm-configurable amounts. Statutory figures —
+the FBAR $10,000 aggregate, the §195 $5,000/$50,000 start-up limits, the Form
+1125-E $500,000 line, the gift tax annual exclusion — are set by law and must
+never be driven from firm config.
 
 ---
 

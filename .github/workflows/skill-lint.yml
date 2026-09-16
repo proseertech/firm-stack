@@ -16,3 +16,6 @@ jobs:
 
       - name: Lint review skills against canonical findings-table block
         run: python3 scripts/lint_review_skills.py
+
+      - name: Lint skill frontmatter against the documented schema
+        run: python3 scripts/lint_skill_frontmatter.py

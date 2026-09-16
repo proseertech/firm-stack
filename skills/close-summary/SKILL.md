@@ -66,7 +66,7 @@ Client name, industry, accounting software, and the close period being summarize
 - Major COGS categories; name the top vendors driving COGS
 - Major OpEx categories; name the top vendors driving expenses
 - Net income and profit margin vs. prior period
-- **Variance analysis** — for each material line, compute the $ and % change vs. prior period. Flag any variance over 10% or the firm materiality threshold. A raw variance isn't useful to a client on its own; each flagged line needs an explanation and something the director can actually say in the meeting:
+- **Variance analysis** — for each material line, compute the $ and % change vs. prior period. Flag any variance over 10% or the configured firm materiality threshold (`${user_config.materiality_threshold}`). A raw variance isn't useful to a client on its own; each flagged line needs an explanation and something the director can actually say in the meeting:
 
   | Account | Current | Prior | $ Change | % Change | Explanation | Client Talking Point |
 

@@ -31,6 +31,19 @@ metadata:
 
 # Fixed Assets: Capitalization Review & Depreciation Schedule
 
+## Firm Configuration
+
+These values come from the plugin config (`/plugin config firm-stack`). Use them
+as the starting point; a documented client-specific policy overrides them.
+
+- Capitalization threshold: `${user_config.capitalization_threshold}`
+- Materiality threshold: `${user_config.materiality_threshold}`
+
+The capitalization threshold drives the initial book-policy screen. The
+materiality threshold drives escalation and review priority. Neither replaces the
+applicable tax capitalization rules (§263(a), the de minimis safe harbor) or
+professional judgment. If a value is unset, ask rather than assuming a default.
+
 ## Purpose
 
 Ensure fixed asset additions are properly capitalized or expensed under the firm's capitalization policy, and that the depreciation schedule is accurate and complete. Evaluate accelerated depreciation opportunities (Section 179, bonus depreciation) and handle special asset categories. The value is a defensible capitalize/expense call and a clean schedule — each recommendation tied to a specific item, its cost, and the rule that governs it.
@@ -40,13 +53,17 @@ Ensure fixed asset additions are properly capitalized or expensed under the firm
 Confirm these before starting. A capitalize/expense review run without the actual costs and descriptions produces guesses, and a wrong call surfaces only in a later depreciation true-up or an exam.
 
 - List of potential fixed asset additions for the period (from the GL or a listing)
-- Firm's capitalization threshold (default: $2,500)
+- Firm's capitalization threshold — configured as `${user_config.capitalization_threshold}`
 - Existing depreciation schedule (if reviewing depreciation)
 - Description and cost of each item being evaluated
 
 ## Workflow
 
-1. **Confirm capitalization threshold** — Default is $2,500. Confirm with the client's capitalization policy if different.
+1. **Confirm capitalization threshold** — Start from the configured firm
+   threshold of `${user_config.capitalization_threshold}`. Confirm whether the
+   client has a different documented capitalization policy; if so, use the
+   client-specific policy and document the override. If neither is available,
+   ask — do not assume a default.
 2. **Review each addition** — For each item:
    - Cost vs. threshold: capitalize if ≥ threshold, expense if < threshold
    - Nature: is this a new asset, an improvement (extends useful life), or routine repair and maintenance?
@@ -91,6 +108,6 @@ Pause and surface to the user when you see:
 
 ## Safety Constraints
 
-- Recommend, don't decide, on items above the materiality threshold — surface the capitalize/expense call for manager confirmation rather than booking it, since the treatment drives the client's tax timing.
+- Recommend, don't decide, on items above the configured materiality threshold (`${user_config.materiality_threshold}`) — surface the capitalize/expense call for manager confirmation rather than booking it, since the treatment drives the client's tax timing.
 - Do not remove an asset from the depreciation schedule without confirming disposal documentation exists — dropping an asset that was never actually disposed of overstates the loss and leaves the books wrong.
 - Journal entries are proposed for approval, never posted directly.
