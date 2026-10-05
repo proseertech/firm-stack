@@ -1,6 +1,6 @@
 ---
 name: 1040-review
-version: 2.11.0
+version: 2.12.0
 description: |
   Cross-reference a completed Form 1040 (individual income tax return) or an
   extension projection against its source documents — W-2s, 1099s, K-1s, brokerage
@@ -55,6 +55,7 @@ Report every discrepancy outside the rounding tolerance in the findings table, i
 - All source documents: W-2s and W-2Gs, 1099s (INT, DIV, B, R, DA, G, S, K, Q, SA, SSA, MISC, NEC), Forms 1098 and 1095-A, K-1s, brokerage statements
 - Any supporting workpapers or schedules
 - Basis worksheets for pass-through entities (if losses are claimed)
+- Prior-year return (for the two-year comparison and the IP PIN check)
 
 **PDF size check before ingestion:** if the return package or any source PDF exceeds ~500 pages, flag it and split it before reading — model PDF limits are 600 pages on ≥1M-context models and 100 pages otherwise (32 MB max). Silent truncation of a source document invalidates the review.
 
@@ -87,8 +88,14 @@ List all source docs provided. Flag any that appear missing based on the return 
 
 Work through each income, deduction, credit, withholding, and carryover category, tying each line to its source document. The per-category procedures and the special cases — filing status and dependents, equity-compensation basis adjustments, 1099-R distribution codes (RMD/early-distribution/QCD), residence sales and Section 121, structured-note/auto-call income to Form 8960, brokerage cash bonuses, the pass-through loss limitation stack (basis → at-risk → passive → excess business loss → QBI), cost-segregation rental losses, the SALT cap, mortgage-interest limits, charitable substantiation, the 1095-A/Form 8962 reconciliation, carryover reconciliation — are in **`references/tie-out-procedures.md`**. Read it before starting this phase; the special cases are where returns quietly go wrong.
 
-Four checks that apply to every return in this phase, regardless of category:
+Five checks that apply to every return in this phase, regardless of category:
 
+- **IP PIN (Identity Protection PIN)** — Check the prior-year return for an IP PIN in the e-file data. If one was present, the taxpayer is in the IRS IP PIN program and every future return must carry one:
+  1. **Prior-year IP PIN present?** — Establishes the taxpayer is in the program. If yes, the check applies.
+  2. **Current-year IP PIN present?** — If not, the return will be rejected by the IRS on e-file. Flag as HIGH and request the current-year PIN from the taxpayer before filing.
+  3. **Current-year IP PIN ≠ prior-year IP PIN?** — The IRS issues a NEW CP01A notice with a new 6-digit PIN every January; prior-year PINs expire. A current-year IP PIN identical to the prior year's is a carried-over placeholder — replace with the number from the current CP01A (or IRS.gov IP PIN retrieval) before filing. Flag as HIGH.
+  4. On MFJ returns, **each spouse** needs their own current-year IP PIN — check both, not just the primary taxpayer.
+  The IP PIN authenticates the return (it is not optional identity hygiene): a taxpayer known to be in the program cannot e-file without the current-year number. If neither spouse had a prior-year PIN, no finding — the program is opt-in via IRS.gov.
 - **Digital-asset question and 1099-DA** — Confirm the digital-asset question on page 1 is answered, and that the answer is consistent with the source documents (a 1099-DA or crypto activity on brokerage statements with a "No" answer is a finding). Reconcile any Forms 1099-DA to the return — broker reporting is new, so basis on the 1099-DA may be missing or wrong; where the taxpayer moved off universal basis tracking, confirm the Rev. Proc. 2024-28 wallet-by-wallet allocation statement exists.
 - **Form 8867 preparer due diligence** — If the return claims EITC, CTC/ACTC/ODC, AOTC, or head-of-household filing status, confirm Form 8867 is attached and the due-diligence documentation exists. A missing 8867 is a MEDIUM finding: the IRC 6695(g) penalty (inflation-adjusted, per credit per return) lands on the preparer, and CTC's high phase-out threshold means this check fires on high-income returns too.
 - **Foreign-item sweep** — If any source document shows foreign tax paid, a foreign address, or foreign accounts, confirm Schedule B Part III is answered correctly and flag potential FinCEN 114 (FBAR) / Form 8938 filing requirements as a preparer question. Building the FBAR workpaper itself is handled by the `fbar-workpaper` skill — hand off rather than reconstructing foreign account detail here.
@@ -159,6 +166,7 @@ Pause and surface to the reviewer when:
 - Form 1095-A in the file with no Form 8962 — automatic e-file reject or guaranteed IRS correspondence
 - Large aggregate business losses with no Form 461 — the Section 461(l) excess business loss gate is the final layer of the limitation stack and the one most often skipped
 - W-2 Box 12 Code V or RSU vesting income with same-year broker sales but no Form 8949 basis adjustment — the compensation element gets taxed twice
+- Prior-year return shows an IP PIN but the current-year return has none, or reuses the prior year's number — the IRS issues a new CP01A PIN each January and the old one is invalid; the e-file is rejected
 
 ## Output Format
 
