@@ -222,6 +222,20 @@ The reviewer needs to see the math tie by formula and to adjust an input and wat
 
 **Always produce a Word document (.docx) as the review deliverable.** The chat response gives the bottom-line summary + the compact findings table; the .docx is the artifact the preparer works from and the firm keeps on file.
 
+**Before building, confirm `python-docx` is available** — this is the one hard
+dependency of the deliverable, and discovering it is missing *after* the review
+wastes the whole pass:
+
+```bash
+python3 -c "import docx" 2>/dev/null || python3 -m pip install python-docx
+```
+
+If the install is not possible in this environment (a managed system Python, no
+network), do not silently drop the deliverable: give the complete findings table
+in chat as markdown, state plainly that the .docx could not be produced and why,
+and offer to write the table to a .md file the preparer can convert. A review
+delivered as markdown is recoverable; a review that fails at the last step is not.
+
 Use `python-docx` to build the document. Structure:
 
 1. **Header** — Firm name, "Tax Return Review", return type (e.g., "Form 1040"), client name, tax year, preparer name, review date

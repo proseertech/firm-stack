@@ -4,7 +4,7 @@ version: 1.0.0
 description: |
   One-line summary of what this skill does.
   Additional detail on scope, expected inputs, and output format.
-trigger: |
+when-to-use: |
   Phrases that should invoke this skill automatically.
   Example: "reconcile", "bank rec", "tie out GL"
 allowed-tools:
@@ -13,7 +13,8 @@ allowed-tools:
   - Grep
   - AskUserQuestion
   # Add others as needed: Bash, Agent, WebSearch, etc.
-tier: all-staff   # all-staff | power-user | developer
+metadata:
+  tier: all-staff   # all-staff | power-user | developer
 ---
 
 # Skill Title

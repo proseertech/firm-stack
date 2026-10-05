@@ -109,9 +109,22 @@ This is the most complex tab. Summarizes all capital gains and losses.
 
 - One row per custodian + term + box combination (e.g., "GS ADV — Box A ST
   Covered" and "GS ADV — Box A LT Covered" are separate rows)
-- **Gain formula**: `=C-D` when no wash sale; `=C-D-E` when wash sale is present
-  (wash stored as a negative number so subtracting it adds back the disallowed
-  loss)
+- **Gain formula**: `=C-D` when no wash sale; `=C-D-E` when wash sale is present.
+
+  > **Sign convention — confirm before delivering.** Column E holds the wash-sale
+  > adjustment as a **negative** number, so `=C-D-E` adds the disallowed loss
+  > back. **Form 1099-B box 1g and Form 8949 column (g) print it POSITIVE.**
+  > Transcribing the printed figure without negating it overstates the loss by
+  > *twice* the disallowed amount — and every total still foots, so nothing
+  > downstream catches it. Label column E on the face of the workpaper as
+  > "enter as negative", and confirm the sign with the preparer before delivery.
+
+  Worked check — proceeds 125,000, basis 130,000, box 1g 2,000:
+
+  | Column E holds | Formula result | Correct? |
+  |---|---|---|
+  | `-2,000` (negated, this convention) | `-3,000` | yes |
+  | `2,000` (as printed on the 1099-B) | `-7,000` | **no — loss overstated by 4,000** |
 - When a custodian embeds the wash adjustment in the reported basis, leave
   column E empty, use `=C-D`, and note "Wash sale adj $X included in basis"
 

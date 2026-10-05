@@ -39,6 +39,11 @@ git clone https://github.com/proseertech/firm-stack ~/.claude/skills/firm-stack
 | `client-email` | Polish CPA-to-client email drafts |
 | `tax-memo` | Draft client-facing tax memos from position notes |
 
+### Tax Research & Advisory
+| Skill | Purpose |
+|---|---|
+| `tax-advisor` | Senior-advisor hub for open-ended tax work — technical research with verified authority, review of a colleague's analysis, and planning strategy. Invoke explicitly. |
+
 ### Tax Workflow
 | Skill | Purpose |
 |---|---|
@@ -56,6 +61,8 @@ git clone https://github.com/proseertech/firm-stack ~/.claude/skills/firm-stack
 | `1065-review` | Form 1065 — partnership return cross-reference |
 | `990-review` | Form 990-PF — private foundation cross-reference |
 | `1041-review` | Form 1041 — trust return cross-reference (grantor, simple, complex) |
+| `1040nr-review` | Form 1040-NR — nonresident / dual-status return cross-reference, residency, treaty and withholding tie-out |
+| `709-review` | Form 709 — gift & GST tax return cross-reference, skip classification, GST allocation, Crummey support |
 
 ### CAS / Month-End Close
 | Skill | Purpose |
@@ -76,6 +83,7 @@ git clone https://github.com/proseertech/firm-stack ~/.claude/skills/firm-stack
 |---|---|
 | `costseg-analysis` | Screen clients for cost segregation study candidacy |
 | `rd-analysis` | Screen clients for R&D tax credit study candidacy |
+| `nexus-screen` | Screen a business client for state income/franchise and sales/use tax nexus exposure |
 
 ---
 

@@ -20,14 +20,19 @@ name: skill-slug          # lowercase, hyphenated — must match folder name
 version: 1.0.0            # semantic versioning
 description: |            # shown in skill registry
   ...
-trigger: |                # phrases that auto-invoke the skill
+when-to-use: |            # phrases that auto-invoke the skill
   ...
 allowed-tools:            # only include what the skill actually needs
   - Read
   - AskUserQuestion
-tier: all-staff           # all-staff | power-user | developer
+metadata:                 # non-standard keys live under metadata
+  tier: all-staff         # all-staff | power-user | developer
 ---
 ```
+
+> `when-to-use` replaced the retired `trigger` key, and `tier` moved under
+> `metadata`, for LibreChat compatibility. `scripts/lint_skill_frontmatter.py`
+> fails the build if a skill still uses the old spelling.
 
 ### Sections
 

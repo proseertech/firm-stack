@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import tempfile
 from dataclasses import dataclass, field
 from typing import Callable, Optional
@@ -254,18 +255,56 @@ def build_tb_sheet(ws: Worksheet, accounts: list[TBAccount],
     return ws.title
 
 
+# Open-ended tags that have no fixed member list; they resolve by prefix in
+# tag_category() but still need representative entries in the dropdown.
+_PREFIX_TAG_EXAMPLES = [
+    "K1-Interest", "K1-Dividends", "K1-179", "K1-CharitableContributions",
+    "NONDEDUCTIBLE-Meals50", "NONDEDUCTIBLE-Entertainment",
+    "NONDEDUCTIBLE-Fines", "NONDEDUCTIBLE-OfficerLife",
+    "CAPITAL-FixedAsset", "RECLASSIFY-Owner",
+    "BS-Cash", "BS-AccountsReceivable", "BS-FixedAsset", "BS-AccumDepr",
+    "BS-Loans", "BS-Equity-Capital", "BS-Equity-Distributions",
+]
+
+TAG_DROPDOWN_SHEET = "_tags"
+
+
+def dropdown_tags() -> list[str]:
+    """The tag list offered in the TB dropdown.
+
+    Built from the canonical sets above rather than a second hand-maintained
+    list, so the dropdown cannot drift from what tag_category() recognises.
+    Title-cased to match references/account-tagging.md; matching is
+    case-insensitive.
+    """
+    fixed = sorted(_INCOME_TAGS | _COGS_TAGS | _EXPENSE_TAGS)
+    return [t.title() if t.islower() else t for t in fixed] + _PREFIX_TAG_EXAMPLES
+
+
 def _add_tag_dropdown(ws: Worksheet, n_accounts: int) -> None:
-    """Attach an Excel data-validation dropdown to the tag column."""
-    tags = [
-        "Gross Receipts", "Sales Returns", "Rental Income", "Interest Income",
-        "Other Income", "Gain/Loss on Sale", "COGS", "Officer Compensation",
-        "Salaries & Wages", "Repairs & Maintenance", "Rents", "Taxes & Licenses",
-        "Interest Expense", "Advertising", "Insurance", "Depreciation", "Meals",
-        "Other Deductions", "K1-Interest", "K1-Dividends", "K1-179",
-        "NONDEDUCTIBLE-Meals50", "NONDEDUCTIBLE-Entertainment",
-        "BS-Cash", "BS-FixedAsset", "BS-AccumDepr", "BS-Equity", "BS-Loans",
-    ]
-    dv = DataValidation(type="list", formula1='"%s"' % ",".join(tags), allow_blank=False)
+    """Attach an Excel data-validation dropdown to the tag column.
+
+    The tag list lives on a hidden sheet and is referenced by range. An inline
+    list ('"a,b,c"') is capped at 255 characters by Excel; this list is far
+    longer, and exceeding the cap makes Excel report the file as damaged and
+    silently drop the validation.
+    """
+    tags = dropdown_tags()
+
+    wb = ws.parent
+    if TAG_DROPDOWN_SHEET in wb.sheetnames:
+        ref_ws = wb[TAG_DROPDOWN_SHEET]
+    else:
+        ref_ws = wb.create_sheet(TAG_DROPDOWN_SHEET)
+        ref_ws.sheet_state = "hidden"
+    for i, tag in enumerate(tags, start=1):
+        ref_ws.cell(row=i, column=1, value=tag)
+
+    dv = DataValidation(
+        type="list",
+        formula1=f"={TAG_DROPDOWN_SHEET}!$A$1:$A${len(tags)}",
+        allow_blank=False,
+    )
     last = TB_DATA_START + max(n_accounts, 1) - 1
     col = get_column_letter(TB_COL_TAG)
     dv.add(f"{col}{TB_DATA_START}:{col}{last}")
@@ -323,9 +362,15 @@ class ProjectionWriter:
         self.row += 1
         return r
 
-    def total_row(self, label: str, formula_cols: dict, note: str = "") -> int:
+    def total_row(self, label: str, formula_cols: dict, note: str = "",
+                  note_col: Optional[int] = None) -> int:
         """Total row: soft-green fill, bold, top=medium/bottom=double border.
-        formula_cols: {col_index: formula_or_value}."""
+
+        formula_cols: {col_index: formula_or_value}.
+        note_col: where the note text goes. Defaults to PROJ_COL_NOTES, but the
+        K-1 grid repurposes that column for an owner, so it passes the first
+        free column past the owners instead. Writing the note into a column that
+        already holds a formula would silently destroy that formula."""
         r = self.row
         lc = self.ws.cell(row=r, column=PROJ_COL_DESC, value=label)
         lc.fill = _solid(FILL_TOTAL)
@@ -340,7 +385,12 @@ class ProjectionWriter:
                 cell.number_format = FMT_SIGNED
                 cell.alignment = ALIGN_RIGHT
         if note:
-            self.ws.cell(row=r, column=PROJ_COL_NOTES, value=note).font = FONT_NOTES
+            target = PROJ_COL_NOTES if note_col is None else note_col
+            if formula_cols.get(target) is not None:
+                raise ValueError(
+                    f"total_row note would overwrite the value already written to "
+                    f"column {get_column_letter(target)} on row {r}; pass note_col")
+            self.ws.cell(row=r, column=target, value=note).font = FONT_NOTES
         self.fill_rows.append(r)
         self.row += 1
         return r
@@ -512,19 +562,24 @@ def build_k1_grid(pw: ProjectionWriter, owners: list[Owner],
             refs = ",".join(f"{letter}{r}" for r in taxable_line_rows)
             total_formula_cols[col] = f"=SUM({refs})"
         # Reuse total_row but it only fills B..F; extend to owner cols manually.
+        # The note must land PAST the owner columns — PROJ_COL_NOTES (F) is an
+        # owner column here, and writing the note there would wipe that owner's
+        # =SUM() total.
+        note_col = owner_col0 + len(owners)
         tr = pw.total_row("Est. Taxable K-1 Income", total_formula_cols,
-                          note="Excl. distributions, nondeductible, tax-exempt")
-        # total_row already styled B..F; ensure any owner cols beyond F styled.
+                          note="Excl. distributions, nondeductible, tax-exempt",
+                          note_col=note_col)
+        # total_row styled C..F only; owner columns beyond F need it applied
+        # explicitly. Re-assert the formula on every owner column so the total
+        # row is correct regardless of how many owners there are.
         for i in range(len(owners)):
             col = owner_col0 + i
-            if col > PROJ_COL_NOTES:
-                cell = pw.ws.cell(row=tr, column=col,
-                                  value=total_formula_cols[col])
-                cell.fill = _solid(FILL_TOTAL)
-                cell.font = FONT_TOTAL
-                cell.border = BORDER_TOTAL
-                cell.number_format = FMT_SIGNED
-                cell.alignment = ALIGN_RIGHT
+            cell = pw.ws.cell(row=tr, column=col, value=total_formula_cols[col])
+            cell.fill = _solid(FILL_TOTAL)
+            cell.font = FONT_TOTAL
+            cell.border = BORDER_TOTAL
+            cell.number_format = FMT_SIGNED
+            cell.alignment = ALIGN_RIGHT
 
 
 # ===========================================================================
@@ -544,6 +599,54 @@ def audit_no_data_fill(ws: Worksheet, data_rows: list[int]) -> list[str]:
                 violations.append(
                     f"row {r}, col {get_column_letter(col)} has fill "
                     f"{fill.fgColor.rgb}")
+    return violations
+
+
+# Categories that must be consumed by some projection line. Balance-sheet and
+# capital tags are excluded: they legitimately have no income-statement line.
+_MUST_MAP_CATEGORIES = {"income", "cogs", "expense", "k1", "nondeductible"}
+
+
+def consumed_tags(ws: Worksheet) -> set[str]:
+    """Every tag the projection sheet actually consumes, lowercased.
+
+    Two ways a tag reaches a SUMIF: as a data-row label in column B (the label
+    IS the criteria), or quoted literally inside a formula (the K-1 grid and
+    addback lines, which have no same-row label to point at).
+    """
+    found: set[str] = set()
+    for row in ws.iter_rows():
+        for cell in row:
+            v = cell.value
+            if not isinstance(v, str):
+                continue
+            if cell.column == PROJ_COL_DESC:
+                found.add(v.strip().lower())
+            if v.startswith("="):
+                found.update(m.lower() for m in re.findall(r'"([^"]+)"', v))
+    return found
+
+
+def audit_all_tags_mapped(ws: Worksheet,
+                          accounts: list[TBAccount]) -> list[str]:
+    """Return a violation per tagged P&L account that no projection line picks up.
+
+    Empty list == every income/expense/K-1 tag on the trial balance reaches the
+    projection. This is the guard against the quietest failure mode in a
+    TB-driven projection: an account is tagged correctly, no line consumes the
+    tag, and the omission is invisible because the TB still balances and every
+    total still foots.
+    """
+    consumed = consumed_tags(ws)
+    violations = []
+    for acct in accounts:
+        cat = tag_category(acct.tag)
+        if cat not in _MUST_MAP_CATEGORIES:
+            continue
+        if acct.tag.strip().lower() not in consumed:
+            violations.append(
+                f"tag {acct.tag!r} ({cat}) on account {acct.name!r} "
+                f"[{acct.net:,.0f}] is not consumed by any projection line")
     return violations
 
 
@@ -579,8 +682,12 @@ def build_demo(out_path: str) -> str:
         TBAccount("Meals 50% addback", net=4_500, tag="NONDEDUCTIBLE-Meals50"),
         TBAccount("Book Depreciation", net=52_000, tag="Depreciation"),
         TBAccount("Operating Cash", net=140_000, tag="BS-Cash"),
-        TBAccount("Shareholder Distributions", net=90_000, tag="BS-Equity"),
-        TBAccount("Common Stock / APIC", net=-16_000, tag="BS-Equity"),
+        # Distributions and contributed capital MUST carry different tags: K-1
+        # Box 16D consumes the distributions tag directly, and a shared tag
+        # would net contributed capital against distributions.
+        TBAccount("Shareholder Distributions", net=90_000,
+                  tag="BS-Equity-Distributions"),
+        TBAccount("Common Stock / APIC", net=-16_000, tag="BS-Equity-Capital"),
     ]
     tb_title = build_tb_sheet(tb_ws, accounts, color_tags=True)
 
@@ -634,6 +741,18 @@ def build_demo(out_path: str) -> str:
     r_rep = pw.row
     pw.data_row("Repairs & Maintenance", prior=12_000,
                 curr_formula=expense_sumif(tb_title, r_rep), note="Line 9")
+    r_meals = pw.row
+    pw.data_row("Meals", prior=8_200,
+                curr_formula=expense_sumif(tb_title, r_meals),
+                note="Line 19 — books carry meals at 100%")
+    # The 50% disallowance is a separate tagged account; net it out here so
+    # ordinary business income is stated on the allowable amount. The label is
+    # not itself a tag, so this line uses the explicit-tag SUMIF.
+    pw.data_row("Less: 50% Meals Disallowance",
+                prior=-4_100,
+                curr_formula="=-" + expense_sumif_for_grid(
+                    tb_title, "NONDEDUCTIBLE-Meals50")[1:],
+                note="§274(n) — also K-1 Box 16C")
     r_dep = pw.row
     pw.data_row("Depreciation", prior=48_000,
                 curr_formula=expense_sumif(tb_title, r_dep), note="Line 14 (book)")
@@ -667,7 +786,7 @@ def build_demo(out_path: str) -> str:
          "total": expense_sumif_for_grid(tb_title, "NONDEDUCTIBLE-Meals50"),
          "nontaxable": True},
         {"k1_line": "Box 16D", "desc": "Distributions",
-         "total": expense_sumif_for_grid(tb_title, "BS-Equity"),
+         "total": expense_sumif_for_grid(tb_title, "BS-Equity-Distributions"),
          "nontaxable": True},
     ]
     build_k1_grid(pw, owners, k1_lines)
@@ -691,6 +810,11 @@ def build_demo(out_path: str) -> str:
     violations = audit_no_data_fill(proj_ws, pw.data_rows)
     if violations:
         raise AssertionError("Data-row fill violations: " + "; ".join(violations))
+
+    # Enforce completeness: every tagged P&L account must reach a projection line.
+    unmapped = audit_all_tags_mapped(proj_ws, accounts)
+    if unmapped:
+        raise AssertionError("Unmapped TB tags: " + "; ".join(unmapped))
 
     wb.save(out_path)
     return out_path

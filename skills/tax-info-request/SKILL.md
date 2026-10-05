@@ -50,16 +50,28 @@ Generate a complete information request for the upcoming tax year by extracting 
 
 Use the amounts for the **tax year of the return you're collecting documents for** — during filing season that is usually the prior calendar year, not the year you are working in. Key thresholds:
 
+<!-- Last reviewed 2026-09-15. The 2025 amounts are the POST-OBBBA figures and
+     supersede the pre-OBBBA projections previously carried here ($30,000 MFJ /
+     $15,000 single). NOT verified against a live IRS source at time of edit —
+     confirm before the next filing season and update this date. -->
+
 | Item | 2025 | 2026 |
 |---|---|---|
 | Gift tax annual exclusion | $19,000 | $19,000 |
-| Standard deduction (MFJ) | $30,000 | $32,200 |
-| Standard deduction (Single) | $15,000 | $16,100 |
+| Standard deduction (MFJ) | $31,500 | $32,200 |
+| Standard deduction (Single) | $15,750 | $16,100 |
+| Standard deduction (HoH) | $23,625 | $24,150 |
 
 - FBAR threshold: $10,000 aggregate (static)
 - Form 8938 thresholds: $50,000/$75,000/$200,000/$400,000 (static, varies by filing status and residence)
 
 For any tax year beyond those shown, confirm that year's inflation-adjusted figures rather than extrapolating.
+
+**Confirm these amounts against current IRS guidance before relying on them.**
+They are prompt text, not a live source, and legislation moves them mid-year —
+OBBBA raised the 2025 standard deduction after the original figures were
+published. If the table's verification date above is more than one filing season
+old, re-verify before use and update the comment.
 
 Update these amounts if the current date indicates a different filing year.
 

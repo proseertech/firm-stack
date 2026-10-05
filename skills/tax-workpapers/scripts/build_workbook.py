@@ -23,6 +23,13 @@ Everything here mirrors, exactly, the standards in
   * Net total row  — bold, double-underline top border
   * Page setup     — landscape, fit to width
 
+Wash-sale sign convention:
+  Column E holds the wash-sale adjustment as a NEGATIVE number, so `=C-D-E` adds
+  the disallowed loss back. Form 1099-B box 1g prints it POSITIVE. Transcribing
+  the printed figure without negating it overstates the loss by twice the
+  disallowed amount, and every total still foots — nothing downstream catches it.
+  The skill requires the preparer to confirm the sign before the workbook ships.
+
 Color convention (financial model):
   * BLUE  font (#0000FF) — hard-coded inputs transcribed from source documents
   * BLACK font (#000000) — all formulas and calculations (SUM, =C-D-E, x-sheet)
@@ -144,6 +151,7 @@ def write_data_row(
     *,
     money_cols: Iterable[int] = (),
     placeholder_cols: Iterable[int] = (),
+    formula_cols: Iterable[int] = (),
     stripe: bool = True,
 ):
     """
@@ -154,14 +162,24 @@ def write_data_row(
     right alignment. `placeholder_cols` get the yellow placeholder fill (missing
     or estimated data). Even data rows get the light-green alternating stripe.
 
-    Note: values that are formula strings (start with "=") are still written as
-    given, but this helper is intended for INPUTS. Use write_formula_cell /
-    write_sum_total_row for computed cells so they get black font.
+    Formula safety: openpyxl stores any string starting with "=" as a live
+    formula, so a payee, account description, or memo transcribed off a source
+    document could execute. Such values are forced to the string type instead —
+    the text is preserved exactly (no apostrophe is injected into the value) and
+    the cell is inert. Pass the column in `formula_cols` when the value really is
+    a formula, or use write_formula_cell / write_sum_total_row for computed cells
+    so they also get black font.
     """
     money_cols = set(money_cols)
     placeholder_cols = set(placeholder_cols)
+    formula_cols = set(formula_cols)
     for col_idx, value in enumerate(values, start=1):
         cell = ws.cell(row=row, column=col_idx, value=value)
+        if (isinstance(value, str) and value.startswith("=")
+                and col_idx not in formula_cols):
+            # Assigning value infers data_type "f"; override it so the string is
+            # written as text rather than evaluated.
+            cell.data_type = "s"
         cell.font = INPUT_FONT
         cell.border = THIN_BORDER
         if col_idx in money_cols:
@@ -277,9 +295,14 @@ def build_demo(path: str) -> str:
 
     # --- Tab 1: 1099-B (Capital Gains) --------------------------------------
     ws = add_sheet(wb, "1099-B")
+    # The wash-sale column header states the sign convention on the face of the
+    # workpaper. Form 1099-B box 1g and Form 8949 column (g) PRINT the
+    # disallowed loss as a positive number; this workbook expects it negated, so
+    # the header has to say so or literal transcription doubles the disallowance.
     headers = [
         "Custodian / Account", "Box / Category", "Proceeds", "Cost Basis",
-        "Wash Sale Adjustment", "Gain / (Loss)", "Term", "Notes",
+        "Wash Sale Adj (ENTER AS NEGATIVE — 1099-B prints it positive)",
+        "Gain / (Loss)", "Term", "Notes",
     ]
     # Money columns: Proceeds(C=3), Cost Basis(D=4), Wash(E=5), Gain(F=6).
     money_cols = [3, 4, 5, 6]

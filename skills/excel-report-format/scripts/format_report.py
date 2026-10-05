@@ -15,6 +15,22 @@ CORE SAFETY CONSTRAINT (from the skill):
     to `cell.value`. See `assert_values_unchanged()` for the guardrail that
     verifies this invariant after formatting.
 
+WHAT THE GUARDRAIL DOES *NOT* COVER — read before using on a client deliverable:
+    `assert_values_unchanged()` compares cell values and formula strings. It says
+    nothing about the rest of the file, and openpyxl does not round-trip a
+    workbook losslessly. Specifically:
+
+      * CACHED FORMULA RESULTS ARE DISCARDED. The output holds formulas with no
+        cached values, so Excel recalculates on open (fine for a human) but any
+        tool reading the file with `data_only=True` sees None where numbers were
+        — including firm-stack's own openpyxl-based skills. Open and save the
+        formatted workbook in Excel before handing it to another tool.
+      * Pivot tables, images, conditional formatting, data validation and
+        comments may not survive. Charts do survive in openpyxl 3.1.5.
+      * Row roles are detected HEURISTICALLY (see classify_row). A misdetected
+        row is styled as a total or note; that is a presentation error the value
+        guardrail cannot catch. Spot-check the output.
+
 USAGE:
     python format_report.py input.xlsx [output.xlsx]
 
@@ -34,6 +50,7 @@ TUNING:
 
 import argparse
 import os
+import re
 import sys
 
 import openpyxl
@@ -84,16 +101,26 @@ FMT_DATE                = "m/d/yyyy"          # dates
 # the reference layout; do NOT hard-code a specific spreadsheet's structure.
 # ---------------------------------------------------------------------------
 
-# A row is treated as a TOTAL row if any of its cells' text starts with one of
-# these keywords (case-insensitive). "Total" is the canonical marker.
-TOTAL_KEYWORDS = ("total", "grand total", "net ", "net income", "net loss")
+# Row-role keywords are matched against the row's LABEL cell only — the first
+# populated text cell, which is the account/description column in every report
+# layout. Matching against *every* cell in the row is what previously turned a
+# detail line into a total row whenever a description or memo field happened to
+# begin with "Total ..." or "Net ..." (e.g. the vendor "Total Wine & More", the
+# account "Net sales - retail"), which are common in GL and TB exports.
+#
+# Patterns are anchored regexes rather than loose prefixes, so "Total" must be a
+# whole word and "Net" must be followed by an actual summary noun.
+TOTAL_PATTERNS = (
+    r"^total\b",
+    r"^grand total\b",
+    r"^net (income|loss|sales|profit|revenue)\b",
+    r"\btotal$",
+)
 
-# A row is treated as a SUBTOTAL row if any cell's text starts with one of these.
-# Checked before TOTAL so "subtotal" isn't swallowed by a loose "total" match.
-SUBTOTAL_KEYWORDS = ("subtotal", "sub-total", "sub total")
+# Checked before TOTAL so "Subtotal" is not claimed by the total patterns.
+SUBTOTAL_PATTERNS = (r"^sub-?\s?total\b",)
 
-# A row is treated as a NOTE row if any cell's text starts with one of these.
-NOTE_KEYWORDS = ("note:", "notes:", "note ", "footnote", "*")
+NOTE_PATTERNS = (r"^notes?\b[:\s]", r"^footnote\b", r"^\*")
 
 # Treat the first non-empty row of each sheet as the COLUMN HEADER row. Set to
 # False for sheets whose first row is a title/section header rather than column
@@ -141,17 +168,20 @@ _SUBTOTAL_BORDER = Border(bottom=Side(style="thin"))
 # ---------------------------------------------------------------------------
 # Row / column role detection (heuristic, tunable)
 # ---------------------------------------------------------------------------
-def _row_text_cells(ws, row_idx):
-    """Return the string values in a row (lowercased, stripped), skipping blanks."""
-    out = []
+def _row_label(ws, row_idx):
+    """The row's label: the first populated text cell, lowercased and stripped.
+
+    Returns "" for a row with no text. Only this cell drives role detection —
+    never a description, memo, or vendor field further along the row.
+    """
     for cell in ws[row_idx]:
         if isinstance(cell.value, str) and cell.value.strip():
-            out.append(cell.value.strip().lower())
-    return out
+            return cell.value.strip().lower()
+    return ""
 
 
-def _starts_with_any(texts, keywords):
-    return any(t.startswith(kw) for t in texts for kw in keywords)
+def _matches_any(text, patterns):
+    return bool(text) and any(re.search(pat, text) for pat in patterns)
 
 
 def _row_is_mostly_bold(ws, row_idx):
@@ -174,14 +204,14 @@ def classify_row(ws, row_idx, header_row):
     if row_idx == header_row:
         return "header"
 
-    texts = _row_text_cells(ws, row_idx)
+    label = _row_label(ws, row_idx)
 
-    if _starts_with_any(texts, NOTE_KEYWORDS):
+    if _matches_any(label, NOTE_PATTERNS):
         return "note"
-    # Subtotal checked before total so "subtotal" isn't caught by "total".
-    if _starts_with_any(texts, SUBTOTAL_KEYWORDS):
+    # Subtotal checked before total so "Subtotal" isn't caught by "total".
+    if _matches_any(label, SUBTOTAL_PATTERNS):
         return "subtotal"
-    if _starts_with_any(texts, TOTAL_KEYWORDS):
+    if _matches_any(label, TOTAL_PATTERNS):
         return "total"
 
     # Bold-but-unlabeled rows: treat as subtotal (a conservative structural
@@ -199,6 +229,10 @@ def infer_number_format(ws, col_idx, header_row, max_row):
     stored type/format, never a fixed column position.
     Returns a number-format string, or None to leave the column's format alone.
     """
+    # header_row is -1 when FIRST_ROW_IS_HEADER is False (no header row at all).
+    # ws.cell() rejects any row below 1, so bail out before touching it.
+    if header_row < 1:
+        return None
     header_cell = ws.cell(row=header_row, column=col_idx)
     header = str(header_cell.value).strip().lower() if header_cell.value else ""
 
@@ -214,7 +248,7 @@ def infer_number_format(ws, col_idx, header_row, max_row):
     saw_number = False
     saw_datetime = False
     saw_fraction_pct = False
-    for r in range(header_row + 1, max_row + 1):
+    for r in range(max(header_row + 1, 1), max_row + 1):
         c = ws.cell(row=r, column=col_idx)
         v = c.value
         if v is None:
@@ -411,7 +445,12 @@ def main(argv=None):
         output = base + "-formatted" + (ext or ".xlsx")
 
     # Load with formulas preserved (data_only=False keeps formula strings intact).
-    wb = openpyxl.load_workbook(args.input, data_only=False)
+    # keep_vba preserves the macro project for .xlsm/.xltm; without it openpyxl
+    # writes a macro-less file that still carries the .xlsm extension, and Excel
+    # then reports the workbook as damaged.
+    is_macro_enabled = os.path.splitext(args.input)[1].lower() in (".xlsm", ".xltm")
+    wb = openpyxl.load_workbook(args.input, data_only=False,
+                                keep_vba=is_macro_enabled)
 
     before = snapshot_values(wb)
 
@@ -424,6 +463,10 @@ def main(argv=None):
     wb.save(output)
     print("Formatted workbook written to: %s" % output)
     print("Sheets formatted: %s" % ", ".join(ws.title for ws in wb.worksheets))
+    if is_macro_enabled:
+        print("Macro project preserved (keep_vba). Verify macros still run.")
+    print("NOTE: cached formula values are not carried over — open and save in "
+          "Excel before any tool reads this file with data_only=True.")
     return 0
 
 
